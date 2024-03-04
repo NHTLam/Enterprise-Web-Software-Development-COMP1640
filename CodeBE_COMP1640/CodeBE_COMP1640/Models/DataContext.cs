@@ -21,7 +21,7 @@ public partial class DataContext : DbContext
 
     public virtual DbSet<Department> Departments { get; set; }
 
-    public virtual DbSet<Report> Reports { get; set; }
+    public virtual DbSet<Feedback> Feedbacks { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -43,10 +43,12 @@ public partial class DataContext : DbContext
 
             entity.HasOne(d => d.Department).WithMany(p => p.Articles)
                 .HasForeignKey(d => d.DepartmentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Articles__Depart__45F365D3");
 
             entity.HasOne(d => d.User).WithMany(p => p.Articles)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Articles__UserID__46E78A0C");
         });
 
@@ -63,10 +65,12 @@ public partial class DataContext : DbContext
 
             entity.HasOne(d => d.Article).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.ArticleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Comments__Articl__49C3F6B7");
 
             entity.HasOne(d => d.User).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Comments__UserID__4AB81AF0");
         });
 
@@ -80,17 +84,27 @@ public partial class DataContext : DbContext
             entity.Property(e => e.DepartmentName).HasMaxLength(100);
         });
 
-        modelBuilder.Entity<Report>(entity =>
+        modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.ReportId).HasName("PK__Reports__D5BD48E5DE28C860");
+            entity.HasKey(e => e.FeedbackId).HasName("PK__Reports__D5BD48E5DE28C860");
 
-            entity.Property(e => e.ReportId)
+            entity.ToTable("Feedback");
+
+            entity.Property(e => e.FeedbackId)
                 .ValueGeneratedNever()
-                .HasColumnName("ReportID");
+                .HasColumnName("FeedbackID");
+            entity.Property(e => e.ArticleId).HasColumnName("ArticleID");
+            entity.Property(e => e.FeedbackTime).HasColumnType("datetime");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
-            entity.HasOne(d => d.User).WithMany(p => p.Reports)
+            entity.HasOne(d => d.Article).WithMany(p => p.Feedbacks)
+                .HasForeignKey(d => d.ArticleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Feedback__Articl__6383C8BA");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Reports__UserID__4D94879B");
         });
 
