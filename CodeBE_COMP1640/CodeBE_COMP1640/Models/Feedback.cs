@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace CodeBE_COMP1640.Models;
 
-public partial class Comment
+public partial class Feedback
 {
-    public int CommentId { get; set; }
-
-    public int ArticleId { get; set; }
+    public int FeedbackId { get; set; }
 
     public int UserId { get; set; }
 
-    public string CommentContent { get; set; } = null!;
+    public int ArticleId { get; set; }
 
-    public DateTime? CommentTime { get; set; }
+    public string? FeedbackContent { get; set; }
+
+    public DateTime? FeedbackTime { get; set; }
 
     public virtual Article Article { get; set; } = null!;
 
