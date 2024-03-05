@@ -34,9 +34,7 @@ public partial class DataContext : DbContext
         {
             entity.HasKey(e => e.ArticleId).HasName("PK__Articles__9C6270C814FA82CF");
 
-            entity.Property(e => e.ArticleId)
-                .ValueGeneratedNever()
-                .HasColumnName("ArticleID");
+            entity.Property(e => e.ArticleId).HasColumnName("ArticleID");
             entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
             entity.Property(e => e.SubmissionTime).HasColumnType("datetime");
             entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -56,9 +54,7 @@ public partial class DataContext : DbContext
         {
             entity.HasKey(e => e.CommentId).HasName("PK__Comments__C3B4DFAA82ECD7A2");
 
-            entity.Property(e => e.CommentId)
-                .ValueGeneratedNever()
-                .HasColumnName("CommentID");
+            entity.Property(e => e.CommentId).HasColumnName("CommentID");
             entity.Property(e => e.ArticleId).HasColumnName("ArticleID");
             entity.Property(e => e.CommentTime).HasColumnType("datetime");
             entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -81,6 +77,7 @@ public partial class DataContext : DbContext
             entity.Property(e => e.DepartmentId)
                 .ValueGeneratedNever()
                 .HasColumnName("DepartmentID");
+            entity.Property(e => e.Code).HasMaxLength(100);
             entity.Property(e => e.DepartmentName).HasMaxLength(100);
         });
 
@@ -90,9 +87,7 @@ public partial class DataContext : DbContext
 
             entity.ToTable("Feedback");
 
-            entity.Property(e => e.FeedbackId)
-                .ValueGeneratedNever()
-                .HasColumnName("FeedbackID");
+            entity.Property(e => e.FeedbackId).HasColumnName("FeedbackID");
             entity.Property(e => e.ArticleId).HasColumnName("ArticleID");
             entity.Property(e => e.FeedbackTime).HasColumnType("datetime");
             entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -112,13 +107,22 @@ public partial class DataContext : DbContext
         {
             entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACC37EB951");
 
-            entity.Property(e => e.UserId)
-                .ValueGeneratedNever()
-                .HasColumnName("UserID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.Property(e => e.Address).HasMaxLength(255);
+            entity.Property(e => e.Class)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.Email).HasMaxLength(255);
             entity.Property(e => e.Password).HasMaxLength(255);
-            entity.Property(e => e.Profile).HasMaxLength(255);
-            entity.Property(e => e.UserType).HasMaxLength(50);
+            entity.Property(e => e.Phone)
+                .HasMaxLength(10)
+                .IsFixedLength();
             entity.Property(e => e.Username).HasMaxLength(100);
+
+            entity.HasOne(d => d.Department).WithMany(p => p.Users)
+                .HasForeignKey(d => d.DepartmentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Users_Departments");
         });
 
         OnModelCreatingPartial(modelBuilder);

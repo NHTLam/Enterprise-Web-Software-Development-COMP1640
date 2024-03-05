@@ -37,8 +37,8 @@ namespace CodeBE_COMP1640.Services.UserS
             try
             {
                 var Users = await UOW.UserRepository.List();
-                List<string> Usernames = Users.Select(a => a.Username).ToList();
-                if (Usernames.Contains(User.Username))
+                List<string> Emails = Users.Select(a => a.Email).ToList();
+                if (Emails.Contains(User.Email))
                 {
                     return false;
                 }
@@ -58,14 +58,14 @@ namespace CodeBE_COMP1640.Services.UserS
             try
             {
                 var Users = await UOW.UserRepository.List();
-                List<string> Usernames = Users.Select(a => a.Username).ToList();
-                if (Usernames.Contains(User.Username))
+                List<string> Emails = Users.Select(a => a.Email).ToList();
+                if (Emails.Contains(User.Email))
                 {
-                    var passHash = Users.Where(u => u.Username.Equals(User.Username))?.FirstOrDefault()?.Password;
+                    var passHash = Users.Where(u => u.Email.Equals(User.Email))?.FirstOrDefault()?.Password;
                     if (passHash != null)
                     {
                         User CurrentUser = new User();
-                        CurrentUser.Username = User.Username;
+                        CurrentUser.Email = User.Email;
                         CurrentUser.Password = passHash;
                         return CurrentUser;
                     }
@@ -131,7 +131,7 @@ namespace CodeBE_COMP1640.Services.UserS
 
         public async Task<string> CreateToken(User user)
         {
-            List<Claim> claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Username) };
+            List<Claim> claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email) };
             var configToken = Configuration.GetValue<string>("AppSettings:Token");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configToken));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);

@@ -18,31 +18,35 @@ namespace CodeBE_COMP1640.Controllers.UserController
         }
 
         [Route(UserRoute.List), HttpPost]
-        public async Task<ActionResult<List<User>>> List()
+        public async Task<ActionResult<List<UserDTO>>> List()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             List<User> Users = await UserService.List();
-            return Users;
+            List<UserDTO> UserDTOs = Users.Select(x => new UserDTO(x)).ToList();
+            return UserDTOs;
         }
 
         [Route(UserRoute.Get), HttpPost]
-        public async Task<ActionResult<User>> Get([FromBody] User User)
+        public async Task<ActionResult<UserDTO>> Get([FromBody] UserDTO UserDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            User User = ConvertDTOToEntity(UserDTO);
             User = await UserService.Get(User.UserId);
-            return User;
+            UserDTO = new UserDTO(User);
+            return UserDTO;
         }
 
         [Route(UserRoute.Register), HttpPost]
-        public async Task<ActionResult<bool>> Register([FromBody] User User)
+        public async Task<ActionResult<bool>> Register([FromBody] UserDTO UserDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            User User = ConvertDTOToEntity(UserDTO);
             bool isRegisterSuccess = await UserService.Create(User);
             if (isRegisterSuccess)
                 return true;
@@ -51,11 +55,12 @@ namespace CodeBE_COMP1640.Controllers.UserController
         }
 
         [Route(UserRoute.Login), HttpPost]
-        public async Task<ActionResult<bool>> Login([FromBody] User User)
+        public async Task<ActionResult<bool>> Login([FromBody] UserDTO UserDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            User User = ConvertDTOToEntity(UserDTO);
             User CurrentUser = await UserService.GetPasswordHash(User);
 
             if (CurrentUser == null)
@@ -70,29 +75,48 @@ namespace CodeBE_COMP1640.Controllers.UserController
         }
 
         [Route(UserRoute.Update), HttpPost]
-        public async Task<ActionResult<User>> Update([FromBody] User User)
+        public async Task<ActionResult<UserDTO>> Update([FromBody] UserDTO UserDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            User User = ConvertDTOToEntity(UserDTO);
             User = await UserService.Update(User);
+            UserDTO = new UserDTO(User);
             if (User != null)
-                return User;
+                return UserDTO;
             else
                 return BadRequest(User);
         }
 
         [Route(UserRoute.Delete), HttpPost]
-        public async Task<ActionResult<User>> Delete([FromBody] User User)
+        public async Task<ActionResult<UserDTO>> Delete([FromBody] UserDTO UserDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            User User = ConvertDTOToEntity(UserDTO);
             User = await UserService.Delete(User);
+            UserDTO = new UserDTO(User);
             if (User != null)
-                return User;
+                return UserDTO;
             else
                 return BadRequest(User);
+        }
+
+        private User ConvertDTOToEntity(UserDTO UserDTO)
+        {
+            User User = new User();
+            User.UserId = UserDTO.UserId;
+            User.Username = UserDTO.Username;
+            User.Password = UserDTO.Password;
+            User.Email = UserDTO.Email;
+            User.Class = UserDTO.Class;
+            User.Phone = UserDTO.Phone;
+            User.Address = UserDTO.Address;
+            User.DepartmentId = UserDTO.DepartmentId ?? 0;
+
+            return User;
         }
     }
 }
