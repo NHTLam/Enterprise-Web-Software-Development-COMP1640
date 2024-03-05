@@ -1,5 +1,6 @@
 ﻿using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Services.UserS;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -17,7 +18,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
             this.UserService = UserService;
         }
 
-        [Route(UserRoute.List), HttpPost]
+        [Route(UserRoute.List), HttpPost, Authorize]
         public async Task<ActionResult<List<UserDTO>>> List()
         {
             if (!ModelState.IsValid)
@@ -28,7 +29,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
             return UserDTOs;
         }
 
-        [Route(UserRoute.Get), HttpPost]
+        [Route(UserRoute.Get), HttpPost, Authorize]
         public async Task<ActionResult<UserDTO>> Get([FromBody] UserDTO UserDTO)
         {
             if (!ModelState.IsValid)
@@ -74,7 +75,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
             return Ok(token);
         }
 
-        [Route(UserRoute.Update), HttpPost]
+        [Route(UserRoute.Update), HttpPost, Authorize]
         public async Task<ActionResult<UserDTO>> Update([FromBody] UserDTO UserDTO)
         {
             if (!ModelState.IsValid)
@@ -89,7 +90,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
                 return BadRequest(User);
         }
 
-        [Route(UserRoute.Delete), HttpPost]
+        [Route(UserRoute.Delete), HttpPost, Authorize]
         public async Task<ActionResult<UserDTO>> Delete([FromBody] UserDTO UserDTO)
         {
             if (!ModelState.IsValid)
