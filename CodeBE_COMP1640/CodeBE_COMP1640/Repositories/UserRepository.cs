@@ -28,8 +28,12 @@ namespace CodeBE_COMP1640.Repositories
             {
                 UserId = x.UserId,
                 Username = x.Username,
-                UserType = x.UserType,
                 Password = x.Password,
+                Email = x.Email,
+                Class = x.Class,
+                Phone = x.Phone,
+                Address = x.Address,
+                DepartmentId = x.DepartmentId,
             }).ToListAsync();
 
             return Users;
@@ -43,8 +47,12 @@ namespace CodeBE_COMP1640.Repositories
             {
                 UserId = x.UserId,
                 Username = x.Username,
-                UserType = x.UserType,
                 Password = x.Password,
+                Email = x.Email,
+                Class = x.Class,
+                Phone = x.Phone,
+                Address = x.Address,
+                DepartmentId = x.DepartmentId,
             }).FirstOrDefaultAsync();
 
             if (User == null)
@@ -72,7 +80,11 @@ namespace CodeBE_COMP1640.Repositories
             NewUser.UserId = User.UserId;
             NewUser.Username = User.Username;
             NewUser.Password = User.Password;
-            NewUser.UserType = User.UserType;
+            NewUser.Email = User.Email;
+            NewUser.Class = User.Class;
+            NewUser.Phone = User.Phone;
+            NewUser.Address = User.Address;
+            NewUser.DepartmentId = User.DepartmentId;
             await DataContext.SaveChangesAsync();
             //await SaveReference(User);
             return true;
