@@ -1,13 +1,16 @@
 import React from 'react'
-import Header from '../components/Header/Header'
+import Header from '../components/Header'
 
-import Footer from '../components/Footer/Footer'
+import Footer from '../components/Footer'
+import 'bootstrap/dist/css/bootstrap.css';
 
-const layout = () => {
+const layout = ({children}) => {
+
 return (
-    <div>
+    <div className='position-relative'>            
         <Header/>
-        <Footer/>
+            <div className='container'>{children}</div>
+        <Footer/>   
     </div>
 )
 }
