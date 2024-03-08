@@ -9,7 +9,7 @@ const layout = ({children}) => {
 return (
     <div className='position-relative'>            
         <Header/>
-            <div className='container'>{children}</div>
+            <div className='container-xl'>{children}</div>
         <Footer/>   
     </div>
 )

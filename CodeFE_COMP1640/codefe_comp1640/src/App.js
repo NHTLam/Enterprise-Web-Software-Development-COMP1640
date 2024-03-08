@@ -4,12 +4,17 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Navigate,
 } from "react-router-dom";
 import Slide from "./components/Slide";
-import Navbar from "./components/NavbarC";
-import Container from "./components/Container";
+import NavbarC from "./components/NavbarC";
+import Home from "./pages/Home";
+import PostInfor from "./components/PostInfor"
+import PostSubmit from "./forms/PostSubmit/PostSubmit";
 const App = () => {
+  const onFileChange = (files) =>{
+    console.log(files)
+  }
+
   return (
     <Router>
       <Routes>
@@ -18,8 +23,8 @@ const App = () => {
           element={
             <Layout>
               <Slide />
-              <Navbar />
-              <Container />
+              <NavbarC/>
+              <Home />
             </Layout>
           }
         />
@@ -34,11 +39,14 @@ const App = () => {
         />
 
         <Route
-          path="/manage post"
+          path="/submit_post"
           element={
-            <div>
-              <h1>Login Page</h1>
-            </div>
+            <Layout>
+              <PostInfor/>
+              <PostSubmit
+                onFileChange={(files) => onFileChange(files)}
+              />
+            </Layout>
           }
         />
       </Routes>
