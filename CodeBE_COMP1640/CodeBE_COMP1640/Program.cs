@@ -1,3 +1,4 @@
+using CodeBE_COMP1640.Factories.Implements;
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Repositories;
 using CodeBE_COMP1640.Services.UserS;
@@ -50,6 +51,7 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
 
 builder.Services.AddScoped<IUOW, UOW>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<RepositoryFactory>();
 
 var app = builder.Build();
 
