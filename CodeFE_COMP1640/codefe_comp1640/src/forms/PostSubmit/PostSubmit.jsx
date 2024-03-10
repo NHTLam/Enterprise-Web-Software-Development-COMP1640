@@ -42,16 +42,15 @@ const PostSubmit = props => {
                     <div className="drop_card form-control">
                         <div className="image_area">
                             {imageList.map((item, index) => (
-                                    <div className="image-preview__item">
-                                        <span className="image-preview__item__del" onClick={() => fileRemove(item)}>&times;</span>
-                                        <img src={item.url} alt={item.name} />
-                                    </div>
-                                
+                                <div className="image-preview__item">
+                                    <span className="image-preview__item__del" onClick={() => fileRemove(item)}>&times;</span>
+                                    <img src={item.url} alt={item.name} />
+                                </div>
                             ))}
-                        </div>
-                        <div className="drag_area">
-                            <img src={imageInput} alt="image_upload" className='img' />
-                            <input name="file" type="file" className='file_input' onChange={onFileInput} ref={fileInputRef} multiple />
+                            <div className="drag_area">
+                                <img src={imageInput} alt="image_upload" className='img' />
+                                <input name="file" type="file" className='file_input' onChange={onFileInput} ref={fileInputRef} multiple />
+                            </div>
                         </div>
                     </div>
 
