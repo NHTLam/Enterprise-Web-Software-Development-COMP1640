@@ -28,4 +28,6 @@ public partial class User
     public virtual Department Department { get; set; } = null!;
 
     public virtual ICollection<Feedback> Feedbacks { get; } = new List<Feedback>();
+
+    public virtual ICollection<Role> Roles { get; } = new List<Role>();
 }

@@ -17,31 +17,26 @@ namespace CodeBE_COMP1640.Controllers.UserController
 
         public static Dictionary<string, List<string>> DictionaryPath = new Dictionary<string, List<string>> 
         {
-            { ActionEnum.CREATE.Name, new List<string>() 
+            { ActionEnum.CREATE_ACCOUNT.Name, new List<string>() 
                 {
                     Register, Login
                 } 
             },
-            { ActionEnum.UPDATE.Name, new List<string>()
+            { ActionEnum.UPDATE_ACCOUNT.Name, new List<string>()
                 {
                     Update, Login
                 }
             },
-            { ActionEnum.DELETE.Name, new List<string>()
+            { ActionEnum.DELETE_ACCOUNT.Name, new List<string>()
                 {
                     Delete, Login
                 }
             },
-            { ActionEnum.READ.Name, new List<string>()
+            { ActionEnum.READ_ACCOUNT.Name, new List<string>()
                 {
                     List, Get, Login
                 }
-            },
-            { ActionEnum.APPROVAL.Name, new List<string>()
-                {
-                    Register, Login
-                }
-            },
+            }
         };
     }
 }

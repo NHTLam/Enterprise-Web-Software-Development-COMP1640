@@ -10,4 +10,6 @@ public partial class Permission
     public string Name { get; set; } = null!;
 
     public string Path { get; set; } = null!;
+
+    public virtual ICollection<Role> Roles { get; } = new List<Role>();
 }
