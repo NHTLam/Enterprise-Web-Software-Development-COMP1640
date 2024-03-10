@@ -23,6 +23,14 @@ public partial class DataContext : DbContext
 
     public virtual DbSet<Feedback> Feedbacks { get; set; }
 
+    public virtual DbSet<Permission> Permissions { get; set; }
+
+    public virtual DbSet<PermissonRoleMapping> PermissonRoleMappings { get; set; }
+
+    public virtual DbSet<Role> Roles { get; set; }
+
+    public virtual DbSet<RoleUserMapping> RoleUserMappings { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -101,6 +109,35 @@ public partial class DataContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Reports__UserID__4D94879B");
+        });
+
+        modelBuilder.Entity<Permission>(entity =>
+        {
+            entity.ToTable("Permission");
+
+            entity.Property(e => e.Name).HasMaxLength(500);
+            entity.Property(e => e.Path).HasMaxLength(500);
+        });
+
+        modelBuilder.Entity<PermissonRoleMapping>(entity =>
+        {
+            entity.HasKey(e => new { e.RoleId, e.PermissionId });
+
+            entity.ToTable("PermissonRoleMapping");
+        });
+
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.ToTable("Role");
+
+            entity.Property(e => e.Name).HasMaxLength(500);
+        });
+
+        modelBuilder.Entity<RoleUserMapping>(entity =>
+        {
+            entity.HasKey(e => new { e.RoleId, e.UserId });
+
+            entity.ToTable("RoleUserMapping");
         });
 
         modelBuilder.Entity<User>(entity =>
