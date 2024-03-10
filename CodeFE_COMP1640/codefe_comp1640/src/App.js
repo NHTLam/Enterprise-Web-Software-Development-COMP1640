@@ -8,13 +8,8 @@ import {
 import Slide from "./components/Slide";
 import NavbarC from "./components/NavbarC";
 import Home from "./pages/Home";
-import PostInfor from "./components/PostInfor"
-import PostSubmit from "./forms/PostSubmit/PostSubmit";
+import StAddPost from "./pages/StAddPost"
 const App = () => {
-  const onFileChange = (files) =>{
-    console.log(files)
-  }
-
   return (
     <Router>
       <Routes>
@@ -39,17 +34,22 @@ const App = () => {
         />
 
         <Route
-          path="/submit_post"
+          path="/st_submit_post"
           element={
             <Layout>
-              <PostInfor/>
-              <PostSubmit
-                onFileChange={(files) => onFileChange(files)}
-              />
+              <StAddPost/>
             </Layout>
           }
         />
-      </Routes>
+        <Route
+          path="/st_edit_post"
+          element={
+            <Layout>
+              <StAddPost/>
+            </Layout>
+          }
+        />
+      </Routes>     
     </Router>
   );
 };
