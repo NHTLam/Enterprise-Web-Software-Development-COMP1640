@@ -9,6 +9,7 @@ import {
 import Slide from "./components/Slide";
 import Navbar from "./components/NavbarC";
 import Container from "./components/Container";
+import Login from "./components/Login";
 const App = () => {
   return (
     <Router>
@@ -24,14 +25,7 @@ const App = () => {
           }
         />
 
-        <Route
-          path="/login"
-          element={
-            <div>
-              <h1>Login Page</h1>
-            </div>
-          }
-        />
+        <Route path="/login" element={<Login />} />
 
         <Route
           path="/manage post"
