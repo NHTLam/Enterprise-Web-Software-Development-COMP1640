@@ -32,11 +32,12 @@ const App = () => {
             </Layout>
           }
         />
+
         <Route
           path="/st_edit_post"
           element={
             <Layout>
-              <StAddPost />
+              <StEditPost />
             </Layout>
           }
         />

@@ -30,7 +30,7 @@ const Login = () => {
   };
 
   return (
-    <div className="container border border-2 w-25">
+    <div className="container border border-2 w-25 d-flex justify-content-center align-content-center">
       <h2 style={{ textAlign: "center" }}>LOGIN</h2>
       <form className="">
         <input
