@@ -55,7 +55,7 @@ namespace CodeBE_COMP1640.Services.PermissionS
                         Permission permission = new Permission();
                         permission.Name = DictionaryPath.Key;
                         permission.Path = path;
-                        permission.Description = $"Cho phép thực hiện hành động {DictionaryPath.Key} ở màn {modelName}";
+                        permission.Description = $"Cho phép thực hiện hành động {DictionaryPath.Key} ở màn quản lý {modelName}";
                         permission.MenuName = modelName;
                         Permissions.Add(permission);
                     }
