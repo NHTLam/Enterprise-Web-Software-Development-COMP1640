@@ -29,5 +29,5 @@ public partial class User
 
     public virtual ICollection<Feedback> Feedbacks { get; } = new List<Feedback>();
 
-    public virtual ICollection<Role> Roles { get; } = new List<Role>();
+    public virtual ICollection<RoleUserMapping> RoleUserMappings { get; } = new List<RoleUserMapping>();
 }

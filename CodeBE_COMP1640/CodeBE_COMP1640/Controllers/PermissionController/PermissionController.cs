@@ -32,7 +32,7 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
             return Paths;
         }
 
-        [HttpGet, Route(PermissionRoute.Init), Authorize]
+        [HttpGet, Route(PermissionRoute.Init)]
         public async Task Init()
         {
             await PermissionService.Init();

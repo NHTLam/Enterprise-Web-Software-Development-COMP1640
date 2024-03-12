@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CodeBE_COMP1640.Controllers.UserController;
 using CodeBE_COMP1640.Controllers.PermissionController;
+using System.Linq;
 
 namespace CodeBE_COMP1640.Services.PermissionS
 {
@@ -43,18 +44,19 @@ namespace CodeBE_COMP1640.Services.PermissionS
             try
             {
                 Dictionary<string, List<string>> DictionaryPaths = new Dictionary<string, List<string>>();
-                DictionaryPaths = DictionaryPaths
-                                  .Concat(UserRoute.DictionaryPath)
-                                  .Concat(PermissionRoute.DictionaryPath)
-                                  .ToDictionary(x => x.Key, x => x.Value);
+                DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, UserRoute.DictionaryPath);
+                DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, PermissionRoute.DictionaryPath);
                 List<Permission> Permissions = new List<Permission>();
                 foreach (var DictionaryPath in DictionaryPaths)
                 {
                     foreach (var path in DictionaryPath.Value)
                     {
+                        string modelName = path.Split('/')[1];
                         Permission permission = new Permission();
                         permission.Name = DictionaryPath.Key;
                         permission.Path = path;
+                        permission.Description = $"Cho phép thực hiện hành động {DictionaryPath.Key} ở màn {modelName}";
+                        permission.MenuName = modelName;
                         Permissions.Add(permission);
                     }
                 }
@@ -152,6 +154,29 @@ namespace CodeBE_COMP1640.Services.PermissionS
             catch (Exception)
             {
                 throw new Exception();
+            }
+        }
+
+        private Dictionary<string, List<string>> ConcatMyDictionaryRoute(Dictionary<string, List<string>> CurrentDictionaryPath, Dictionary<string, List<string>> NewDictionaryPath)
+        {
+            if (CurrentDictionaryPath != null && CurrentDictionaryPath.Count != 0)
+            {
+                foreach (var Dictionary in NewDictionaryPath)
+                {
+                    if (CurrentDictionaryPath.Select(x => x.Key).ToList().Contains(Dictionary.Key))
+                    {
+                        CurrentDictionaryPath[Dictionary.Key].AddRange(Dictionary.Value);
+                    }
+                    else
+                    {
+                        CurrentDictionaryPath.Add(Dictionary.Key, Dictionary.Value);
+                    }
+                }
+                return CurrentDictionaryPath;
+            }
+            else
+            {
+                return NewDictionaryPath;
             }
         }
     }

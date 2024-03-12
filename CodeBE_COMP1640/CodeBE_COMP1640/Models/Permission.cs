@@ -11,5 +11,9 @@ public partial class Permission
 
     public string Path { get; set; } = null!;
 
-    public virtual ICollection<Role> Roles { get; } = new List<Role>();
+    public string? Description { get; set; }
+
+    public string? MenuName { get; set; }
+
+    public virtual ICollection<PermissonRoleMapping> PermissonRoleMappings { get; } = new List<PermissonRoleMapping>();
 }

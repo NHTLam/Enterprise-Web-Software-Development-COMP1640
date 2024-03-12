@@ -1,7 +1,8 @@
-﻿using System;
+﻿using CodeBE_COMP1640.Models;
+using System;
 using System.Collections.Generic;
 
-namespace CodeBE_COMP1640.Models;
+namespace CodeBE_COMP1640.Controllers.UserController;
 
 public partial class UserDTO
 {

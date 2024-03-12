@@ -54,6 +54,7 @@ namespace CodeBE_COMP1640.Repositories
             {
                 RoleId = x.RoleId,
                 Name = x.Name,
+                Description = x.Description,
             }).ToListAsync();
 
             return Roles;
@@ -67,6 +68,7 @@ namespace CodeBE_COMP1640.Repositories
             {
                 RoleId = x.RoleId,
                 Name = x.Name,
+                Description = x.Description,
             }).FirstOrDefaultAsync();
 
             if (Role == null)
@@ -80,7 +82,7 @@ namespace CodeBE_COMP1640.Repositories
             DataContext.Roles.Add(Role);
             await DataContext.SaveChangesAsync();
             Role.RoleId = Role.RoleId;
-            //await SaveReference(Role);
+            await SaveReference(Role);
             return true;
         }
 
@@ -93,8 +95,9 @@ namespace CodeBE_COMP1640.Repositories
                 return false;
             NewRole.RoleId = Role.RoleId;
             NewRole.Name = Role.Name;
+            NewRole.Description = Role.Description;
             await DataContext.SaveChangesAsync();
-            //await SaveReference(Role);
+            await SaveReference(Role);
             return true;
         }
 
@@ -107,8 +110,33 @@ namespace CodeBE_COMP1640.Repositories
                 return false;
             DataContext.Roles.Remove(CurrentRole);
             await DataContext.SaveChangesAsync();
-            //await SaveReference(Role);
+            await SaveReference(Role);
             return true;
+        }
+
+        private async Task SaveReference(Role Role)
+        {
+            if (Role.PermissonRoleMappings == null || Role.PermissonRoleMappings.Count == 0)
+                await DataContext.PermissonRoleMappings
+                    .Where(x => x.RoleId == Role.RoleId)
+                    .DeleteFromQueryAsync();
+            else
+            {
+                List<PermissonRoleMapping> PermissonRoleMappings = new List<PermissonRoleMapping>();
+                var PermissonRoleMappingIds = Role.PermissonRoleMappings.Select(x => x.Id).Distinct().ToList();
+                await DataContext.PermissonRoleMappings
+                    .Where(x => x.RoleId == Role.RoleId)
+                    .Where(x => PermissonRoleMappingIds.Contains(x.Id))
+                    .DeleteFromQueryAsync();
+                foreach (PermissonRoleMapping PermissonRoleMapping in Role.PermissonRoleMappings)
+                {
+                    PermissonRoleMapping NewPermissonRoleMapping = new PermissonRoleMapping();
+                    NewPermissonRoleMapping.RoleId = Role.RoleId;
+                    NewPermissonRoleMapping.PermissionId = PermissonRoleMapping.PermissionId;
+                    PermissonRoleMappings.Add(NewPermissonRoleMapping);
+                }
+                await DataContext.BulkMergeAsync(PermissonRoleMappings);
+            }
         }
     }
 }

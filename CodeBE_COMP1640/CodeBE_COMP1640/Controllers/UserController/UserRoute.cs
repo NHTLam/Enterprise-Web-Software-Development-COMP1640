@@ -8,7 +8,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
     public class UserRoute
     {
         public const string Module = "/app-user";
-        public const string Register = Module + "/register";
+        public const string Register = Module + "/create";
         public const string Get = Module + "/get";
         public const string List = Module + "/list";
         public const string Update = Module + "/update";
@@ -17,22 +17,22 @@ namespace CodeBE_COMP1640.Controllers.UserController
 
         public static Dictionary<string, List<string>> DictionaryPath = new Dictionary<string, List<string>> 
         {
-            { ActionEnum.CREATE_ACCOUNT.Name, new List<string>() 
+            { ActionEnum.CREATE.Name, new List<string>() 
                 {
                     Register, Login
                 } 
             },
-            { ActionEnum.UPDATE_ACCOUNT.Name, new List<string>()
+            { ActionEnum.UPDATE.Name, new List<string>()
                 {
                     Update, Login
                 }
             },
-            { ActionEnum.DELETE_ACCOUNT.Name, new List<string>()
+            { ActionEnum.DELETE.Name, new List<string>()
                 {
                     Delete, Login
                 }
             },
-            { ActionEnum.READ_ACCOUNT.Name, new List<string>()
+            { ActionEnum.READ.Name, new List<string>()
                 {
                     List, Get, Login
                 }
