@@ -11,7 +11,7 @@ public partial class Role
 
     public string? Description { get; set; }
 
-    public virtual ICollection<PermissonRoleMapping> PermissonRoleMappings { get; } = new List<PermissonRoleMapping>();
+    public virtual ICollection<PermissonRoleMapping> PermissonRoleMappings { get; set; } = new List<PermissonRoleMapping>();
 
-    public virtual ICollection<RoleUserMapping> RoleUserMappings { get; } = new List<RoleUserMapping>();
+    public virtual ICollection<RoleUserMapping> RoleUserMappings { get; set; } = new List<RoleUserMapping>();
 }

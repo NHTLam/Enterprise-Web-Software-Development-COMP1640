@@ -57,6 +57,22 @@ namespace CodeBE_COMP1640.Repositories
                 Description = x.Description,
             }).ToListAsync();
 
+            var PermissonRoleMappingQuery = DataContext.PermissonRoleMappings.AsNoTracking();
+            List<PermissonRoleMapping> PermissonRoleMappings = await PermissonRoleMappingQuery
+                .Select(x => new PermissonRoleMapping
+                {
+                    Id = x.Id,
+                    RoleId = x.RoleId,
+                    PermissionId = x.PermissionId,
+                }).ToListAsync();
+
+            foreach (Role Role in Roles)
+            {
+                Role.PermissonRoleMappings = PermissonRoleMappings
+                    .Where(x => x.RoleId == Role.RoleId)
+                    .ToList();
+            }
+
             return Roles;
         }
 
@@ -73,6 +89,14 @@ namespace CodeBE_COMP1640.Repositories
 
             if (Role == null)
                 return null;
+            Role.PermissonRoleMappings = await DataContext.PermissonRoleMappings.AsNoTracking()
+                .Where(x => x.RoleId == Role.RoleId)
+                .Select(x => new PermissonRoleMapping
+                {
+                    Id = x.Id,
+                    RoleId = x.RoleId,
+                    PermissionId = x.PermissionId,
+                }).ToListAsync();
 
             return Role;
         }
