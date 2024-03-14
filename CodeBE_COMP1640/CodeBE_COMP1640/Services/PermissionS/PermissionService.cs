@@ -25,19 +25,23 @@ namespace CodeBE_COMP1640.Services.PermissionS
         Task<Role> UpdateRole(Role Role);
         Task<Role> DeleteRole(Role Role);
         Task<bool> HasPermission(string Path, int UserId);
+        int GetUserId();
     }
     public class PermissionService : IPermissionService
     {
         private IUOW UOW;
         private readonly IConfiguration Configuration;
+        private IHttpContextAccessor HttpContextAccessor;
 
         public PermissionService(
             IUOW UOW,
-            IConfiguration Configuration
+            IConfiguration Configuration,
+            IHttpContextAccessor HttpContextAccessor
         )
         {
             this.UOW = UOW;
             this.Configuration = Configuration;
+            this.HttpContextAccessor = HttpContextAccessor;
         }
 
         public async Task Init()
@@ -210,6 +214,16 @@ namespace CodeBE_COMP1640.Services.PermissionS
             {
                 return NewDictionaryPath;
             }
+        }
+
+        public int GetUserId()
+        {
+            int userId = 0;
+            if (HttpContextAccessor.HttpContext is not null)
+            {
+                userId = int.TryParse(HttpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier), out int id) ? id : 0;
+            }
+            return userId;
         }
     }
 }

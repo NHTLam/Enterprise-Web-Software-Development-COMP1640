@@ -1,6 +1,7 @@
 using CodeBE_COMP1640.Controllers;
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Repositories;
+using CodeBE_COMP1640.Services;
 using CodeBE_COMP1640.Services.PermissionS;
 using CodeBE_COMP1640.Services.UserS;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ builder.Services.AddCors(options =>
 });
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<DataContext>(options =>
 
 options.UseSqlServer(builder.Configuration.GetConnectionString("dbconn")));
@@ -54,7 +56,6 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
 builder.Services.AddScoped<IUOW, UOW>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
-builder.Services.AddScoped<ICurrentContext, CurrentContext>();
 
 var app = builder.Build();
 

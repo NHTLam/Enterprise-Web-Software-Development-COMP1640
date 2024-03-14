@@ -6,7 +6,7 @@ namespace CodeBE_COMP1640.Controllers
 {
     public class SetupController : ControllerBase
     {
-        private DataContext DataContext;
+        private DataContext DataContext; 
         public SetupController(DataContext DataContext)
         {
             this.DataContext = DataContext;
@@ -29,15 +29,5 @@ namespace CodeBE_COMP1640.Controllers
             }).ToList();
             DataContext.Departments.BulkSynchronize(DepartmentEnumList);
         }
-    }
-
-    public interface ICurrentContext
-    {
-        public int UserId { get; set; }
-    }
-
-    public class CurrentContext : ICurrentContext
-    {
-        public int UserId { get; set; }
     }
 }
