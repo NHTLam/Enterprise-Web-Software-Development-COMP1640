@@ -24,6 +24,7 @@ namespace CodeBE_COMP1640.Services.PermissionS
         Task<bool> CreateRole (Role Role);
         Task<Role> UpdateRole(Role Role);
         Task<Role> DeleteRole(Role Role);
+        Task<bool> HasPermission(string Path, int UserId);
     }
     public class PermissionService : IPermissionService
     {
@@ -72,12 +73,43 @@ namespace CodeBE_COMP1640.Services.PermissionS
         {
             try
             {
-                return await UOW.PermissionRepository.ListPath(User);
+                User = await UOW.UserRepository.Get(User.UserId);
+                List<long> RoleIds = new List<long>();
+                foreach (var userRoleMapping in User.RoleUserMappings)
+                {
+                    RoleIds.Add(userRoleMapping.RoleId);
+                }
+
+                List<Role> Roles = await UOW.PermissionRepository.ListRole();
+                Roles = Roles.Where(x => RoleIds.Contains(x.RoleId)).ToList();
+
+                List<int> permissionIds = new List<int>();
+                foreach (var Role in Roles)
+                {
+                    permissionIds.AddRange(Role.PermissonRoleMappings.Select(x => x.PermissionId).ToList());
+                }
+                permissionIds = permissionIds.Distinct().ToList();
+
+                List<Permission> AllowPermission = await UOW.PermissionRepository.ListPermission();
+                List<string> AllowPath = AllowPermission.Where(x => permissionIds.Contains(x.PermissionId)).Select(x => x.Path).ToList();
+                return AllowPath;
             }
             catch (Exception)
             {
                 throw new Exception();
             }
+        }
+
+        public async Task<bool> HasPermission(string Path, int UserId)
+        {
+            User User = new User();
+            User.UserId = UserId;
+            List<string> AllowPath = await ListPath(User);
+            if (AllowPath.Contains(Path))
+            {
+                return true;
+            }
+            return false;
         }
 
         public async Task<List<string>> ListAllPath()

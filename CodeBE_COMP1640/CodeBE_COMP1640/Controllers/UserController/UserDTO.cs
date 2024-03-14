@@ -29,9 +29,9 @@ public partial class UserDTO
         this.Username = user.Username;
         this.Password = user.Password;
         this.Email = user.Email;
-        this.Class = user.Class;
-        this.Phone = user.Phone;
-        this.Address = user.Address;
+        this.Class = user.Class?.Trim();
+        this.Phone = user.Phone?.Trim();
+        this.Address = user.Address?.Trim();
         this.DepartmentId = user.DepartmentId;
     }
 }

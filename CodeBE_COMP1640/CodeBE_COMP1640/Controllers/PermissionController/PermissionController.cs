@@ -2,19 +2,25 @@
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Repositories;
 using CodeBE_COMP1640.Services.PermissionS;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace CodeBE_COMP1640.Controllers.PermissionController
 {
     public class PermissionController : ControllerBase
     {
         private IPermissionService PermissionService;
+        private ICurrentContext CurrentContext;
 
-        public PermissionController(IPermissionService PermissionService, DataContext DataContext)
+        public PermissionController(IPermissionService PermissionService, ICurrentContext CurrentContext)
         {
             this.PermissionService = PermissionService;
+            this.CurrentContext = CurrentContext;
         }
 
         [HttpPost, Route(PermissionRoute.ListPath), Authorize]
@@ -43,6 +49,11 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if(!await PermissionService.HasPermission(PermissionRoute.ListRole, CurrentContext.UserId))
+            {
+                return Forbid("Bạn không có quyền thực hiện thao tác này");
+            }
 
             List<Role> Roles = await PermissionService.ListRole();
             List<RoleDTO> RoleDTOs = Roles.Select(x => new RoleDTO(x)).ToList();
@@ -135,4 +146,62 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
             return role;
         }
     }
+
+    public class CustomAuthorizer : IAuthorizationHandler
+    {
+        private readonly ICurrentContext CurrentContext;
+
+        public CustomAuthorizer(ICurrentContext CurrentContext)
+        {
+            this.CurrentContext = CurrentContext;
+        }
+
+        public async Task HandleAsync(AuthorizationHandlerContext context)
+        {
+            if (context.Resource is HttpContext httpContext)
+            {
+                string token = httpContext.Request.Headers["Authorization"];
+
+                if (!string.IsNullOrEmpty(token))
+                {
+                    var claimsPrincipal = await ValidateTokenAsync(token);
+                    if (claimsPrincipal != null)
+                    {
+                        var userId = claimsPrincipal.Claims.First(c => c.Type == "UserId").Value;
+
+                        CurrentContext.UserId = int.TryParse(userId, out int id) ? id : 0;
+
+                        //context.Succeed(Requirement.Create());
+                    }
+                }
+            }
+        }
+
+        private async Task<ClaimsPrincipal> ValidateTokenAsync(string token)
+        {
+            // Xác minh token
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.FromMinutes(5)
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var validatedToken);
+                return principal;
+            }
+            catch (SecurityTokenException ex)
+            {
+                // Xử lý lỗi xác thực token
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+    }
+
 }

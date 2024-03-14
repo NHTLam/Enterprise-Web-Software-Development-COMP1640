@@ -30,4 +30,14 @@ namespace CodeBE_COMP1640.Controllers
             DataContext.Departments.BulkSynchronize(DepartmentEnumList);
         }
     }
+
+    public interface ICurrentContext
+    {
+        public int UserId { get; set; }
+    }
+
+    public class CurrentContext : ICurrentContext
+    {
+        public int UserId { get; set; }
+    }
 }

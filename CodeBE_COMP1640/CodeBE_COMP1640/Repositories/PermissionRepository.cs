@@ -9,7 +9,7 @@ namespace CodeBE_COMP1640.Repositories
     public interface IPermissionRepository
     {
         Task Init(List<Permission> Permissions);
-        Task<List<string>> ListPath(User User);
+        Task<List<Permission>> ListPermission();
         Task<List<string>> ListAllPath();
         Task<List<Role>> ListRole();
         Task<Role> GetRole(long Id);
@@ -27,11 +27,11 @@ namespace CodeBE_COMP1640.Repositories
             this.DataContext = DataContext;
         }
 
-        public async Task<List<string>> ListPath(User User)
+        public async Task<List<Permission>> ListPermission()
         {
             IQueryable<Permission> query = DataContext.Permissions.AsNoTracking();
-            List<string> Paths = await query.AsNoTracking().Select(x => x.Path).ToListAsync();
-            return Paths;
+            List<Permission> Permissions = await query.AsNoTracking().ToListAsync();
+            return Permissions;
         }
 
         public async Task<List<string>> ListAllPath()

@@ -1,3 +1,4 @@
+using CodeBE_COMP1640.Controllers;
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Repositories;
 using CodeBE_COMP1640.Services.PermissionS;
@@ -32,6 +33,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
+        Description = "Example add token: \"Authorization: Bearer {token}\"",
         In = ParameterLocation.Header,
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey
@@ -52,6 +54,7 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
 builder.Services.AddScoped<IUOW, UOW>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<ICurrentContext, CurrentContext>();
 
 var app = builder.Build();
 
