@@ -3,10 +3,11 @@ import Layout from "./layouts/Layout";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Slide from "./components/Slide";
 import NavbarC from "./components/NavbarC";
-import Home from "./components/Home";
+import Home from "./pages/Home";
 import Login from "./components/Login";
 import StAddPost from "./pages/StAddPost";
 import StEditPost from "./pages/StEditPost";
+import Manage from "./pages/Manage";
 const App = () => {
   return (
     <Router>
@@ -41,6 +42,8 @@ const App = () => {
             </Layout>
           }
         />
+
+        <Route path="/ad_manage" element={<Manage />} />
       </Routes>
     </Router>
   );
