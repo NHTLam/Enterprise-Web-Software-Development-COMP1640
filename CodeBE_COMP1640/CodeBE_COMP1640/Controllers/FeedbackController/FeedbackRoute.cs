@@ -14,11 +14,10 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
         public const string DeleteFeedback = Module + "/delete/{id}";
 
         public static Dictionary<string, List<string>> DictionaryPath = new Dictionary<string, List<string>>
-        {
-            { ActionEnum.READ.Name, new List<string> { GetAllFeedbacks, GetFeedbackById } },
-            { ActionEnum.CREATE.Name, new List<string> { CreateFeedback } },
+        {   { ActionEnum.CREATE.Name, new List<string> { CreateFeedback } },
             { ActionEnum.UPDATE.Name, new List<string> { UpdateFeedback } },
-            { ActionEnum.DELETE.Name, new List<string> { DeleteFeedback } }
+            { ActionEnum.DELETE.Name, new List<string> { DeleteFeedback } },
+            { ActionEnum.READ.Name, new List<string> { GetAllFeedbacks, GetFeedbackById } }
         };
     }
 }
