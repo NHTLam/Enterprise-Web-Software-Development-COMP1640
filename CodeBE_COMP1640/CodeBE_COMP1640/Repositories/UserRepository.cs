@@ -1,5 +1,6 @@
 ﻿using CodeBE_COMP1640.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace CodeBE_COMP1640.Repositories
 {
@@ -36,6 +37,22 @@ namespace CodeBE_COMP1640.Repositories
                 DepartmentId = x.DepartmentId,
             }).ToListAsync();
 
+            var RoleUserMappingQuery = DataContext.RoleUserMappings.AsNoTracking();
+            List<RoleUserMapping> RoleUserMappings = await RoleUserMappingQuery
+                .Select(x => new RoleUserMapping
+                {
+                    Id = x.Id,
+                    RoleId = x.RoleId,
+                    UserId = x.UserId,
+                }).ToListAsync();
+
+            foreach (User User in Users)
+            {
+                User.RoleUserMappings = RoleUserMappings
+                    .Where(x => x.UserId == User.UserId)
+                    .ToList();
+            }
+
             return Users;
         }
 
@@ -57,6 +74,14 @@ namespace CodeBE_COMP1640.Repositories
 
             if (User == null)
                 return null;
+            User.RoleUserMappings = await DataContext.RoleUserMappings.AsNoTracking()
+                .Where(x => x.UserId == User.UserId)
+                .Select(x => new RoleUserMapping
+                {
+                    Id = x.Id,
+                    UserId = x.UserId,
+                    RoleId = x.RoleId,
+                }).ToListAsync();
 
             return User;
         }
@@ -66,7 +91,7 @@ namespace CodeBE_COMP1640.Repositories
             DataContext.Users.Add(User);
             await DataContext.SaveChangesAsync();
             User.UserId = User.UserId;
-            //await SaveReference(User);
+            await SaveReference(User);
             return true;
         }
 
@@ -86,7 +111,7 @@ namespace CodeBE_COMP1640.Repositories
             NewUser.Address = User.Address;
             NewUser.DepartmentId = User.DepartmentId;
             await DataContext.SaveChangesAsync();
-            //await SaveReference(User);
+            await SaveReference(User);
             return true;
         }
 
@@ -99,8 +124,33 @@ namespace CodeBE_COMP1640.Repositories
                 return false;
             DataContext.Users.Remove(CurrentUser);
             await DataContext.SaveChangesAsync();
-            //await SaveReference(User);
+            await SaveReference(User);
             return true;
+        }
+
+        private async Task SaveReference(User User)
+        {
+            if (User.RoleUserMappings == null || User.RoleUserMappings.Count == 0)
+                await DataContext.RoleUserMappings
+                    .Where(x => x.UserId == User.UserId)
+                    .DeleteFromQueryAsync();
+            else
+            {
+                List<RoleUserMapping> RoleUserMappings = new List<RoleUserMapping>();
+                var PermissonUserMappingIds = User.RoleUserMappings.Select(x => x.Id).Distinct().ToList();
+                await DataContext.RoleUserMappings
+                    .Where(x => x.UserId == User.UserId)
+                    .Where(x => PermissonUserMappingIds.Contains(x.Id))
+                    .DeleteFromQueryAsync();
+                foreach (RoleUserMapping PermissonUserMapping in User.RoleUserMappings)
+                {
+                    RoleUserMapping NewPermissonUserMapping = new RoleUserMapping();
+                    NewPermissonUserMapping.UserId = User.UserId;
+                    NewPermissonUserMapping.RoleId = PermissonUserMapping.RoleId;
+                    RoleUserMappings.Add(NewPermissonUserMapping);
+                }
+                await DataContext.BulkMergeAsync(RoleUserMappings);
+            }
         }
     }
 }
