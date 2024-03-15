@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using CodeBE_COMP1640.Enums;
 
-namespace CodeBE_COMP1640.Controllers
+namespace CodeBE_COMP1640.Controllers.FeedbackController
+
 {
     public static class FeedbackRoute
     {

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CodeBE_COMP1640.Controllers
+namespace CodeBE_COMP1640.Controllers.FeedbackController
 {
     [ApiController]
     [Route("api/[controller]")]
