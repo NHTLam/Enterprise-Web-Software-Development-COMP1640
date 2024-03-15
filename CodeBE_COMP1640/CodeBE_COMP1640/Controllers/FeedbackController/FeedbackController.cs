@@ -19,52 +19,47 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Feedback>>> GetAllFeedbacks()
-        {
-            var feedbacks = await _feedbackService.GetFeedbacks();
-            return Ok(feedbacks);
-        }
+public async Task<ActionResult<List<Feedback>>> GetFeedbacks()
+{
+    var feedbacks = await _feedbackService.GetFeedbacks();
+    return Ok(feedbacks);
+}
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Feedback>> GetFeedbackById(int id)
-        {
-            var feedback = await _feedbackService.GetFeedbackById(id);
-            if (feedback == null)
-            {
-                return NotFound();
-            }
-            return Ok(feedback);
-        }
+[HttpPost("get-by-id")]
+public async Task<ActionResult<Feedback>> GetFeedbackById([FromBody] int id)
+{
+    var feedback = await _feedbackService.GetFeedbackById(id);
+    if (feedback == null)
+    {
+        return NotFound();
+    }
+    return Ok(feedback);
+}
 
-        [HttpPost]
-        public async Task<IActionResult> CreateFeedback(Feedback feedback)
-        {
-            if (feedback == null)
-            {
-                return BadRequest();
-            }
+[HttpPost]
+public async Task<ActionResult<Feedback>> CreateFeedback([FromBody] Feedback feedback)
+{
+    await _feedbackService.CreateFeedback(feedback);
+    return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
+}
 
-            await _feedbackService.CreateFeedback(feedback);
-            return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
-        }
+[HttpPost("update")]
+public async Task<IActionResult> UpdateFeedback([FromBody] Feedback feedback)
+{
+    await _feedbackService.UpdateFeedback(feedback);
+    return NoContent();
+}
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateFeedback(int id, Feedback feedback)
-        {
-            if (id != feedback.FeedbackId)
-            {
-                return BadRequest();
-            }
-
-            await _feedbackService.UpdateFeedback(feedback);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFeedback(int id)
-        {
-            await _feedbackService.DeleteFeedback(id);
-            return NoContent();
-        }
+[HttpPost("delete")]
+public async Task<IActionResult> DeleteFeedback([FromBody] int id)
+{
+    var feedback = await _feedbackService.GetFeedbackById(id);
+    if (feedback == null)
+    {
+        return NotFound();
+    }
+    await _feedbackService.DeleteFeedback(id);
+    return NoContent();
+}
     }
 }
