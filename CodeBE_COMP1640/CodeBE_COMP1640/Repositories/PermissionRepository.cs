@@ -3,6 +3,7 @@ using CodeBE_COMP1640.Controllers.UserController;
 using CodeBE_COMP1640.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security;
 
 namespace CodeBE_COMP1640.Repositories
 {
@@ -43,8 +44,8 @@ namespace CodeBE_COMP1640.Repositories
 
         public async Task Init(List<Permission> Permissions)
         {
-            await DataContext.Permissions.DeleteFromQueryAsync();            
-            await DataContext.Permissions.BulkInsertAsync(Permissions);
+            await DataContext.Permissions.Where(x => !Permissions.Select(p => p.PermissionId).Contains(x.PermissionId)).DeleteFromQueryAsync();
+            await DataContext.Permissions.BulkMergeAsync(Permissions);
         }
 
         public async Task<List<Role>> ListRole()

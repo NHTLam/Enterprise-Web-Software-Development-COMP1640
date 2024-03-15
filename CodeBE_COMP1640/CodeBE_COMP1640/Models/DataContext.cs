@@ -130,12 +130,12 @@ public partial class DataContext : DbContext
             entity.HasOne(d => d.Permission).WithMany(p => p.PermissonRoleMappings)
                 .HasForeignKey(d => d.PermissionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PermissonRoleMapping_Permission");
+                .HasConstraintName("FK_PermissonRoleMapping_Permission1");
 
             entity.HasOne(d => d.Role).WithMany(p => p.PermissonRoleMappings)
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PermissonRoleMapping_Role");
+                .HasConstraintName("FK_PermissonRoleMapping_Role1");
         });
 
         modelBuilder.Entity<Role>(entity =>

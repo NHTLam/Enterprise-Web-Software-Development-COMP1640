@@ -12,7 +12,7 @@ public partial class RoleDTO
 
     public string? Description { get; set; }
 
-    public List<PermissonRoleMappingDTO> PermissonRoleMappings { get; set; }
+    public List<PermissonRoleMappingDTO>? PermissonRoleMappings { get; set; }
 
     public RoleDTO() { }
 

@@ -60,10 +60,15 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
         }
 
         [Route(PermissionRoute.GetRole), HttpPost, Authorize]
-        public async Task<ActionResult<RoleDTO>> Get([FromBody] RoleDTO RoleDTO)
+        public async Task<ActionResult<RoleDTO>> GetRole([FromBody] RoleDTO RoleDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (!await PermissionService.HasPermission(PermissionRoute.GetRole, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
 
             Role Role = ConvertRoleDTOToRoleEntity(RoleDTO);
             Role = await PermissionService.GetRole(Role.RoleId);
@@ -77,6 +82,11 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (!await PermissionService.HasPermission(PermissionRoute.CreateRole, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
+
             Role Role = ConvertRoleDTOToRoleEntity(RoleDTO);
             bool isRegisterSuccess = await PermissionService.CreateRole(Role);
             if (isRegisterSuccess)
@@ -86,10 +96,15 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
         }
 
         [Route(PermissionRoute.UpdateRole), HttpPost, Authorize]
-        public async Task<ActionResult<RoleDTO>> Update([FromBody] RoleDTO RoleDTO)
+        public async Task<ActionResult<RoleDTO>> UpdateRole([FromBody] RoleDTO RoleDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (!await PermissionService.HasPermission(PermissionRoute.UpdateRole, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
 
             Role Role = ConvertRoleDTOToRoleEntity(RoleDTO);
             Role = await PermissionService.UpdateRole(Role);
@@ -101,10 +116,15 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
         }
 
         [Route(PermissionRoute.DeleteRole), HttpPost, Authorize]
-        public async Task<ActionResult<RoleDTO>> Delete([FromBody] RoleDTO RoleDTO)
+        public async Task<ActionResult<RoleDTO>> DeleteRole([FromBody] RoleDTO RoleDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (!await PermissionService.HasPermission(PermissionRoute.DeleteRole, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
 
             Role Role = ConvertRoleDTOToRoleEntity(RoleDTO);
             Role = await PermissionService.DeleteRole(Role);

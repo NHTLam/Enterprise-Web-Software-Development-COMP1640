@@ -48,6 +48,7 @@ namespace CodeBE_COMP1640.Services.PermissionS
         {
             try
             {
+                var PermissionDbs = await UOW.PermissionRepository.ListPermission();
                 Dictionary<string, List<string>> DictionaryPaths = new Dictionary<string, List<string>>();
                 DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, UserRoute.DictionaryPath);
                 DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, PermissionRoute.DictionaryPath);
@@ -57,7 +58,9 @@ namespace CodeBE_COMP1640.Services.PermissionS
                     foreach (var path in DictionaryPath.Value)
                     {
                         string modelName = path.Split('/')[1];
+                        int? PermissionId = PermissionDbs.FirstOrDefault(x => x.Path.Trim() == path.Trim() && x.Name == DictionaryPath.Key)?.PermissionId;
                         Permission permission = new Permission();
+                        permission.PermissionId = PermissionId ?? 0;
                         permission.Name = DictionaryPath.Key;
                         permission.Path = path;
                         permission.Description = $"Cho phép thực hiện hành động {DictionaryPath.Key} ở màn quản lý {modelName}";
@@ -79,9 +82,12 @@ namespace CodeBE_COMP1640.Services.PermissionS
             {
                 User = await UOW.UserRepository.Get(User.UserId);
                 List<long> RoleIds = new List<long>();
-                foreach (var userRoleMapping in User.RoleUserMappings)
+                if (User.RoleUserMappings != null && User.RoleUserMappings.Count > 0)
                 {
-                    RoleIds.Add(userRoleMapping.RoleId);
+                    foreach (var userRoleMapping in User.RoleUserMappings)
+                    {
+                        RoleIds.Add(userRoleMapping.RoleId);
+                    }
                 }
 
                 List<Role> Roles = await UOW.PermissionRepository.ListRole();
@@ -90,7 +96,8 @@ namespace CodeBE_COMP1640.Services.PermissionS
                 List<int> permissionIds = new List<int>();
                 foreach (var Role in Roles)
                 {
-                    permissionIds.AddRange(Role.PermissonRoleMappings.Select(x => x.PermissionId).ToList());
+                    if (Role.PermissonRoleMappings != null && Role.PermissonRoleMappings.Count > 0)
+                        permissionIds.AddRange(Role.PermissonRoleMappings.Select(x => x.PermissionId).ToList());
                 }
                 permissionIds = permissionIds.Distinct().ToList();
 

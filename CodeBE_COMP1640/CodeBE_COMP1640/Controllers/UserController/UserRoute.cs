@@ -8,7 +8,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
     public class UserRoute
     {
         public const string Module = "/app-user";
-        public const string Register = Module + "/create";
+        public const string Create = Module + "/create";
         public const string Get = Module + "/get";
         public const string List = Module + "/list";
         public const string Update = Module + "/update";
@@ -19,7 +19,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
         {
             { ActionEnum.CREATE.Name, new List<string>() 
                 {
-                    Register, Login
+                    Create, Login
                 } 
             },
             { ActionEnum.UPDATE.Name, new List<string>()

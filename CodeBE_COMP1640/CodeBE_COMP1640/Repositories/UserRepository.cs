@@ -1,5 +1,6 @@
 ﻿using CodeBE_COMP1640.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace CodeBE_COMP1640.Repositories
 {
@@ -36,6 +37,22 @@ namespace CodeBE_COMP1640.Repositories
                 DepartmentId = x.DepartmentId,
             }).ToListAsync();
 
+            var RoleUserMappingQuery = DataContext.RoleUserMappings.AsNoTracking();
+            List<RoleUserMapping> RoleUserMappings = await RoleUserMappingQuery
+                .Select(x => new RoleUserMapping
+                {
+                    Id = x.Id,
+                    RoleId = x.RoleId,
+                    UserId = x.UserId,
+                }).ToListAsync();
+
+            foreach (User User in Users)
+            {
+                User.RoleUserMappings = RoleUserMappings
+                    .Where(x => x.UserId == User.UserId)
+                    .ToList();
+            }
+
             return Users;
         }
 
@@ -57,6 +74,14 @@ namespace CodeBE_COMP1640.Repositories
 
             if (User == null)
                 return null;
+            User.RoleUserMappings = await DataContext.RoleUserMappings.AsNoTracking()
+                .Where(x => x.UserId == User.UserId)
+                .Select(x => new RoleUserMapping
+                {
+                    Id = x.Id,
+                    UserId = x.UserId,
+                    RoleId = x.RoleId,
+                }).ToListAsync();
 
             return User;
         }
