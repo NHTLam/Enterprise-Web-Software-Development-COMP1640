@@ -10,7 +10,7 @@ return (
     <div className='position-relative'>            
         <Header/>
             <div className='container-xl'>{children}</div>
-        <Footer/>   
+        
     </div>
 )
 }

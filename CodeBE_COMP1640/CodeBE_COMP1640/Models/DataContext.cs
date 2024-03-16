@@ -115,29 +115,52 @@ public partial class DataContext : DbContext
         {
             entity.ToTable("Permission");
 
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.MenuName).HasMaxLength(500);
             entity.Property(e => e.Name).HasMaxLength(500);
             entity.Property(e => e.Path).HasMaxLength(500);
         });
 
         modelBuilder.Entity<PermissonRoleMapping>(entity =>
         {
-            entity.HasKey(e => new { e.RoleId, e.PermissionId });
+            entity.HasKey(e => e.Id).HasName("PK_PermissonRoleMapping_1");
 
             entity.ToTable("PermissonRoleMapping");
+
+            entity.HasOne(d => d.Permission).WithMany(p => p.PermissonRoleMappings)
+                .HasForeignKey(d => d.PermissionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PermissonRoleMapping_Permission1");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.PermissonRoleMappings)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PermissonRoleMapping_Role1");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
             entity.ToTable("Role");
 
+            entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.Name).HasMaxLength(500);
         });
 
         modelBuilder.Entity<RoleUserMapping>(entity =>
         {
-            entity.HasKey(e => new { e.RoleId, e.UserId });
+            entity.HasKey(e => e.Id).HasName("PK_RoleUserMapping_1");
 
             entity.ToTable("RoleUserMapping");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.RoleUserMappings)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_RoleUserMapping_Role1");
+
+            entity.HasOne(d => d.User).WithMany(p => p.RoleUserMappings)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_RoleUserMapping_Users1");
         });
 
         modelBuilder.Entity<User>(entity =>

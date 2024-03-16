@@ -1,20 +1,17 @@
 import React from "react";
 import Layout from "./layouts/Layout";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.css";
 import Slide from "./components/Slide";
 import NavbarC from "./components/NavbarC";
 import Home from "./pages/Home";
-import PostInfor from "./components/PostInfor"
-import PostSubmit from "./forms/PostSubmit/PostSubmit";
+import Login from "./components/Login";
+import StAddPost from "./pages/StAddPost";
+import StEditPost from "./pages/StEditPost";
+import MarketingC from "./pages/MarketingC";
+import Me from "./pages/Me/Me";
+import Manage from "./pages/Manage";
 const App = () => {
-  const onFileChange = (files) =>{
-    console.log(files)
-  }
-
   return (
     <Router>
       <Routes>
@@ -23,32 +20,49 @@ const App = () => {
           element={
             <Layout>
               <Slide />
-              <NavbarC/>
+              <NavbarC />
               <Home />
             </Layout>
           }
         />
 
+        <Route path="/login" element={<Login />} />
+
         <Route
-          path="/login"
+          path="/st_submit_post"
           element={
-            <div>
-              <h1>Login Page</h1>
-            </div>
+            <Layout>
+              <StAddPost />
+            </Layout>
           }
         />
 
         <Route
-          path="/submit_post"
+          path="/st_edit_post"
           element={
             <Layout>
-              <PostInfor/>
-              <PostSubmit
-                onFileChange={(files) => onFileChange(files)}
-              />
+              <StEditPost />
             </Layout>
           }
         />
+
+        <Route
+          path="/mk_manage_topic"
+          element={
+            <Layout>
+              <MarketingC />
+            </Layout>
+          }
+        />
+        <Route
+          path="/me"
+          element={
+            <Layout>
+              <Me />
+            </Layout>
+          }
+        />
+        <Route path="/ad_manage" element={<Manage />} />
       </Routes>
     </Router>
   );

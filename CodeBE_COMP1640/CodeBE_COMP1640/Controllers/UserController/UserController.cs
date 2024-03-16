@@ -41,8 +41,8 @@ namespace CodeBE_COMP1640.Controllers.UserController
             return UserDTO;
         }
 
-        [Route(UserRoute.Register), HttpPost]
-        public async Task<ActionResult<bool>> Register([FromBody] UserDTO UserDTO)
+        [Route(UserRoute.Create), HttpPost, Authorize]
+        public async Task<ActionResult<bool>> Create([FromBody] UserDTO UserDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
