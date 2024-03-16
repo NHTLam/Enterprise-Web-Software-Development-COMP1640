@@ -22,9 +22,12 @@ namespace CodeBE_COMP1640.Services.FeedbackS
 
   public class FeedbackService : IFeedbackService
     {
-        private readonly IUOWs _uow;
+        private readonly IUOW _uow;
 
-        public FeedbackService(IUOWs uow)
+
+
+
+        public FeedbackService(IUOW uow)
         {
             _uow = uow;
         }

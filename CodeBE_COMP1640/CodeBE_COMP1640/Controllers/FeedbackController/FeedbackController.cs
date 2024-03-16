@@ -19,47 +19,65 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
         }
 
         [HttpGet]
-public async Task<ActionResult<List<Feedback>>> GetFeedbacks()
-{
-    var feedbacks = await _feedbackService.GetFeedbacks();
-    return Ok(feedbacks);
-}
+        public async Task<ActionResult<List<Feedback>>> GetAllFeedbacks()
+        {
+            var feedbacks = await _feedbackService.GetFeedbacks();
+            return Ok(feedbacks);
+        }
 
-[HttpPost("get-by-id")]
-public async Task<ActionResult<Feedback>> GetFeedbackById([FromBody] int id)
-{
-    var feedback = await _feedbackService.GetFeedbackById(id);
-    if (feedback == null)
-    {
-        return NotFound();
-    }
-    return Ok(feedback);
-}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Feedback>> GetFeedbackById(int id)
+        {
+            var feedback = await _feedbackService.GetFeedbackById(id);
+            if (feedback == null)
+            {
+                return NotFound();
+            }
+            return Ok(feedback);
+        }
 
-[HttpPost]
-public async Task<ActionResult<Feedback>> CreateFeedback([FromBody] Feedback feedback)
+        [HttpPost]
+        public async Task<IActionResult> CreateFeedback(FeedbackDTO feedbackDTO)
 {
-    await _feedbackService.CreateFeedback(feedback);
-    return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
-}
+                // Tạo mới đối tượng Feedback từ dữ liệu trong request body
+                var feedback = new Feedback
+                {
+                    UserId = feedbackDTO.UserId,
+                    ArticleId = feedbackDTO.ArticleId,
+                    FeedbackContent = feedbackDTO.FeedbackContent,
+                    FeedbackTime = feedbackDTO.FeedbackTime
+                };
 
-[HttpPost("update")]
-public async Task<IActionResult> UpdateFeedback([FromBody] Feedback feedback)
-{
-    await _feedbackService.UpdateFeedback(feedback);
-    return NoContent();
-}
+                // Gọi phương thức tạo mới feedback từ service
+                await _feedbackService.CreateFeedback(feedback);
 
-[HttpPost("delete")]
-public async Task<IActionResult> DeleteFeedback([FromBody] int id)
-{
-    var feedback = await _feedbackService.GetFeedbackById(id);
-    if (feedback == null)
-    {
-        return NotFound();
-    }
-    await _feedbackService.DeleteFeedback(id);
-    return NoContent();
-}
+                return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
+            }
+
+        [HttpPut("{id}")]
+       public async Task<IActionResult> UpdateFeedback(int id, FeedbackDTO feedbackDTO)
+        {
+            var existingFeedback = await _feedbackService.GetFeedbackById(id);
+            if (existingFeedback == null)
+            {
+                return NotFound();
+            }
+
+            // Cập nhật thông tin của feedback với các giá trị từ DTO
+            existingFeedback.FeedbackContent = feedbackDTO.FeedbackContent;
+            existingFeedback.FeedbackTime = feedbackDTO.FeedbackTime;
+            existingFeedback.UserId = feedbackDTO.UserId; // Cập nhật userId
+            existingFeedback.ArticleId = feedbackDTO.ArticleId; // Cập nhật articleId
+
+            await _feedbackService.UpdateFeedback(existingFeedback);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteFeedback(int id)
+        {
+            await _feedbackService.DeleteFeedback(id);
+            return NoContent();
+        }
     }
 }

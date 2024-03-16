@@ -25,7 +25,7 @@ namespace CodeBE_COMP1640.Repositories
             _context = context;
         }
 
-        public async Task<List<Feedback>> GetAllFeedbacks()
+         public async Task<List<Feedback>> GetAllFeedbacks()
         {
             return await _context.Feedbacks.ToListAsync();
         }
@@ -42,7 +42,7 @@ namespace CodeBE_COMP1640.Repositories
                 throw new ArgumentNullException(nameof(feedback));
             }
 
-            await _context.Feedbacks.AddAsync(feedback);
+            _context.Feedbacks.Add(feedback);
             await _context.SaveChangesAsync();
         }
 
@@ -53,19 +53,19 @@ namespace CodeBE_COMP1640.Repositories
                 throw new ArgumentNullException(nameof(feedback));
             }
 
-            _context.Feedbacks.Update(feedback);
+            _context.Entry(feedback).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteFeedback(int id)
         {
-            var feedbackToDelete = await _context.Feedbacks.FindAsync(id);
-            if (feedbackToDelete == null)
+            var feedback = await _context.Feedbacks.FindAsync(id);
+            if (feedback == null)
             {
-                throw new KeyNotFoundException($"Feedback with id {id} not found.");
+                throw new Exception("Feedback not found");
             }
 
-            _context.Feedbacks.Remove(feedbackToDelete);
+            _context.Feedbacks.Remove(feedback);
             await _context.SaveChangesAsync();
         }
     }
