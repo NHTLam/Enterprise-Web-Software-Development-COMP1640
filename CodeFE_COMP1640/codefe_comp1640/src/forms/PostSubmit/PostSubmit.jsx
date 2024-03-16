@@ -1,10 +1,46 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types'
 import './Style.css'
-import imageInput from '../../assets/add_image.png'
+import imageInput from '../../assets/add_image.png';
+import { Link, useNavigate } from "react-router-dom";
+
+
 const PostSubmit = props => {
+    // const API_KEY_URL = import.meta.env.API_KEY_URL || "";
+    const navigate = useNavigate();
     const [imageList, setImageList] = useState([]);
+    const [userId,setUserId] = useState(2);
+    const [departmentId,setDepartmentId] = useState(1);
+
+    const [content,setContent] = useState("conent");
     const fileInputRef = useRef(null);
+
+    const handleClickSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(
+                `https://4f1c-2405-4802-1d0e-f8f0-f97e-3de2-2c81-98a7.ngrok-free.app/api/Article`,
+                {
+                    departmentId,
+                    userId,
+                    content
+                }
+            );
+            const postData = response.data;
+            if (response.status === 200) {
+                console.log("Submit successful", postData);
+            } else if (response.status === 400) {
+                console.log("some thing went wrong");
+            }
+        } catch (err) {
+            console.log("Error " + err);
+        }
+    };
+
+    // const handleChange = (e) => {
+    //     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+    // };
 
     function onFileInput(e) {
         const files = e.target.files;
@@ -36,7 +72,7 @@ const PostSubmit = props => {
                 <form>
                     <div className='bg-light'>
                         <div className="mb-3 mt-5">
-                            <input className="form-control" type="file" id="formFileMultiple" multiple />
+                            <input className="form-control" type="file" id="fileData" multiple />
                         </div>
                     </div>
                     <div className="drop_card form-control">
@@ -56,10 +92,10 @@ const PostSubmit = props => {
 
                     <div className="input-group mt-3">
                         <span className="input-group-text">With textarea</span>
-                        <textarea className="form-control" aria-label="With textarea"></textarea>
+                        <textarea className="form-control" aria-label="With textarea"  id="content"></textarea>
                     </div>
 
-                    <button type="submit" className="btn btn-secondary float-end mt-3">Submit</button>
+                    <button type="submit" className="btn btn-secondary float-end mt-3" onClick={handleClickSubmit}>Submit</button>
                 </form>
             </div>
 
