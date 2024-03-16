@@ -33,13 +33,13 @@ namespace CodeBE_COMP1640.Repositories
         public override IEnumerable<Article> GetList(ArticleSearchModel model)
         {
             return _context.Articles.Where(x =>
-            (!model.SearchId.HasValue || model.SearchId == x.ArticleId) &&
-            (!model.SearchUserId.HasValue || model.SearchUserId == x.UserId) &&
-            (!model.SearchDepartmentId.HasValue || model.SearchDepartmentId == x.DepartmentId) &&
-            (!model.IsLateSubmissionAllowed.HasValue || model.IsLateSubmissionAllowed == x.IsLateSubmissionAllowed) &&
-            (!model.IsApproved.HasValue || model.IsApproved == x.IsApproved) &&
-            (!model.SubmissionTimeFrom.HasValue || model.SubmissionTimeFrom <= x.SubmissionTime) &&
-            (!model.SubmissionTimeTo.HasValue || model.SubmissionTimeTo > x.SubmissionTime));
+                (!model.SearchId.HasValue || model.SearchId == x.ArticleId) &&
+                (!model.SearchUserId.HasValue || model.SearchUserId == x.UserId) &&
+                (!model.SearchDepartmentId.HasValue || model.SearchDepartmentId == x.DepartmentId) &&
+                (!model.IsLateSubmissionAllowed.HasValue || model.IsLateSubmissionAllowed == x.IsLateSubmissionAllowed) &&
+                (!model.IsApproved.HasValue || model.IsApproved == x.IsApproved) &&
+                (!model.SubmissionTimeFrom.HasValue || model.SubmissionTimeFrom <= x.SubmissionTime) &&
+                (!model.SubmissionTimeTo.HasValue || model.SubmissionTimeTo > x.SubmissionTime));
         }
 
         public override Article Update(Article item)
@@ -47,6 +47,16 @@ namespace CodeBE_COMP1640.Repositories
             _context.Articles.Update(item);
             _context.SaveChanges();
             return item;
+        }
+
+        //public IEnumerable<Article> GetListByTopicId(int topicId)
+        //{
+        //    return _context.Articles.Where(x => x.TopicId == topicId);
+        //}
+
+        public IEnumerable<Article> GetListByUserId(int userId)
+        {
+            return _context.Articles.Where(x => x.UserId == userId);
         }
     }
 }

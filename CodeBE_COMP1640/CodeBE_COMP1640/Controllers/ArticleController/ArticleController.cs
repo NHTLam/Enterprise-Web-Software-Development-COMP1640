@@ -9,13 +9,13 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IConfiguration _configuration;
-        private readonly RepositoryFactory _reposifactory;
+        private readonly RepositoryFactory _repositoryFactory;
 
         public ArticleController(IServiceProvider serviceProvider, IConfiguration configuration)
         {
             _serviceProvider = serviceProvider;
             _configuration = configuration;
-            _reposifactory = serviceProvider.GetService<RepositoryFactory>();
+            _repositoryFactory = serviceProvider.GetService<RepositoryFactory>();
         }
 
         [HttpGet("{id}")]
@@ -23,7 +23,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
-                var data = _reposifactory.ArticleRepository.Get(id);
+                var data = _repositoryFactory.ArticleRepository.Get(id);
                 return Ok(new
                 {
                     Data = data,
@@ -43,7 +43,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
-                var data = _reposifactory.ArticleRepository.Create(request.ToEntity());
+                var data = _repositoryFactory.ArticleRepository.Create(request.ToEntity());
                 return Ok(new
                 {
                     Data = data,
@@ -61,12 +61,11 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         [HttpPut("{id}")]
         public IActionResult Update(int id, ArticlePut request)
         {
-
             try
             {
                 var entity = request.ToEntity();
                 entity.ArticleId = id;
-                var data = _reposifactory.ArticleRepository.Update(request.ToEntity());
+                var data = _repositoryFactory.ArticleRepository.Update(request.ToEntity());
                 return Ok(new
                 {
                     Data = data,
@@ -86,7 +85,47 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
-                var data = _reposifactory.ArticleRepository.Delete(id);
+                var data = _repositoryFactory.ArticleRepository.Delete(id);
+                return Ok(new
+                {
+                    Data = data,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new
+                {
+                    Error = ex,
+                });
+            }
+        }
+
+        //[HttpGet("byTopic/{topicId}")]
+        //public IActionResult GetByTopic(int topicId)
+        //{
+        //    try
+        //    {
+        //        var data = _repositoryFactory.ArticleRepository.GetListByTopicId(topicId);
+        //        return Ok(new
+        //        {
+        //            Data = data,
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Ok(new
+        //        {
+        //            Error = ex,
+        //        });
+        //    }
+        //}
+
+        [HttpGet("byUser/{userId}")]
+        public IActionResult GetByUser(int userId)
+        {
+            try
+            {
+                var data = _repositoryFactory.ArticleRepository.GetListByUserId(userId);
                 return Ok(new
                 {
                     Data = data,
@@ -101,5 +140,4 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
     }
-
 }
