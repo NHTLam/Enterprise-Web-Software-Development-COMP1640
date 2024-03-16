@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
+
 const Manage = () => {
   return (
-    <div className="container bg-secondary">
+    <div className="container-fluid bg-secondary">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
         <a
           href="/"
@@ -9,10 +10,9 @@ const Manage = () => {
         >
           <h2>Logo</h2>
         </a>
-
         <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
           <li>
-            <Link to="#" className="nav-link px-2 link-dark">
+            <Link to="/ad_home" className="nav-link px-2 link-dark">
               Home
             </Link>
           </li>

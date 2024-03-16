@@ -18,4 +18,8 @@ public partial class Feedback
     public virtual Article Article { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
-}
+
+    public virtual ICollection<User> Articles { get; } = new List<User>();
+    }
+    
+

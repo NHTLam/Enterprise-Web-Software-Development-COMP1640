@@ -10,6 +10,7 @@ import StAddPost from "./pages/StAddPost";
 import StEditPost from "./pages/StEditPost";
 import MarketingC from "./pages/MarketingC";
 import Me from "./pages/Me/Me";
+import Manage from "./pages/Manage";
 const App = () => {
   return (
     <Router>
@@ -61,6 +62,7 @@ const App = () => {
             </Layout>
           }
         />
+        <Route path="/ad_manage" element={<Manage />} />
       </Routes>
     </Router>
   );

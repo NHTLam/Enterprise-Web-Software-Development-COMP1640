@@ -1,11 +1,31 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
+
+  const handleChangeEmail = (e) => {
+    setEmail(e.target.value);
+    if (e.target.value === "") {
+      setEmailError("Please enter your email address");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const handleChangePassword = (e) => {
+    setPassword(e.target.value);
+    if (e.target.value === "") {
+      setPasswordError("Please enter your password");
+    } else {
+      setPasswordError("");
+    }
+  };
 
   const handleClickLogin = async (e) => {
     e.preventDefault();
@@ -29,51 +49,58 @@ const Login = () => {
     }
   };
 
+  // background-image: url(https://eskipaper.com/images/tumblr-wallpaper-8.jpg);
   return (
-    <div className="container border border-2 w-25 d-flex justify-content-center align-content-center">
-      <h2 style={{ textAlign: "center" }}>LOGIN</h2>
-      <form className="">
-        <input
-          type="text"
-          className="rounded-2 form-control mb-2"
-          aria-label="Default"
-          aria-describedby="inputGroup-sizing-default"
-          placeholder="Enter email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        ></input>
-        <input
-          type="password"
-          className="rounded-2 form-control mb-2"
-          aria-label="Default"
-          aria-describedby="inputGroup-sizing-default"
-          placeholder="Enter password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        ></input>
-        <div className="d-grid align-content-center">
-          <button
-            type="submit"
-            className="btn btn-primary"
-            onClick={handleClickLogin}
-          >
-            LOGIN
-          </button>
+    <section className="vh-100 bg-custom">
+      <div className="container h-100">
+        <div className="row d-flex justify-content-center align-content-center h-100">
+          <div className="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div className="card bg-light text-black rounded-2">
+              <div className="card-body p-5">
+                <div className="mb-md-5 mt-md-4 pb-5">
+                  <h2 class="fw-bold mb-2 text-uppercase text-center">Login</h2>
+                  <p class="text-black-50 mb-5 text-center">
+                    Please enter your login and password!
+                  </p>
+                  {/* Hiển thị nhập */}
+                  <div className="mb-4">
+                    <label className="form-label">Email</label>
+                    <input
+                      className="input-group form-control-lg"
+                      type="email"
+                      id="email"
+                      value={email}
+                      onChange={handleChangeEmail}
+                    />
+                    {emailError && <p className="text-danger">{emailError}</p>}
+                  </div>
+                  <div className="mb-4">
+                    <label className="form-label">Password</label>
+                    <input
+                      className="input-group form-control-lg"
+                      type="password"
+                      id="password"
+                      value={password}
+                      onChange={handleChangePassword}
+                    />
+                    {passwordError && (
+                      <p className="text-danger">{passwordError}</p>
+                    )}
+                  </div>
+                  <div
+                    className="btn btn-primary btn-lg px-5 d-grid"
+                    type="submit"
+                    onClick={handleClickLogin}
+                  >
+                    Login
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <p className="small fw-bold mt-2 text-center">
-          Don't have an account?{" "}
-          <Link to="/signup" className="link-danger">
-            SIGN UP
-          </Link>
-        </p>
-        <hr></hr>
-        <div className="d-flex justify-content-center">
-          <button className="btn btn-success" type="button">
-            SIGN IN WITH GOOGLE
-          </button>
-        </div>
-      </form>
-    </div>
+      </div>
+    </section>
   );
 };
 

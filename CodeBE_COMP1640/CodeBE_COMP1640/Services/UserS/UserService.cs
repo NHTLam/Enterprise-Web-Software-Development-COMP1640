@@ -129,19 +129,24 @@ namespace CodeBE_COMP1640.Services.UserS
             }
         }
 
-        public async Task<string> CreateToken(User user)
+        public async Task<string> CreateToken(User? user)
         {
-            List<Claim> claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email) };
-            var configToken = Configuration.GetValue<string>("AppSettings:Token");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configToken));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddDays(1), signingCredentials: creds
-            );
+            user = (await UOW.UserRepository.List()).Where(x => x.Email == user.Email)?.FirstOrDefault();
+            if (user != null)
+            {
+                List<Claim> claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email), new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()) };
+                var configToken = Configuration.GetValue<string>("AppSettings:Token");
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configToken));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+                var token = new JwtSecurityToken(
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(1), signingCredentials: creds
+                );
 
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-            return jwt;
+                var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+                return jwt;
+            }
+            return string.Empty;
         }
     }
 }
