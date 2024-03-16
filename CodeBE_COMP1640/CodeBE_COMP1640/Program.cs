@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins("http://localhost:3000");
             policy.WithMethods("POST", "PUT", "DELETE");
-            policy.WithHeaders("Content-Type");
+            policy.WithHeaders("Content-Type", "Authorization", "ngrok-skip-browser-warning");
         });
 });
 // Add services to the container.
