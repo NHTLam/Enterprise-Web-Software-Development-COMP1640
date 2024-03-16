@@ -5,22 +5,21 @@ import './Style.css'
 import imageInput from '../../assets/add_image.png';
 import { Link, useNavigate } from "react-router-dom";
 
-
 const PostSubmit = props => {
-    // const API_KEY_URL = import.meta.env.API_KEY_URL || "";
+    // const API_KEY_URL = import.meta.env.API_URL_KEY|| "";
     const navigate = useNavigate();
     const [imageList, setImageList] = useState([]);
     const [userId,setUserId] = useState(2);
     const [departmentId,setDepartmentId] = useState(1);
 
-    const [content,setContent] = useState("conent");
+    const [content,setContent] = useState("test delete");
     const fileInputRef = useRef(null);
 
     const handleClickSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                `https://4f1c-2405-4802-1d0e-f8f0-f97e-3de2-2c81-98a7.ngrok-free.app/api/Article`,
+                `https://5b28-2405-4802-1d0e-f8f0-f97e-3de2-2c81-98a7.ngrok-free.app/api/Article`,
                 {
                     departmentId,
                     userId,
