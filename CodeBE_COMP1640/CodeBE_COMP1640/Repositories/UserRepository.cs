@@ -140,7 +140,7 @@ namespace CodeBE_COMP1640.Repositories
                 var PermissonUserMappingIds = User.RoleUserMappings.Select(x => x.Id).Distinct().ToList();
                 await DataContext.RoleUserMappings
                     .Where(x => x.UserId == User.UserId)
-                    .Where(x => PermissonUserMappingIds.Contains(x.Id))
+                    .Where(x => !PermissonUserMappingIds.Contains(x.Id))
                     .DeleteFromQueryAsync();
                 foreach (RoleUserMapping PermissonUserMapping in User.RoleUserMappings)
                 {

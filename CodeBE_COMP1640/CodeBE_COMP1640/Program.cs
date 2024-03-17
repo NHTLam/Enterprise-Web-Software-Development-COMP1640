@@ -3,6 +3,7 @@ using CodeBE_COMP1640.Controllers;
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Repositories;
 using CodeBE_COMP1640.Services;
+using CodeBE_COMP1640.Services.CommentS;
 using CodeBE_COMP1640.Services.PermissionS;
 using CodeBE_COMP1640.Services.UserS;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+using CodeBE_COMP1640.Services.FeedbackS;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +23,7 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins("http://localhost:3000");
             policy.WithMethods("POST", "PUT", "DELETE");
-            policy.WithHeaders("Content-Type");
+            policy.WithHeaders("Content-Type", "Authorization", "ngrok-skip-browser-warning");
         });
 });
 // Add services to the container.
@@ -58,6 +60,8 @@ builder.Services.AddScoped<IUOW, UOW>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<RepositoryFactory>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 
 var app = builder.Build();
 

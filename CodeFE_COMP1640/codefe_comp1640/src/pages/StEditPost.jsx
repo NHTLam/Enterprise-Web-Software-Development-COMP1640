@@ -7,6 +7,7 @@ import axios from "axios";
 import React from 'react'
 
 function StEditPost(props) {
+    const navigate = useNavigate();
     const onFileChange = (files) => {
         console.log(files)
     }
@@ -15,21 +16,38 @@ function StEditPost(props) {
     const [postData, setPostData] = useState();
 
     useEffect(() => {
-        axios.get("https://4f1c-2405-4802-1d0e-f8f0-f97e-3de2-2c81-98a7.ngrok-free.app/api/Article/19", {
+        axios.get("https://5b28-2405-4802-1d0e-f8f0-f97e-3de2-2c81-98a7.ngrok-free.app/api/Article/89", {
             headers: {
                 'ngrok-skip-browser-warning': 'true'
-            }
+            },staleTime: 0
         })
             .then(data => {
-                setPostData(data.config);
+                 setPostData(data.data.data)
+                // console.log(data.data)
             })
             .catch(err => console.log(err))
     })
-    console.log(postData);
+    // console.log(postData);       
     if (!postData) {
         return <></>;
     }
 
+    const handleClickDelete = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.delete(
+                `https://5b28-2405-4802-1d0e-f8f0-f97e-3de2-2c81-98a7.ngrok-free.app/api/Article/89`,
+            );
+            if (response.status === 200) {
+                navigate("/st_submit_post");
+                console.log("delete sucess");
+            } else if (response.status === 400) {
+                console.log("some thing went wrong");
+            }
+        } catch (err) {
+            console.log("Error " + err);
+        }
+    };
     function onFileInput(e) {
         const files = e.target.files;
         if (files.length === 0) return;
@@ -80,10 +98,10 @@ function StEditPost(props) {
 
                         <div className="input-group mt-3">
                             <span className="input-group-text">With textarea</span>
-                            <textarea className="form-control" aria-label="With textarea">{postData.content}</textarea>
+                            <p>{postData.content}</p>
                         </div>
                         <button type="submit" className="btn btn-secondary float-end mt-3">Submit</button>
-                        <button type="submit" className="btn btn-secondary float-end mt-3">Detele</button>
+                        <button type="submit" className="btn btn-secondary float-end mt-3" onClick={handleClickDelete}>Detele</button>
                     </form>
 
 
