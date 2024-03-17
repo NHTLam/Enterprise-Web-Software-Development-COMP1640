@@ -1,5 +1,6 @@
 import React from "react";
 import Layout from "./layouts/Layout";
+import LayoutAdmin from "./layouts/LayoutAdmin";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Slide from "./components/Slide";
 import NavbarC from "./components/NavbarC";
@@ -44,6 +45,14 @@ const App = () => {
         />
 
         <Route path="/ad_manage" element={<Manage />} />
+        <Route
+          path="/ad_manage/account"
+          element={
+            <LayoutAdmin>
+              <Manage />
+            </LayoutAdmin>
+          }
+        />
       </Routes>
     </Router>
   );
