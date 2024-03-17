@@ -47,14 +47,14 @@ const Account = () => {
       );
       console.log("Delete success");
       setAccount(accounts.filter((account) => account.userId !== userId));
-      navigate("/");
+      // navigate("/");
     } catch (err) {
       console.log("Delete account failed! " + err);
     }
   };
 
   const navigateToEdit = (id) => {
-    navigate(`/edit/${id}`);
+    // navigate(`/edit/${id}`);
   };
 
   useEffect(() => {

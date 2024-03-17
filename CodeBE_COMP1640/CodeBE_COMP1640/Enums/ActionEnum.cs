@@ -13,7 +13,8 @@ public partial class ActionEnum
     public static Action APPROVAL = new Action(5, "Approval");
     public static List<Action> ActionEnumList = new List<Action>
     {
-        CREATE, UPDATE, DELETE, READ, APPROVAL
+        CREATE, UPDATE, DELETE, READ,
+        APPROVAL
     };
 }
 

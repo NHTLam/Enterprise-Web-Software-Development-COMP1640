@@ -12,9 +12,9 @@ const NavbarC = () => {
             <button type ="button" className="navbar-brand btn btn-secondary text-light" href="#">Design</button>
             <button type ="button" className="navbar-brand btn btn-secondary text-light" href="#">Information Technology</button>
           </div>
-          <form className="d-flex">
+          <form className="d-flex me-2 ms-5 w-100">
             <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-            <button className="btn btn-outline-secondary" type="submit">Search</button>
+            <button className="btn btn-outline-secondary border border-primary" type="submit">Search</button>
           </form>
         </div>
       </nav>

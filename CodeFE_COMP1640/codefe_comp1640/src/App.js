@@ -2,13 +2,17 @@ import React from "react";
 import Layout from "./layouts/Layout";
 import LayoutAdmin from "./layouts/LayoutAdmin";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.css";
 import Slide from "./components/Slide";
 import NavbarC from "./components/NavbarC";
 import Home from "./pages/Home";
 import Login from "./components/Login";
 import StAddPost from "./pages/StAddPost";
 import StEditPost from "./pages/StEditPost";
+import MarketingC from "./pages/MarketingC";
+import Me from "./pages/Me/Me";
 import Manage from "./pages/Manage";
+import Account from "./components/Manage/Account";
 const App = () => {
   return (
     <Router>
@@ -44,6 +48,22 @@ const App = () => {
           }
         />
 
+        <Route
+          path="/mk_manage_topic"
+          element={
+            <Layout>
+              <MarketingC />
+            </Layout>
+          }
+        />
+        <Route
+          path="/me"
+          element={
+            <Layout>
+              <Me />
+            </Layout>
+          }
+        />
         <Route path="/ad_manage" element={<Manage />} />
         <Route
           path="/ad_manage/account"
@@ -53,6 +73,7 @@ const App = () => {
             </LayoutAdmin>
           }
         />
+        <Route path="/ad_manage/account" element={<Account />} />
       </Routes>
     </Router>
   );

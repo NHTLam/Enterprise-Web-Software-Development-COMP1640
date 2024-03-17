@@ -6,7 +6,7 @@ namespace CodeBE_COMP1640.Controllers
 {
     public class SetupController : ControllerBase
     {
-        private DataContext DataContext;
+        private DataContext DataContext; 
         public SetupController(DataContext DataContext)
         {
             this.DataContext = DataContext;
