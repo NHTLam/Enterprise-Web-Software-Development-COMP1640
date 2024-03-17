@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Account = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -26,8 +28,9 @@ const Account = () => {
         }
       );
       console.log("Create account success!");
-      console.table(response.data);
-      // navigate("/");
+      const newAccount = [...accounts, response.data];
+      setAccount(newAccount);
+      navigate("/");
     } catch (err) {
       console.log("Create account failed!");
     }
@@ -67,7 +70,7 @@ const Account = () => {
       }
     };
     listAcount();
-  }, []);
+  }, [accounts]);
 
   return (
     <div className="container">
@@ -144,28 +147,28 @@ const Account = () => {
               <div className="modal-body">
                 {/* <!-- Form to input user details --> */}
                 <div className="mb-3">
-                  <label for="Email" className="form-label">
+                  <label for="email" className="form-label">
                     Email
                   </label>
                   <input
-                    name="Email"
+                    name="email"
                     type="text"
                     className="form-control"
-                    id="Email"
+                    id="email"
                     placeholder="Enter Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="mb-3">
-                  <label for="Name" className="form-label">
+                  <label for="username" className="form-label">
                     Name
                   </label>
                   <input
-                    name="Name"
+                    name="username"
                     type="text"
                     className="form-control"
-                    id="Name"
+                    id="username"
                     placeholder="Enter Name"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -189,56 +192,56 @@ const Account = () => {
                   </select>
                 </div> */}
                 <div className="mb-3">
-                  <label for="Password" className="form-label">
+                  <label for="password" className="form-label">
                     Password
                   </label>
                   <input
-                    name="Password"
-                    type="number"
+                    name="password"
+                    type="password"
                     className="form-control"
-                    id="Phone"
-                    placeholder="Enter Phone"
+                    id="password"
+                    placeholder="Enter password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 <div className="mb-3">
-                  <label for="Phone" className="form-label">
+                  <label for="phone" className="form-label">
                     Phone
                   </label>
                   <input
-                    name="Phone"
+                    name="phone"
                     type="text"
                     className="form-control"
-                    id="Phone"
+                    id="phone"
                     placeholder="Enter Phone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
                 <div className="mb-3">
-                  <label for="Address" className="form-label">
+                  <label for="address" className="form-label">
                     address
                   </label>
                   <input
-                    name="Address"
+                    name="address"
                     type="text"
                     className="form-control"
-                    id="Phone"
+                    id="address"
                     placeholder="Enter Address"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                   />
                 </div>
                 <div className="mb-3">
-                  <label for="Clas" className="form-label">
+                  <label for="className" className="form-label">
                     Class
                   </label>
                   <input
-                    name="Clas"
+                    name="className"
                     type="text"
                     className="form-control"
-                    id="Clas"
+                    id="className"
                     placeholder="Enter Class"
                     value={className}
                     onChange={(e) => setClass(e.target.value)}
@@ -271,3 +274,109 @@ const Account = () => {
 };
 
 export default Account;
+
+// const [feedback, setFeedback] = useState("");
+//   const [articleId, setArticleId] = useState(6);
+//   const [userId, setUserId] = useState(2);
+//   const [feedbackTime, setFeedbackTime] = useState(new Date());
+//   const [feedbackList, setFeedbackList] = useState([]);
+//   const handleFeedback = () => {
+//     try {
+//       const formattedFeedbackTime = feedbackTime.toISOString();
+//       const feb = axios.post(
+//         "https://3c78-2405-4802-1d0e-f8f0-e117-fd1b-3a2f-7a91.ngrok-free.app/api/Feedback",
+//         {
+//           userId,
+//           articleId,
+//           feedbackContent: feedback,
+//           feedbackTime: formattedFeedbackTime,
+//         }
+//       );
+//       const newFeedback = {
+//         userId: userId,
+//         articleId: articleId,
+//         context: feedback,
+//         feedbackTime: feedbackTime,
+//       };
+//       const newFbackList = [...feedbackList, newFeedback];
+//       setFeedbackList(newFbackList);
+//       setFeedback("");
+//       console.log(feb.data);
+//       console.log("Send feedback success!");
+//     } catch (err) {
+//       console.log("Error fail feedback: " + err);
+//     }
+//   };
+
+//   useEffect(() => {
+//     console.log("Feedback list update: ", feedbackList);
+//   }, [feedbackList]);
+
+//   return (
+//     <div className="container border border-5">
+//       <div className="input-group border border-3 mb-2 w-50">
+//         <textarea
+//           className="form-control"
+//           aria-label="With textarea"
+//           value={feedback}
+//           onChange={(e) => setFeedback(e.target.value)}
+//         ></textarea>
+//       </div>
+//       <div className="mb-2">
+//         <button
+//           className="btn btn-group btn-outline-primary"
+//           type="submit"
+//           onClick={handleFeedback}
+//         >
+//           Save feedback
+//         </button>
+//       </div>
+//       <h3>Feedback</h3>
+//       <div className="container">
+//         <table className="table table-hover">
+//           <thead>
+//             <tr>
+//               <th scope="col">1</th>
+//               <th scope="col">2</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {feedbackList.map((feedback) => (
+//               <>
+//                 <tr>
+//                   <th scope="row">UserID</th>
+//                   <td>{feedback.userId}</td>
+//                 </tr>
+//                 <tr>
+//                   <th scope="row">ArticleID</th>
+//                   <td>{feedback.articleId}</td>
+//                 </tr>
+//                 <tr>
+//                   <th scope="row">Context</th>
+//                   <textarea
+//                     className="form-control"
+//                     aria-label="With textarea"
+//                     value={feedback.context}
+//                     onChange={(e) => setFeedback(e.target.value)}
+//                   />
+//                 </tr>
+//                 <tr>
+//                   <th scope="row">Date</th>
+//                   <td>{feedback.feedbackTime.toLocaleString()}</td>
+//                 </tr>
+//               </>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//       <hr />
+//       <div className="mb-2">
+//         <button
+//           className="btn btn-group btn-outline-primary"
+//           type="submit"
+//           onClick={handleFeedback}
+//         >
+//           Save feedback
+//         </button>
+//       </div>
+//     </div>
