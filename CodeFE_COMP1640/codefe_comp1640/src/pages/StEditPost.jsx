@@ -14,15 +14,15 @@ function StEditPost(props) {
     const [imageList, setImageList] = useState([]);
     const fileInputRef = useRef(null);
     const [postData, setPostData] = useState();
-
+    const API_KEY_URL = process.env.REACT_APP_API_KEY|| "";
     useEffect(() => {
-        axios.get("https://5b28-2405-4802-1d0e-f8f0-f97e-3de2-2c81-98a7.ngrok-free.app/api/Article/89", {
+        axios.get(`https://3c78-2405-4802-1d0e-f8f0-e117-fd1b-3a2f-7a91.ngrok-free.app/api/Article/93`, {
             headers: {
                 'ngrok-skip-browser-warning': 'true'
             },staleTime: 0
         })
             .then(data => {
-                 setPostData(data.data.data)
+                setPostData(data.data.data)
                 // console.log(data.data)
             })
             .catch(err => console.log(err))
@@ -36,7 +36,7 @@ function StEditPost(props) {
         e.preventDefault();
         try {
             const response = await axios.delete(
-                `https://5b28-2405-4802-1d0e-f8f0-f97e-3de2-2c81-98a7.ngrok-free.app/api/Article/89`,
+                `https://3c78-2405-4802-1d0e-f8f0-e117-fd1b-3a2f-7a91.ngrok-free.app/api/Article/93`,
             );
             if (response.status === 200) {
                 navigate("/st_submit_post");
@@ -100,8 +100,8 @@ function StEditPost(props) {
                             <span className="input-group-text">With textarea</span>
                             <p>{postData.content}</p>
                         </div>
-                        <button type="submit" className="btn btn-secondary float-end mt-3">Submit</button>
-                        <button type="submit" className="btn btn-secondary float-end mt-3" onClick={handleClickDelete}>Detele</button>
+                        <button type="submit" className="btn btn-secondary float-end mt-3">Save</button>
+                        <button type="submit" className="btn btn-secondary float-end mt-3 me-2" onClick={handleClickDelete}>Detele</button>
                     </form>
 
 

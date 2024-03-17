@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 const Account = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -25,7 +27,7 @@ const Account = () => {
       );
       console.log("Create account success!");
       console.table(response.data);
-      navigate("/");
+      // navigate("/");
     } catch (err) {
       console.log("Create account failed!");
     }
@@ -42,14 +44,14 @@ const Account = () => {
       );
       console.log("Delete success");
       setAccount(accounts.filter((account) => account.userId !== userId));
-      navigate("/");
+      // navigate("/");
     } catch (err) {
       console.log("Delete account failed! " + err);
     }
   };
 
   const navigateToEdit = (id) => {
-    navigate(`/edit/${id}`);
+    // navigate(`/edit/${id}`);
   };
 
   useEffect(() => {

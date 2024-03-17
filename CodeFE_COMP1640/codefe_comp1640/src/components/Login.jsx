@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode' 
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -31,12 +32,17 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://0894-2405-4802-1d0e-f8f0-f97e-3de2-2c81-98a7.ngrok-free.app/app-user/login",
+        "https://3c78-2405-4802-1d0e-f8f0-e117-fd1b-3a2f-7a91.ngrok-free.app/app-user/login",
         {
           email,
           password,
         }
       );
+      const token = response.data;
+      const userData = jwtDecode(token); // decode your token here
+      localStorage.setItem('token', token);
+      console.log("token decode: ",userData);
+      
       const user = response.data;
       if (response.status === 200) {
         console.log("Login successful", user);

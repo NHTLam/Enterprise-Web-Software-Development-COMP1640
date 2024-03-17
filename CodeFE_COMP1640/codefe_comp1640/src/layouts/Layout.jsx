@@ -1,18 +1,19 @@
-import React from 'react'
-import Header from '../components/Header'
+import React from 'react';
+import Header from '../components/Header';
 
-import Footer from '../components/Footer'
+import Footer from '../components/Footer';
 import 'bootstrap/dist/css/bootstrap.css';
+import { useMemo } from 'react';
 
-const layout = ({children}) => {
-
-return (
-    <div className='position-relative'>            
-        <Header/>
-            <div className='container-xl'>{children}</div>
-        
-    </div>
-)
+const Layout = ({ children }) => {
+    const header = useMemo(() => <Header/>,[]);
+    return (
+        <div className="layout">
+            {header}
+            <div className='container-xl' style={{marginTop:"55px"}}>{children}</div>
+            
+        </div>
+    )
 }
 
-export default layout
+export default Layout
