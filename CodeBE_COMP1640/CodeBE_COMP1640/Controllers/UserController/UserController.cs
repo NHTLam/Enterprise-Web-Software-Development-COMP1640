@@ -2,7 +2,7 @@
 using CodeBE_COMP1640.Services.UserS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using System.Data;
 
 namespace CodeBE_COMP1640.Controllers.UserController
 {
@@ -116,6 +116,12 @@ namespace CodeBE_COMP1640.Controllers.UserController
             User.Phone = UserDTO.Phone;
             User.Address = UserDTO.Address;
             User.DepartmentId = UserDTO.DepartmentId ?? 0;
+            User.RoleUserMappings = UserDTO.RoleUserMappings?.Select(x => new RoleUserMapping
+            {
+                Id = x.Id,
+                RoleId = x.RoleId,
+                UserId = x.UserId,
+            }).ToList();
 
             return User;
         }
