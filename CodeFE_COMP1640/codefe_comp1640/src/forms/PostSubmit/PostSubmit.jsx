@@ -5,8 +5,8 @@ import './Style.css'
 import imageInput from '../../assets/add_image.png';
 import { Link, useNavigate } from "react-router-dom";
 
+
 const PostSubmit = props => {
-    // const API_KEY_URL = import.meta.env.API_URL_KEY|| "";
     const navigate = useNavigate();
     const [imageList, setImageList] = useState([]);
     const [userId,setUserId] = useState(2);
@@ -19,7 +19,7 @@ const PostSubmit = props => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                `https://5b28-2405-4802-1d0e-f8f0-f97e-3de2-2c81-98a7.ngrok-free.app/api/Article`,
+                `https://3c78-2405-4802-1d0e-f8f0-e117-fd1b-3a2f-7a91.ngrok-free.app/api/Article`,
                 {
                     departmentId,
                     userId,

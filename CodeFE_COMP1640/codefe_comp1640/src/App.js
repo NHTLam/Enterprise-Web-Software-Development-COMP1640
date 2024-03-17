@@ -11,6 +11,7 @@ import StEditPost from "./pages/StEditPost";
 import MarketingC from "./pages/MarketingC";
 import Me from "./pages/Me/Me";
 import Manage from "./pages/Manage";
+import Account from "./components/Manage/Account";
 const App = () => {
   return (
     <Router>
@@ -63,6 +64,7 @@ const App = () => {
           }
         />
         <Route path="/ad_manage" element={<Manage />} />
+        <Route path="/ad_manage/account" element={<Account />} />
       </Routes>
     </Router>
   );

@@ -17,7 +17,7 @@ const Manage = () => {
             </Link>
           </li>
           <li>
-            <Link to="#" className="nav-link px-2 link-dark">
+            <Link to="/ad_manage/account" className="nav-link px-2 link-dark">
               Account
             </Link>
           </li>
