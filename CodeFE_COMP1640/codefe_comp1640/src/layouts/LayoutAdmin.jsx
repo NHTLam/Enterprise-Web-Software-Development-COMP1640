@@ -3,7 +3,7 @@ import HeaderAdmin from "../components/HeaderAdmin";
 
 import "bootstrap/dist/css/bootstrap.css";
 
-const layout = ({ children }) => {
+const LayoutAdmin = ({ children }) => {
   return (
     <div className="position-relative">
       <HeaderAdmin />
@@ -12,4 +12,4 @@ const layout = ({ children }) => {
   );
 };
 
-export default layout;
+export default LayoutAdmin;

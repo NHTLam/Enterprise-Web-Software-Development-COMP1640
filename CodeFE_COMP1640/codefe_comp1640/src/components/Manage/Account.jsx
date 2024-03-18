@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Account = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -53,9 +53,6 @@ const Account = () => {
     }
   };
 
-  const navigateToEdit = (id) => {
-    // navigate(`/edit/${id}`);
-  };
 
   useEffect(() => {
     const listAcount = async () => {
@@ -105,12 +102,10 @@ const Account = () => {
             <td>{account.class}</td>
             <td>{account.address}</td>
             <td>
-              <button
-                className="btn btn-warning"
-                onClick={() => navigateToEdit(account.userId)}
-              >
+              <Link to={`ad_manage/account/${account.userId}`}
+                className="btn btn-warning">
                 EDIT
-              </button>
+              </Link>
               <button
                 className="btn btn-danger"
                 type="button"
