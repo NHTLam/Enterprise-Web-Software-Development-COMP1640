@@ -13,12 +13,12 @@ const HeaderAdmin = () => {
         </a>
         <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
           <li>
-            <Link to="/ad_home" className="nav-link px-2 link-dark">
+            <Link to="/ad_manage" className="nav-link px-2 link-dark">
               Home
             </Link>
           </li>
           <li>
-            <Link to="/ad_home/account" className="nav-link px-2 link-dark">
+            <Link to="/ad_manage/account" className="nav-link px-2 link-dark">
               Account
             </Link>
           </li>

@@ -1,7 +1,9 @@
+import { useState, useEffect, useParams } from "react";
+import { axios } from "axios";
 const EditAccount = () => {
   const { id } = useParams();
   const userId = parseInt(id);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [account, setAccount] = useState({
     email: "",
     username: "",
@@ -37,7 +39,7 @@ const EditAccount = () => {
         account // Gửi dữ liệu từ state account
       );
       console.log("Account updated successfully!");
-      navigate("/");
+      // navigate("/");
     } catch (err) {
       console.log("Failed to update account!" + err);
     }

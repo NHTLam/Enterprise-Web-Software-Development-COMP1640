@@ -13,6 +13,7 @@ import MarketingC from "./pages/MarketingC";
 import Me from "./pages/Me/Me";
 import Manage from "./pages/Manage";
 import Account from "./components/Manage/Account";
+import EditAccount from "./components/Manage/EditAccount";
 const App = () => {
   return (
     <Router>
@@ -64,16 +65,27 @@ const App = () => {
             </Layout>
           }
         />
-        <Route path="/ad_manage" element={<Manage />} />
+        <Route path="/ad_manage" element={
+          <LayoutAdmin>
+            <Manage />
+          </LayoutAdmin>} />
         <Route
           path="/ad_manage/account"
           element={
             <LayoutAdmin>
-              <Manage />
+              <Account />
             </LayoutAdmin>
           }
         />
-        <Route path="/ad_manage/account" element={<Account />} />
+
+<Route
+          path="/ad_manage/account/:account_id"
+          element={
+            <LayoutAdmin>
+              <EditAccount />
+            </LayoutAdmin>
+          }
+        />
       </Routes>
     </Router>
   );
