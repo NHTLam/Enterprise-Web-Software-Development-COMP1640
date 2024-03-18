@@ -10,6 +10,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
         public const string Module = "/app-user";
         public const string Create = Module + "/create";
         public const string Get = Module + "/get";
+        public const string GetUserId = Module + "/get-user-id";
         public const string List = Module + "/list";
         public const string Update = Module + "/update";
         public const string Delete = Module + "/delete";

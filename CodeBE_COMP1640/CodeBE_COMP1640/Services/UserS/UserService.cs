@@ -85,7 +85,7 @@ namespace CodeBE_COMP1640.Services.UserS
                 await UOW.UserRepository.Delete(User);
                 return User;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw new Exception();
             }

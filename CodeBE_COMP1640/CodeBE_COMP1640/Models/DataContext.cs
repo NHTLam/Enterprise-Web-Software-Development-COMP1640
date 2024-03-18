@@ -104,11 +104,6 @@ public partial class DataContext : DbContext
                 .HasForeignKey(d => d.ArticleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Feedback__Articl__6383C8BA");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Feedbacks)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Reports__UserID__4D94879B");
         });
 
         modelBuilder.Entity<Permission>(entity =>
