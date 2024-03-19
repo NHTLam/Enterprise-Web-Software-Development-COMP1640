@@ -1,7 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react'
 import "./Style.css"
+import axios from 'axios';
+import { useEffect } from 'react';
 
 function Me() {
+    const API_BASE = process.env.REACT_APP_API_KEY;
+
+    const [userId, setUserId] = useState();
+    const [userData, setUserData] = useState();
+
+    useEffect(()=>{
+        const getUserId = async()=>{
+            const token = localStorage.getItem("token");
+            const response = await axios.post(`${API_BASE}/app-user/get-user-id`,null, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setUserId(response.data);
+        }
+        getUserId();
+    })
+
+    useEffect(() => {
+        const getAccount = async () => {
+            const response = await axios.post(`${API_BASE}/app-user/get`,{userId: userId});
+            const data = response.data;
+            setUserData(data);
+        }
+        getAccount();
+      });
+      if (userData == null) return <></>
+
+
+
     return (
         <div class="container">
             <div class="row">
@@ -18,32 +50,32 @@ function Me() {
                                         <h4 class="mb-4 mt-0">Contact detail</h4>
                                         <div class="col-md-6">
                                             <label class="form-label">First Name *</label>
-                                            <input type="text" class="form-control" placeholder="" aria-label="First name"  />
+                                            <input type="text" class="form-control" placeholder="" aria-label="First name" />
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Last Name *</label>
-                                            <input type="text" class="form-control" placeholder="" aria-label="Last name"  />
+                                            <input type="text" class="form-control" placeholder="" aria-label="Last name" />
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Student Id *</label>
-                                            <input type="text" class="form-control" placeholder="" aria-label="Student Id"  />
+                                            <input type="text" class="form-control" placeholder="" aria-label="Student Id" />
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Class</label>
-                                            <input type="text" class="form-control" placeholder="" aria-label="Class"  />
+                                            <input type="text" class="form-control" placeholder="" aria-label="Class" />
                                         </div>
                                         <div class="col-md-6">
                                             <label for="inputEmail4" class="form-label">Email *</label>
-                                            <input type="email" class="form-control" id="inputEmail4"  />
+                                            <input type="email" class="form-control" id="inputEmail4" value={userData.email}/>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Phone</label>
-                                            <input type="text" class="form-control" placeholder="" aria-label="Phone number"/>
+                                            <input type="text" class="form-control" placeholder="" aria-label="Phone number" />
                                         </div>
                                     </div>
                                 </div>
 
-                               
+
 
                                 {/* <div class="bg-secondary-soft mt-3 px-4 py-5 rounded">
                                     <div class="row g-3">

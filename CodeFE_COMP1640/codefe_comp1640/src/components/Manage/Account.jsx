@@ -11,12 +11,13 @@ const Account = () => {
   const [address, setAddress] = useState("");
   const [departmentId, setdepartmentId] = useState(1);
   const [accounts, setAccount] = useState([]);
-
+  const API_BASE = process.env.REACT_APP_API_KEY;
   const handlNewAccount = async (e) => {
+    const token = localStorage.getItem("token");
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://fb8c-2405-4802-1d0e-f8f0-912e-c785-ed77-a567.ngrok-free.app/app-user/register",
+        `${API_BASE}/app-user/create`,
         {
           email,
           username,
@@ -25,12 +26,16 @@ const Account = () => {
           class: className,
           address,
           departmentId,
-        }
+        },{
+          headers: {
+              Authorization: `Bearer ${token}`  
+          }
+      }
       );
       console.log("Create account success!");
       const newAccount = [...accounts, response.data];
       setAccount(newAccount);
-      navigate("/");
+      navigate("/ad_manage/account");
     } catch (err) {
       console.log("Create account failed!");
     }
@@ -40,7 +45,7 @@ const Account = () => {
     console.log(userId);
     try {
       await axios.post(
-        "https://fb8c-2405-4802-1d0e-f8f0-912e-c785-ed77-a567.ngrok-free.app/app-user/delete",
+        `${API_BASE}/app-user/delete`,
         {
           userId,
         }
@@ -58,7 +63,7 @@ const Account = () => {
     const listAcount = async () => {
       try {
         const res = await axios.post(
-          "https://fb8c-2405-4802-1d0e-f8f0-912e-c785-ed77-a567.ngrok-free.app/app-user/list"
+          `${API_BASE}/app-user/list`
         );
         setAccount(res.data);
         console.table("List of accounts:", JSON.stringify(res.data));
@@ -67,7 +72,7 @@ const Account = () => {
       }
     };
     listAcount();
-  }, [accounts]);
+  }, []);
 
   return (
     <div className="container">
@@ -102,7 +107,7 @@ const Account = () => {
             <td>{account.class}</td>
             <td>{account.address}</td>
             <td>
-              <Link to={`ad_manage/account/${account.userId}`}
+              <Link to={`/edit_account/${account.userId}`}
                 className="btn btn-warning">
                 EDIT
               </Link>
