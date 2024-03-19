@@ -16,7 +16,7 @@ function StEditPost(props) {
     const [postData, setPostData] = useState();
     const API_KEY_URL = process.env.REACT_APP_API_KEY|| "";
     useEffect(() => {
-        axios.get(`https://3c78-2405-4802-1d0e-f8f0-e117-fd1b-3a2f-7a91.ngrok-free.app/api/Article/93`, {
+        axios.get(`https://6fdd-2001-ee0-1a2d-ee72-8c6b-c998-e5b-db15.ngrok-free.app/api/Article/93`, {
             headers: {
                 'ngrok-skip-browser-warning': 'true'
             },staleTime: 0
@@ -36,7 +36,7 @@ function StEditPost(props) {
         e.preventDefault();
         try {
             const response = await axios.delete(
-                `https://3c78-2405-4802-1d0e-f8f0-e117-fd1b-3a2f-7a91.ngrok-free.app/api/Article/93`,
+                `https://6fdd-2001-ee0-1a2d-ee72-8c6b-c998-e5b-db15.ngrok-free.app/api/Article/93`,
             );
             if (response.status === 200) {
                 navigate("/st_submit_post");
@@ -97,7 +97,7 @@ function StEditPost(props) {
                         </div>
 
                         <div className="input-group mt-3">
-                            <span className="input-group-text">With textarea</span>
+                            <span className="input-group-text" >With textarea</span>
                             <p>{postData.content}</p>
                         </div>
                         <button type="submit" className="btn btn-secondary float-end mt-3">Save</button>

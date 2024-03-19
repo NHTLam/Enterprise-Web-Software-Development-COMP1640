@@ -19,7 +19,7 @@ const PostSubmit = props => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                `https://3c78-2405-4802-1d0e-f8f0-e117-fd1b-3a2f-7a91.ngrok-free.app/api/Article`,
+                `https://6fdd-2001-ee0-1a2d-ee72-8c6b-c998-e5b-db15.ngrok-free.app/api/Article`,
                 {
                     departmentId,
                     userId,
