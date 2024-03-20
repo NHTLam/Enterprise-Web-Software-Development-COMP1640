@@ -1,4 +1,5 @@
 ﻿using CodeBE_COMP1640.Models;
+using CodeBE_COMP1640.Services.PermissionS;
 using CodeBE_COMP1640.Services.UserS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +11,15 @@ namespace CodeBE_COMP1640.Controllers.UserController
     public class UserController : ControllerBase
     {
         private IUserService UserService;
+        private IPermissionService PermissionService;
 
         public UserController(
-            IUserService UserService
+            IUserService UserService,
+            IPermissionService PermissionService
         )
         {
             this.UserService = UserService;
+            this.PermissionService = PermissionService;
         }
 
         [Route(UserRoute.List), HttpPost, Authorize]
@@ -39,6 +43,16 @@ namespace CodeBE_COMP1640.Controllers.UserController
             User = await UserService.Get(User.UserId);
             UserDTO = new UserDTO(User);
             return UserDTO;
+        }
+
+        [Route(UserRoute.GetUserId), HttpPost, Authorize]
+        public async Task<ActionResult<int>> GetUserId()
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            int id = PermissionService.GetUserId();
+            return id;
         }
 
         [Route(UserRoute.Create), HttpPost, Authorize]

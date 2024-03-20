@@ -1,16 +1,21 @@
 import React from 'react'
+import {Link} from "react-router-dom"
 
 const Home = () => {
     return (
         <div className="container">
             <div className="row">
+                
                 <div className="col">
+                <Link to={"/st_submit_post"}>
                     <div className="card">
                         <img src="https://www.analyticsinsight.net/wp-content/uploads/2021/07/Technology-Can-Boost-Your-Business-Productivity.jpg" className="card-img-top" alt="..." />
                         <div className="card-body">
-                            <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <p className="card-text">dsasadas</p>
                         </div>
                     </div>
+
+                </Link>  
                 </div>
                 <div className="col-5">
                     <div className="card h-100">

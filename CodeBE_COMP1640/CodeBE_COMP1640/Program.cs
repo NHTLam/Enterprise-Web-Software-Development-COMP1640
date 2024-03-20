@@ -1,3 +1,4 @@
+using CodeBE_COMP1640.Factories.Implements;
 using CodeBE_COMP1640.Controllers;
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Repositories;
@@ -20,7 +21,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000");
+            policy.WithOrigins("http://localhost:3000", "http://localhost:3001");
             policy.WithMethods("POST", "PUT", "DELETE");
             policy.WithHeaders("Content-Type", "Authorization", "ngrok-skip-browser-warning");
         });
@@ -57,6 +58,7 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
 
 builder.Services.AddScoped<IUOW, UOW>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<RepositoryFactory>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();

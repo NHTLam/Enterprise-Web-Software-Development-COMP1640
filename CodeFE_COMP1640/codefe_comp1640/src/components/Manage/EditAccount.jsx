@@ -1,8 +1,11 @@
-import { useState, useEffect, useParams } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 const EditAccount = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const userId = parseInt(id);
+  console.log("userId", userId);
   // const navigate = useNavigate();
   const [account, setAccount] = useState({
     email: "",
@@ -11,23 +14,30 @@ const EditAccount = () => {
     phone: "",
     address: "",
   });
-
+  const API_BASE = process.env.REACT_APP_API_KEY;
   useEffect(() => {
     const getAccount = async () => {
-      try {
-        const response = await axios.post(
-          "https://fb8c-2405-4802-1d0e-f8f0-912e-c785-ed77-a567.ngrok-free.app/app-user/get",
-          {
-            userId,
-          }
-        );
-        const data = response.data;
-        setAccount(data);
-        console.log("Edit success!");
-      } catch (err) {
-        console.log("Edit failed!" + err);
-      }
+      const response = await axios.post(`${API_BASE}/app-user/get`, {
+        userId,
+      });
+      const data = response.data;
+      setAccount(data);
+      console.log("Edit success!");
+      // try {
+      //   const response = await axios.post(
+      //     `${API_BASE}/app-user/get`,
+      //     {
+      //       userId,
+      //     }
+      //   );
+      //   const data = response.data;
+      //   setAccount(data);
+      //   console.log("Edit success!");
+      // } catch (err) {
+      //   console.log("Edit failed!" + err);
+      // }
     };
+
     getAccount();
   }, [userId]);
 
@@ -35,7 +45,7 @@ const EditAccount = () => {
     e.preventDefault();
     try {
       await axios.post(
-        `https://fb8c-2405-4802-1d0e-f8f0-912e-c785-ed77-a567.ngrok-free.app/app-user/update/`,
+        `${API_BASE}/app-user/update/`,
         account // Gửi dữ liệu từ state account
       );
       console.log("Account updated successfully!");

@@ -21,6 +21,8 @@ public partial class Article
 
     public bool IsApproved { get; set; }
 
+    public bool? IsTopic { get; set; }
+
     public virtual ICollection<Comment> Comments { get; } = new List<Comment>();
 
     public virtual Department Department { get; set; } = null!;

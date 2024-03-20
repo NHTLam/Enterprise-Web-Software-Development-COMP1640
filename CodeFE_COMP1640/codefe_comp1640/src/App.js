@@ -19,6 +19,8 @@ const App = () => {
   return (
     <Router>
       <Routes>
+
+        {/* STUDENT ROUTES */}
         <Route
           path="/"
           element={
@@ -51,14 +53,6 @@ const App = () => {
         />
 
         <Route
-          path="/mk_manage_topic"
-          element={
-            <Layout>
-              <MarketingC />
-            </Layout>
-          }
-        />
-        <Route
           path="/me"
           element={
             <Layout>
@@ -66,6 +60,18 @@ const App = () => {
             </Layout>
           }
         />
+
+        {/* Marketing Conidator ROUTES */}
+        <Route
+          path="/mk_manage_topic"
+          element={
+            <Layout>
+              <MarketingC />
+            </Layout>
+          }
+        />
+
+        {/* ADMIN ROUTES */}
         <Route
           path="/ad_manage"
           element={
@@ -84,16 +90,7 @@ const App = () => {
         />
 
         <Route
-          path="/ad_manage/feedback"
-          element={
-            <LayoutAdmin>
-              <Feedback />
-            </LayoutAdmin>
-          }
-        />
-
-        <Route
-          path="/ad_manage/account/:account_id"
+          path="/edit_account/:id"
           element={
             <LayoutAdmin>
               <EditAccount />
