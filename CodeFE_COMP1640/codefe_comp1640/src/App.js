@@ -14,6 +14,7 @@ import Me from "./pages/Me/Me";
 import Manage from "./pages/Manage";
 import Account from "./components/Manage/Account";
 import EditAccount from "./components/Manage/EditAccount";
+import Feedback from "./components/Manage/Feedback";
 const App = () => {
   return (
     <Router>
@@ -79,7 +80,6 @@ const App = () => {
             </LayoutAdmin>
           }
         />
-
         <Route
           path="/ad_manage/account"
           element={

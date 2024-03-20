@@ -11,7 +11,6 @@ const Layout = ({ children }) => {
         <div className="layout">
             {header}
             <div className='container-xl' style={{marginTop:"55px"}}>{children}</div>
-            
         </div>
     )
 }
