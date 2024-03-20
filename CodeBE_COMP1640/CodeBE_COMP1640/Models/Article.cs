@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CodeBE_COMP1640.Models;
+﻿namespace CodeBE_COMP1640.Models;
 
 public partial class Article
 {
@@ -28,4 +25,6 @@ public partial class Article
     public virtual ICollection<Feedback> Feedbacks { get; } = new List<Feedback>();
 
     public virtual User User { get; set; } = null!;
+
+    public bool IsTopic { get; set; }
 }

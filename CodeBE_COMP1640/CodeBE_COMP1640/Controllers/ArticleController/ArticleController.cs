@@ -1,5 +1,6 @@
 ﻿using CodeBE_COMP1640.Factories.Implements;
 using Microsoft.AspNetCore.Mvc;
+using System.IO.Compression;
 
 namespace CodeBE_COMP1640.Controllers.ArticleController
 {
@@ -139,5 +140,60 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 });
             }
         }
+        [HttpPost("File")]
+        public async Task<IActionResult> UploadFile(IFormFile file)
+        {
+            string _uploadFolder = "./UploadFile";
+            if (file == null || file.Length == 0)
+                return BadRequest("File not selected");
+
+            if (!Directory.Exists(_uploadFolder))
+                Directory.CreateDirectory(_uploadFolder);
+
+            var filePath = Path.Combine(_uploadFolder, file.FileName);
+
+            if (System.IO.File.Exists(filePath))
+                return Conflict("File already exists");
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            return Ok("File uploaded successfully");
+        }
+        [HttpGet("export")]
+        public IActionResult ExportFiles()
+        {
+            string _uploadFolder = "./UploadFile";
+
+            if (!Directory.Exists(_uploadFolder) || !Directory.EnumerateFiles(_uploadFolder).Any())
+                return NotFound("No files found to export");
+
+            var zipFileName = $"ExportedFiles_{DateTime.Now.ToString("yyyyMMddHHmmss")}.zip";
+            var zipFilePath = Path.Combine(Directory.GetCurrentDirectory(), zipFileName);
+
+            using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+            {
+                var files = Directory.GetFiles(_uploadFolder);
+                foreach (var file in files)
+                {
+                    zipArchive.CreateEntryFromFile(file, Path.GetFileName(file));
+                }
+            }
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(zipFilePath, FileMode.Open))
+            {
+                stream.CopyTo(memory);
+            }
+            memory.Position = 0;
+
+            // Xóa tệp ZIP sau khi đã truyền dữ liệu từ nó
+            System.IO.File.Delete(zipFilePath);
+
+            return File(memory, "application/zip", zipFileName);
+        }
+
     }
 }
