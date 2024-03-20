@@ -1,11 +1,11 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import  axios  from "axios";
+import axios from "axios";
 const EditAccount = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const userId = parseInt(id);
-  console.log("userId",userId)
+  console.log("userId", userId);
   // const navigate = useNavigate();
   const [account, setAccount] = useState({
     email: "",
@@ -17,12 +17,9 @@ const EditAccount = () => {
   const API_BASE = process.env.REACT_APP_API_KEY;
   useEffect(() => {
     const getAccount = async () => {
-      const response = await axios.post(
-        `${API_BASE}/app-user/get`,
-        {
-          userId,
-        }
-      );
+      const response = await axios.post(`${API_BASE}/app-user/get`, {
+        userId,
+      });
       const data = response.data;
       setAccount(data);
       console.log("Edit success!");
@@ -40,7 +37,7 @@ const EditAccount = () => {
       //   console.log("Edit failed!" + err);
       // }
     };
-    
+
     getAccount();
   }, [userId]);
 
