@@ -26,16 +26,7 @@ namespace CodeBE_COMP1640.Repositories
 
         public async Task<List<Comment>> List()
         {
-            IQueryable<Comment> query = DataContext.Comments.AsNoTracking();
-            List<Comment> Comments = await query.AsNoTracking().Select(x => new Comment
-            {
-                CommentId = x.CommentId,
-                ArticleId = x.ArticleId,
-                UserId = x.UserId,
-                CommentContent = x.CommentContent,
-                CommentTime = x.CommentTime,
-            }).ToListAsync();
-
+            List<Comment> Comments = await DataContext.Comments.AsNoTracking().ToListAsync();
             return Comments;
         }
 
@@ -47,16 +38,7 @@ namespace CodeBE_COMP1640.Repositories
 
         public async Task<Comment> Get(long Id)
         {
-            Comment? Comment = await DataContext.Comments.AsNoTracking()
-            .Where(x => x.CommentId == Id)
-            .Select(x => new Comment()
-            {
-                CommentId = x.CommentId,
-                ArticleId = x.ArticleId,
-                UserId = x.UserId,
-                CommentContent = x.CommentContent,
-                CommentTime = x.CommentTime,
-            }).FirstOrDefaultAsync();
+            Comment? Comment = await DataContext.Comments.AsNoTracking().Where(x => x.CommentId == Id).FirstOrDefaultAsync();
 
             if (Comment == null)
                 return null;

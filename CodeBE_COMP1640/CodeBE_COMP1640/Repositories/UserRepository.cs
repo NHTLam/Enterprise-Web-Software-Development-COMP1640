@@ -24,27 +24,10 @@ namespace CodeBE_COMP1640.Repositories
 
         public async Task<List<User>> List()
         {
-            IQueryable<User> query = DataContext.Users.AsNoTracking();
-            List<User> Users = await query.AsNoTracking().Select(x => new User
-            {
-                UserId = x.UserId,
-                Username = x.Username,
-                Password = x.Password,
-                Email = x.Email,
-                Class = x.Class,
-                Phone = x.Phone,
-                Address = x.Address,
-                DepartmentId = x.DepartmentId,
-            }).ToListAsync();
+            List<User> Users = await DataContext.Users.AsNoTracking().ToListAsync();
 
             var RoleUserMappingQuery = DataContext.RoleUserMappings.AsNoTracking();
-            List<RoleUserMapping> RoleUserMappings = await RoleUserMappingQuery
-                .Select(x => new RoleUserMapping
-                {
-                    Id = x.Id,
-                    RoleId = x.RoleId,
-                    UserId = x.UserId,
-                }).ToListAsync();
+            List<RoleUserMapping> RoleUserMappings = await RoleUserMappingQuery.ToListAsync();
 
             foreach (User User in Users)
             {
@@ -59,29 +42,11 @@ namespace CodeBE_COMP1640.Repositories
         public async Task<User> Get(long Id)
         {
             User? User = await DataContext.Users.AsNoTracking()
-            .Where(x => x.UserId == Id)
-            .Select(x => new User()
-            {
-                UserId = x.UserId,
-                Username = x.Username,
-                Password = x.Password,
-                Email = x.Email,
-                Class = x.Class,
-                Phone = x.Phone,
-                Address = x.Address,
-                DepartmentId = x.DepartmentId,
-            }).FirstOrDefaultAsync();
+            .Where(x => x.UserId == Id).FirstOrDefaultAsync();
 
             if (User == null)
                 return null;
-            User.RoleUserMappings = await DataContext.RoleUserMappings.AsNoTracking()
-                .Where(x => x.UserId == User.UserId)
-                .Select(x => new RoleUserMapping
-                {
-                    Id = x.Id,
-                    UserId = x.UserId,
-                    RoleId = x.RoleId,
-                }).ToListAsync();
+            User.RoleUserMappings = await DataContext.RoleUserMappings.AsNoTracking().Where(x => x.UserId == User.UserId).ToListAsync();
 
             return User;
         }

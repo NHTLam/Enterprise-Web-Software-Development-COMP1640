@@ -50,22 +50,10 @@ namespace CodeBE_COMP1640.Repositories
 
         public async Task<List<Role>> ListRole()
         {
-            IQueryable<Role> query = DataContext.Roles.AsNoTracking();
-            List<Role> Roles = await query.AsNoTracking().Select(x => new Role
-            {
-                RoleId = x.RoleId,
-                Name = x.Name,
-                Description = x.Description,
-            }).ToListAsync();
+            List<Role> Roles = await DataContext.Roles.AsNoTracking().ToListAsync();
 
             var PermissonRoleMappingQuery = DataContext.PermissonRoleMappings.AsNoTracking();
-            List<PermissonRoleMapping> PermissonRoleMappings = await PermissonRoleMappingQuery
-                .Select(x => new PermissonRoleMapping
-                {
-                    Id = x.Id,
-                    RoleId = x.RoleId,
-                    PermissionId = x.PermissionId,
-                }).ToListAsync();
+            List<PermissonRoleMapping> PermissonRoleMappings = await PermissonRoleMappingQuery.ToListAsync();
 
             foreach (Role Role in Roles)
             {
@@ -79,25 +67,11 @@ namespace CodeBE_COMP1640.Repositories
 
         public async Task<Role> GetRole(long Id)
         {
-            Role? Role = await DataContext.Roles.AsNoTracking()
-            .Where(x => x.RoleId == Id)
-            .Select(x => new Role()
-            {
-                RoleId = x.RoleId,
-                Name = x.Name,
-                Description = x.Description,
-            }).FirstOrDefaultAsync();
+            Role? Role = await DataContext.Roles.AsNoTracking().Where(x => x.RoleId == Id).FirstOrDefaultAsync();
 
             if (Role == null)
                 return null;
-            Role.PermissonRoleMappings = await DataContext.PermissonRoleMappings.AsNoTracking()
-                .Where(x => x.RoleId == Role.RoleId)
-                .Select(x => new PermissonRoleMapping
-                {
-                    Id = x.Id,
-                    RoleId = x.RoleId,
-                    PermissionId = x.PermissionId,
-                }).ToListAsync();
+            Role.PermissonRoleMappings = await DataContext.PermissonRoleMappings.AsNoTracking().Where(x => x.RoleId == Role.RoleId).ToListAsync();
 
             return Role;
         }
