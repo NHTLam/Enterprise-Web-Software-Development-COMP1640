@@ -23,6 +23,11 @@ const HeaderAdmin = () => {
             </Link>
           </li>
           <li>
+            <Link to="/ad_manage/feedback" className="nav-link px-2 link-dark">
+              Feedback
+            </Link>
+          </li>
+          <li>
             <Link to="#" className="nav-link px-2 link-dark">
               Profile admin
             </Link>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useParams } from "react";
-import { axios } from "axios";
+import axios from "axios";
 const EditAccount = () => {
   const { id } = useParams();
   const userId = parseInt(id);

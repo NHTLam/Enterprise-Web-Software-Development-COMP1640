@@ -14,6 +14,7 @@ import Me from "./pages/Me/Me";
 import Manage from "./pages/Manage";
 import Account from "./components/Manage/Account";
 import EditAccount from "./components/Manage/EditAccount";
+import Feedback from "./components/Manage/Feedback";
 const App = () => {
   return (
     <Router>
@@ -65,10 +66,14 @@ const App = () => {
             </Layout>
           }
         />
-        <Route path="/ad_manage" element={
-          <LayoutAdmin>
-            <Manage />
-          </LayoutAdmin>} />
+        <Route
+          path="/ad_manage"
+          element={
+            <LayoutAdmin>
+              <Manage />
+            </LayoutAdmin>
+          }
+        />
         <Route
           path="/ad_manage/account"
           element={
@@ -78,7 +83,16 @@ const App = () => {
           }
         />
 
-<Route
+        <Route
+          path="/ad_manage/feedback"
+          element={
+            <LayoutAdmin>
+              <Feedback />
+            </LayoutAdmin>
+          }
+        />
+
+        <Route
           path="/ad_manage/account/:account_id"
           element={
             <LayoutAdmin>

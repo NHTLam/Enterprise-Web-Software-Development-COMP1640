@@ -53,7 +53,6 @@ const Account = () => {
     }
   };
 
-
   useEffect(() => {
     const listAcount = async () => {
       try {
@@ -77,7 +76,7 @@ const Account = () => {
           className="btn btn-primary"
           type="button"
           data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
+          data-bs-target="#createAccount"
         >
           {" "}
           CREATE NEW ACCOUNT
@@ -102,8 +101,10 @@ const Account = () => {
             <td>{account.class}</td>
             <td>{account.address}</td>
             <td>
-              <Link to={`ad_manage/account/${account.userId}`}
-                className="btn btn-warning">
+              <Link
+                to={`ad_manage/account/${account.userId}`}
+                className="btn btn-warning"
+              >
                 EDIT
               </Link>
               <button
@@ -122,7 +123,7 @@ const Account = () => {
       <form>
         <div
           className="modal fade"
-          id="exampleModal"
+          id="createAccount"
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
         >
@@ -269,109 +270,3 @@ const Account = () => {
 };
 
 export default Account;
-
-// const [feedback, setFeedback] = useState("");
-//   const [articleId, setArticleId] = useState(6);
-//   const [userId, setUserId] = useState(2);
-//   const [feedbackTime, setFeedbackTime] = useState(new Date());
-//   const [feedbackList, setFeedbackList] = useState([]);
-//   const handleFeedback = () => {
-//     try {
-//       const formattedFeedbackTime = feedbackTime.toISOString();
-//       const feb = axios.post(
-//         "https://3c78-2405-4802-1d0e-f8f0-e117-fd1b-3a2f-7a91.ngrok-free.app/api/Feedback",
-//         {
-//           userId,
-//           articleId,
-//           feedbackContent: feedback,
-//           feedbackTime: formattedFeedbackTime,
-//         }
-//       );
-//       const newFeedback = {
-//         userId: userId,
-//         articleId: articleId,
-//         context: feedback,
-//         feedbackTime: feedbackTime,
-//       };
-//       const newFbackList = [...feedbackList, newFeedback];
-//       setFeedbackList(newFbackList);
-//       setFeedback("");
-//       console.log(feb.data);
-//       console.log("Send feedback success!");
-//     } catch (err) {
-//       console.log("Error fail feedback: " + err);
-//     }
-//   };
-
-//   useEffect(() => {
-//     console.log("Feedback list update: ", feedbackList);
-//   }, [feedbackList]);
-
-//   return (
-//     <div className="container border border-5">
-//       <div className="input-group border border-3 mb-2 w-50">
-//         <textarea
-//           className="form-control"
-//           aria-label="With textarea"
-//           value={feedback}
-//           onChange={(e) => setFeedback(e.target.value)}
-//         ></textarea>
-//       </div>
-//       <div className="mb-2">
-//         <button
-//           className="btn btn-group btn-outline-primary"
-//           type="submit"
-//           onClick={handleFeedback}
-//         >
-//           Save feedback
-//         </button>
-//       </div>
-//       <h3>Feedback</h3>
-//       <div className="container">
-//         <table className="table table-hover">
-//           <thead>
-//             <tr>
-//               <th scope="col">1</th>
-//               <th scope="col">2</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {feedbackList.map((feedback) => (
-//               <>
-//                 <tr>
-//                   <th scope="row">UserID</th>
-//                   <td>{feedback.userId}</td>
-//                 </tr>
-//                 <tr>
-//                   <th scope="row">ArticleID</th>
-//                   <td>{feedback.articleId}</td>
-//                 </tr>
-//                 <tr>
-//                   <th scope="row">Context</th>
-//                   <textarea
-//                     className="form-control"
-//                     aria-label="With textarea"
-//                     value={feedback.context}
-//                     onChange={(e) => setFeedback(e.target.value)}
-//                   />
-//                 </tr>
-//                 <tr>
-//                   <th scope="row">Date</th>
-//                   <td>{feedback.feedbackTime.toLocaleString()}</td>
-//                 </tr>
-//               </>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-//       <hr />
-//       <div className="mb-2">
-//         <button
-//           className="btn btn-group btn-outline-primary"
-//           type="submit"
-//           onClick={handleFeedback}
-//         >
-//           Save feedback
-//         </button>
-//       </div>
-//     </div>
