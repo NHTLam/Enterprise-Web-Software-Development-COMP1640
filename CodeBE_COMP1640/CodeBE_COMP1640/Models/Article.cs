@@ -1,4 +1,7 @@
-﻿namespace CodeBE_COMP1640.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace CodeBE_COMP1640.Models;
 
 public partial class Article
 {
@@ -18,6 +21,8 @@ public partial class Article
 
     public bool IsApproved { get; set; }
 
+    public bool? IsTopic { get; set; }
+
     public virtual ICollection<Comment> Comments { get; } = new List<Comment>();
 
     public virtual Department Department { get; set; } = null!;
@@ -25,6 +30,4 @@ public partial class Article
     public virtual ICollection<Feedback> Feedbacks { get; } = new List<Feedback>();
 
     public virtual User User { get; set; } = null!;
-
-    public bool IsTopic { get; set; }
 }
