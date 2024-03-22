@@ -48,14 +48,6 @@ const Manage = () => {
     // ["Gold", 19.3, "gold"],
     // ["Platinum", 18.2, "color: #e5e4e2"], // CSS-style declaration
   ];
-  const data4 = [
-    ["Copper", 8.94, "#b87333"], // RGB value
-    ["Silver", 10.49, "silver"], // English color name
-    ["Gold", 19.3, "gold"],
-    ["Platinum", 18.2, "color: #e5e4e2"], // CSS-style declaration
-  ];
-
-  const data5 = [...data2, ...data4];
 
   //Line Chart
   // Top 10 topic được đóng góp nhiều nhất.
@@ -108,7 +100,7 @@ const Manage = () => {
           chartType="ColumnChart"
           width={"100%"}
           height={"400px"}
-          data={data5}
+          data={data2}
         />
       </div>
       <div className="row w-100 bg-light">
