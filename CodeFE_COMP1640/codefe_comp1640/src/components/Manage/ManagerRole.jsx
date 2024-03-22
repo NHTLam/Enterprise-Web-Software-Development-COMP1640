@@ -66,20 +66,21 @@ const ManagerRole = () => {
       }
     };
 
-    // const listRole = async () => {
-    //   try {
-    //     const res = await axios.post(`${API_BASE}/role/list-role`, null, {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     });
-    //     setRole(res.data);
-    //     console.table("List of Roles:", JSON.stringify(res.data));
-    //   } catch (err) {
-    //     console.log("Failed to list Role! " + err);
-    //   }
-    // };
+    const listPermission = async () => {
+      try {
+        const res = await axios.post(`${API_BASE}/permission/list-permission`, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setPermissions(res.data);
+        console.table("List of Permissions:", JSON.stringify(res.data));
+      } catch (err) {
+        console.log("Failed to list Role! " + err);
+      }
+    };
     listRole();
+    listPermission();
   }, []);
 
   return (
@@ -232,14 +233,17 @@ const ManagerRole = () => {
               <table className="table table-striped mt-2 text-center">
                 <tr>
                   <th>STT</th>
-                  <th>Name</th>
+                  <th>Action</th>
+                  <th>Menu Name</th>
                   <th>Description</th>
+                  <th>Asigned</th>
                 </tr>
-                {Roles.map((Role, index) => (
-                  <tr key={Role.userId}>
+                {Permissions.map((Permission, index) => (
+                  <tr key={Permission.Id}>
                     <td>{index + 1}</td>
-                    <td>{Role.name}</td>
-                    <td>{Role.description}</td>
+                    <td>{Permission.name}</td>
+                    <td>{Permission.menuName}</td>
+                    <td>{Permission.description}</td>
                     <td>
                       <button 
                         type="button"

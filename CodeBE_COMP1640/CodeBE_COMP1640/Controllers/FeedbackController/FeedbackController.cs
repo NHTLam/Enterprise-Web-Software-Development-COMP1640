@@ -26,7 +26,7 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
             return Ok(feedbacks);
         }
 
-        [Route(FeedbackRoute.Get), HttpGet("{id}"), Authorize]
+        [Route(FeedbackRoute.Get), HttpGet, Authorize]
         public async Task<ActionResult<Feedback>> GetFeedbackById(int id)
         {
             var feedback = await _feedbackService.GetFeedbackById(id);
@@ -55,7 +55,7 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
             return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
         }
 
-        [Route(FeedbackRoute.Update), HttpPut("{id}"), Authorize]
+        [Route(FeedbackRoute.Update), HttpPut, Authorize]
         public async Task<IActionResult> UpdateFeedback(int id, FeedbackDTO feedbackDTO)
         {
             var existingFeedback = await _feedbackService.GetFeedbackById(id);
@@ -74,7 +74,7 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
             return NoContent();
         }
 
-        [Route(FeedbackRoute.Update), HttpDelete("{id}"), Authorize]
+        [Route(FeedbackRoute.Update), HttpDelete, Authorize]
         public async Task<IActionResult> DeleteFeedback(int id)
         {
             await _feedbackService.DeleteFeedback(id);

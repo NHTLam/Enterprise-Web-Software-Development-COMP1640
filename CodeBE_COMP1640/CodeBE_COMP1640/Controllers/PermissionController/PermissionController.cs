@@ -43,6 +43,22 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
             await PermissionService.Init();
         }
 
+        [Route(PermissionRoute.ListPermission), HttpPost, Authorize]
+        public async Task<ActionResult<List<PermissionDTO>>> ListPermission()
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
+
+            List<Permission> Permissions = await PermissionService.ListPermission();
+            List<PermissionDTO> PermissionDTOs = Permissions.Select(x => new PermissionDTO(x)).ToList();
+            return PermissionDTOs;
+        }
+
         [Route(PermissionRoute.ListRole), HttpPost, Authorize]
         public async Task<ActionResult<List<RoleDTO>>> ListRole()
         {

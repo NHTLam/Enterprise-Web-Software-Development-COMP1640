@@ -19,7 +19,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             _repositoryFactory = serviceProvider.GetService<RepositoryFactory>();
         }
 
-        [Route(ArticleRoute.Get), HttpGet("{id}"), Authorize]
+        [Route(ArticleRoute.Get), HttpGet, Authorize]
         public IActionResult Get(int id)
         {
             try
@@ -59,7 +59,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
 
-        [Route(ArticleRoute.Update), HttpPut("{id}"), Authorize]
+        [Route(ArticleRoute.Update), HttpPut, Authorize]
         public IActionResult Update(int id, ArticlePut request)
         {
             try
@@ -81,7 +81,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
 
-        [Route(ArticleRoute.Delete), HttpDelete("{id}"), Authorize]
+        [Route(ArticleRoute.Delete), HttpDelete, Authorize]
         public IActionResult Delete(int id)
         {
             try
@@ -121,7 +121,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         //    }
         //}
 
-        [Route(ArticleRoute.GetByUser), HttpGet("{userId}"), Authorize]
+        [Route(ArticleRoute.GetByUser), HttpGet, Authorize]
         public IActionResult GetByUser(int userId)
         {
             try
