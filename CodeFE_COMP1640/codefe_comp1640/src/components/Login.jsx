@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode';
 const API_BASE = process.env.REACT_APP_API_KEY;
@@ -31,22 +31,19 @@ const Login = () => {
 
   const handleClickLogin = async (e) => {
     e.preventDefault();
+    console.log("click")
     try {
       const response = await axios.post(
-        API_BASE + "/app-user/login",
+        `${API_BASE}/app-user/login`,
         {
           email,
           password,
         }
       );
       const token = response.data;
-      const userData = jwtDecode(token); // decode your token here
       localStorage.setItem('token', token);
-      console.log("token decode: ",userData);
-      
-      const user = response.data;
+      console.log(token)
       if (response.status === 200) {
-        console.log("Login successful", user);
         navigate("/");
       } else if (response.status === 400) {
         console.log("Wrong email or password");

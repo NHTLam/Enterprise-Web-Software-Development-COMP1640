@@ -13,12 +13,12 @@ const Header = () => {
     if (token != null) setIsLogin(true);
   }, 1);
 
-  console.log(islogin);
-  console.log("token got: ", token);
-
   const handleClickLogOut = (e) => {
     e.preventDefault();
-    localStorage.removeItem("token");
+    localStorage.clear();
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('token');
+
     setIsLogin(false);
     navigate("/");
   };
