@@ -20,7 +20,6 @@ const App = () => {
   return (
     <Router>
       <Routes>
-
         {/* STUDENT ROUTES */}
         <Route
           path="/"
@@ -86,6 +85,15 @@ const App = () => {
           element={
             <LayoutAdmin>
               <Account />
+            </LayoutAdmin>
+          }
+        />
+
+        <Route
+          path="/ad_manage/feedback"
+          element={
+            <LayoutAdmin>
+              <Feedback />
             </LayoutAdmin>
           }
         />
