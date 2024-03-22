@@ -11,10 +11,12 @@ public partial class ActionEnum
     public static Action DELETE = new Action(3, "Delete");
     public static Action READ = new Action(4, "Read");
     public static Action APPROVAL = new Action(5, "Approval");
+    public static Action UPLOAD_FILE = new Action(6, "Upload File");
+    public static Action EXPORT = new Action(7, "Export");
     public static List<Action> ActionEnumList = new List<Action>
     {
         CREATE, UPDATE, DELETE, READ,
-        APPROVAL
+        APPROVAL, UPLOAD_FILE, EXPORT
     };
 }
 

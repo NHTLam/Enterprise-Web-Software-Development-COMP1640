@@ -11,6 +11,10 @@ using Microsoft.EntityFrameworkCore;
 using CodeBE_COMP1640.Controllers.UserController;
 using CodeBE_COMP1640.Controllers.PermissionController;
 using System.Linq;
+using CodeBE_COMP1640.Controllers.FeedbackController;
+using CodeBE_COMP1640.Controllers.DashboardController;
+using CodeBE_COMP1640.Controllers.CommentController;
+using CodeBE_COMP1640.Controllers.ArticleController;
 
 namespace CodeBE_COMP1640.Services.PermissionS
 {
@@ -52,6 +56,10 @@ namespace CodeBE_COMP1640.Services.PermissionS
                 Dictionary<string, List<string>> DictionaryPaths = new Dictionary<string, List<string>>();
                 DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, UserRoute.DictionaryPath);
                 DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, PermissionRoute.DictionaryPath);
+                DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, FeedbackRoute.DictionaryPath);
+                DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, DashboardRoute.DictionaryPath);
+                DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, CommentRoute.DictionaryPath);
+                DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, ArticleRoute.DictionaryPath);
                 List<Permission> Permissions = new List<Permission>();
                 foreach (var DictionaryPath in DictionaryPaths)
                 {

@@ -18,13 +18,18 @@ const HeaderAdmin = () => {
             </Link>
           </li>
           <li>
+            <Link to="/mk_manage_topic" className="nav-link px-2 link-dark">
+              Manager Contribution / Topic
+            </Link>
+          </li>
+          <li>
             <Link to="/ad_manage/account" className="nav-link px-2 link-dark">
               Account
             </Link>
           </li>
           <li>
-            <Link to="/ad_manage/feedback" className="nav-link px-2 link-dark">
-              Feedback
+            <Link to="/manager_role" className="nav-link px-2 link-dark">
+              Manager Role
             </Link>
           </li>
           <li>

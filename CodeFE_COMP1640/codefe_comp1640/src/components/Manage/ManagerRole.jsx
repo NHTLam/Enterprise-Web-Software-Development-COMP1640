@@ -9,7 +9,8 @@ const ManagerRole = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [Roles, setRole] = useState([]);
-  const [STT, setSTT] = useState(1);
+  const [Permissions, setPermissions] = useState([]);
+
   const API_BASE = process.env.REACT_APP_API_KEY;
 
   const handlNewRole = async (e) => {
@@ -64,6 +65,20 @@ const ManagerRole = () => {
         console.log("Failed to list Role! " + err);
       }
     };
+
+    // const listRole = async () => {
+    //   try {
+    //     const res = await axios.post(`${API_BASE}/role/list-role`, null, {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     });
+    //     setRole(res.data);
+    //     console.table("List of Roles:", JSON.stringify(res.data));
+    //   } catch (err) {
+    //     console.log("Failed to list Role! " + err);
+    //   }
+    // };
     listRole();
   }, []);
 
@@ -87,12 +102,20 @@ const ManagerRole = () => {
           <th>Name</th>
           <th>Description</th>
         </tr>
-        {Roles.map((Role) => (
+        {Roles.map((Role, index) => (
           <tr key={Role.userId}>
-            <td>1</td>
+            <td>{index + 1}</td>
             <td>{Role.name}</td>
             <td>{Role.description}</td>
             <td>
+              <button
+                className="btn btn-primary"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#setPermission"
+              >
+                Set Permission
+              </button>
               <Link
                 to={`/edit_Role/${Role.userId}`}
                 className="btn btn-warning"
@@ -178,6 +201,68 @@ const ManagerRole = () => {
                   onClick={handlNewRole}
                 >
                   Create Role
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      
+      {/* <!-- Modal for permission --> */}
+      <form>
+        <div
+          className="modal fade"
+          id="setPermission"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">
+                  Set Permission
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <table className="table table-striped mt-2 text-center">
+                <tr>
+                  <th>STT</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+                {Roles.map((Role, index) => (
+                  <tr key={Role.userId}>
+                    <td>{index + 1}</td>
+                    <td>{Role.name}</td>
+                    <td>{Role.description}</td>
+                    <td>
+                      <button 
+                        type="button"
+                        className="btn btn-secondary"></button>
+                    </td>
+                  </tr>
+                ))}
+              </table>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  data-bs-dismiss="modal"
+                  // onClick={handlNewRole}
+                >
+                  Save
                 </button>
               </div>
             </div>
