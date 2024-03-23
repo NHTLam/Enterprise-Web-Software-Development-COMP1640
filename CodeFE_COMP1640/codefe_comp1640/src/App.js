@@ -16,6 +16,7 @@ import Account from "./components/Manage/Account";
 import EditAccount from "./components/Manage/EditAccount";
 import Feedback from "./components/Manage/Feedback";
 import ManagerRole from "./components/Manage/ManagerRole";
+import PostHistory from "./pages/PostHistory";
 const App = () => {
   return (
     <Router>
@@ -39,6 +40,14 @@ const App = () => {
           element={
             <Layout>
               <StAddPost />
+            </Layout>
+          }
+        />
+        <Route
+          path="/history"
+          element={
+            <Layout>
+              <PostHistory/>
             </Layout>
           }
         />
