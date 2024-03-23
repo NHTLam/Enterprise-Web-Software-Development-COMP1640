@@ -17,14 +17,17 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
     public class FeedbackController : ControllerBase
     {
         private readonly IFeedbackService _feedbackService;
-        // private readonly IEmailService _emailService;
-        // private readonly IUserService _userService;
-        // private readonly ILogger<FeedbackController> _logger;
+   
+        private readonly IEmailSender _emailSender;
+     
+         private readonly IUserService _userService;
 
-        public FeedbackController(IFeedbackService feedbackService)
+        public FeedbackController(IFeedbackService feedbackService,IEmailSender emailSender,IUserService userService)
         {
             _feedbackService = feedbackService ?? throw new ArgumentNullException(nameof(feedbackService));
-            // _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+    
+            this._emailSender = emailSender;
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
              
         }
 
@@ -48,49 +51,42 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
 
         [HttpPost]
         public async Task<IActionResult> CreateFeedback(FeedbackDTO feedbackDTO)
-{
+{               
+               
+                
                 // Tạo mới đối tượng Feedback từ dữ liệu trong request body
                 var feedback = new Feedback
+                
                 {
                     UserId = feedbackDTO.UserId,
                     ArticleId = feedbackDTO.ArticleId,
                     FeedbackContent = feedbackDTO.FeedbackContent,
-                    FeedbackTime = feedbackDTO.FeedbackTime
+                    FeedbackTime = feedbackDTO.FeedbackTime,
+                    
                 };
-                //gửi email
-                
-
                 // Gọi phương thức tạo mới feedback từ service
                 await _feedbackService.CreateFeedback(feedback);
+                 // Lấy thông tin người dùng từ UserService
+                var user = await _userService.Get(feedbackDTO.UserId);
+                
+                //gửi email
+                 if (user != null)
+                    {   
+                        var receiver = user.Email;
+                        var subject = "Test";
+                        var message = "Hello";
+                        await _emailSender.SendEmailAsync(receiver, subject, message);
+                    }
+                    
+                
+                
                 // await SendFeedbackEmailAsync(feedback);
                 return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
                 
 
             }
-            // private async Task SendFeedbackEmailAsync(Feedback feedback)
-            //     {
-            //          try
-            // {
-            //     if (feedback == null)
-            //     {
-            //         throw new ArgumentNullException(nameof(feedback), "Feedback object is null.");
-            //     }
-
-            //     // Prepare email content
-            //     string toEmail = feedback.User.Email; // Assuming User object has Email property
-            //     string subject = "New Feedback Submitted";
-            //     string content = "Your feedback has been submitted successfully.";
-
-            //     // Send email
-            //     await _emailService.SendEmailAsync(toEmail, subject, content);
-            // }
-            // catch (Exception ex)
-            // {
-            //     // Log or handle the exception as needed
-            //     _logger.LogError($"Failed to send email: {ex.Message}");
-                 
-            // }
-            //     }
+            
+        
 
         [HttpPut("{id}")]
        public async Task<IActionResult> UpdateFeedback(int id, FeedbackDTO feedbackDTO)

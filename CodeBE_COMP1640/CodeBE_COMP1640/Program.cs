@@ -67,7 +67,7 @@ builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
-
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 // builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();

@@ -8,4 +8,7 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController;
     public int ArticleId { get; set; }
     public string FeedbackContent { get; set; }
     public DateTime FeedbackTime { get; set; }
+
+  
+
     }
