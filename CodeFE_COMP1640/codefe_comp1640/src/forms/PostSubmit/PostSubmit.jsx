@@ -30,6 +30,7 @@ const PostSubmit = props => {
             return;
         }
 
+        console.log(selectedFile)
         const formData = new FormData();
         formData.append('file', selectedFile);
 
@@ -40,7 +41,23 @@ const PostSubmit = props => {
                     Authorization: `Bearer ${token}`
                 }
             });
-
+            const res = await axios.post(
+                `${API_BASE}/article/create`,
+                {
+                    departmentId,
+                    userId,
+                    ...credentials,
+                }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const postData = response.data;
+            if (res.status === 200) {
+                console.log("Submit successful", postData);
+            } else if (res.status === 400) {
+                console.log("some thing went wrong");
+            }
             if (response.status === 200) { // Assuming successful upload has status 200
                 console.log('File uploaded successfully!');
                 setSelectedFile(null); // Clear file selection

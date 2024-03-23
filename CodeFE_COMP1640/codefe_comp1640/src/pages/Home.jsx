@@ -1,21 +1,21 @@
 import React from 'react'
-import {Link, useNavigate} from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 const API_BASE = process.env.REACT_APP_API_KEY;
-const token = localStorage.getItem("token");
 
 const Home = () => {
+
     const navigate = useNavigate();
     const [userId, setUserId] = useState();
-
-    useEffect(()=>{
-        if(token){
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
             const token = localStorage.getItem("token");
-            if(userId === undefined|| userId === null){
-                const getUserId = async()=>{
-                    const response = await axios.post(`${API_BASE}/app-user/get-user-id`,null, {
+            if (userId === undefined || userId === null) {
+                const getUserId = async () => {
+                    const response = await axios.post(`${API_BASE}/app-user/get-user-id`, null, {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }
@@ -23,27 +23,25 @@ const Home = () => {
                     setUserId(response.data);
                 }
                 getUserId();
-                navigate("/")
             }
-            
         }
-    }, [])
-    // localStorage.clear();
+        navigate("/");
+    })
     localStorage.setItem("user_id", userId);
     return (
         <div className="container">
             <div className="row">
-                
-                <div className="col">
-                <Link to={"/st_submit_post"}>
-                    <div className="card">
-                        <img src="https://www.analyticsinsight.net/wp-content/uploads/2021/07/Technology-Can-Boost-Your-Business-Productivity.jpg" className="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <p className="card-text">dsasadas</p>
-                        </div>
-                    </div>
 
-                </Link>  
+                <div className="col">
+                    <Link to={"/st_submit_post"}>
+                        <div className="card">
+                            <img src="https://www.analyticsinsight.net/wp-content/uploads/2021/07/Technology-Can-Boost-Your-Business-Productivity.jpg" className="card-img-top" alt="..." />
+                            <div className="card-body">
+                                <p className="card-text">dsasadas</p>
+                            </div>
+                        </div>
+
+                    </Link>
                 </div>
                 <div className="col-5">
                     <div className="card h-100">

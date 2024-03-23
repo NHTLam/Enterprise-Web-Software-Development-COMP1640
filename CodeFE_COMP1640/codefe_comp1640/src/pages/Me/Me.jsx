@@ -2,17 +2,18 @@ import React, { useState } from 'react'
 import "./Style.css"
 import axios from 'axios';
 import { useEffect } from 'react';
-const token = localStorage.getItem("token");
 
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 function Me() {
+    const userId = localStorage.getItem("user_id");
     const [userData, setUserData] = useState();
+
     useEffect(() => {
-        const userId = localStorage.getItem("user_id");
-        if (userId !== undefined){
+        const token = localStorage.getItem("token");
+        if (userId !== undefined) {
             const getAccount = async () => {
-                const response = await axios.post(`${API_BASE}/app-user/get`,{userId: userId}, {
+                const response = await axios.post(`${API_BASE}/app-user/get`, { userId: userId }, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -22,7 +23,7 @@ function Me() {
             }
             getAccount();
         }
-    },[]);
+    }, []);
     if (userData == null) return <></>
 
 
@@ -59,7 +60,7 @@ function Me() {
                                         </div>
                                         <div class="col-md-6">
                                             <label for="inputEmail4" class="form-label">Email *</label>
-                                            <input type="email" class="form-control" id="inputEmail4" value={userData.email}/>
+                                            <input type="email" class="form-control" id="inputEmail4" value={userData.email} />
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Phone</label>

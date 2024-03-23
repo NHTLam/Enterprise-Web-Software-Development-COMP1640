@@ -15,7 +15,7 @@ const Header = () => {
 
   const handleClickLogOut = (e) => {
     e.preventDefault();
-    localStorage.clear();
+    // localStorage.clear();
     localStorage.removeItem('user_id');
     localStorage.removeItem('token');
 

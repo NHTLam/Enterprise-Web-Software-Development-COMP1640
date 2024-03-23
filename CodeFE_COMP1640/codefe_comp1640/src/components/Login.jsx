@@ -34,16 +34,15 @@ const Login = () => {
     console.log("click")
     try {
       const response = await axios.post(
-      `${API_BASE}/app-user/login`,
+        `${API_BASE}/app-user/login`,
         {
           email,
           password,
         }
       );
-      const token = response.data;
-      localStorage.setItem('token', token);
-      console.log(token)
       if (response.status === 200) {
+        const token = response.data;
+        localStorage.setItem('token', token);
         navigate("/");
       } else if (response.status === 400) {
         console.log("Wrong email or password");
