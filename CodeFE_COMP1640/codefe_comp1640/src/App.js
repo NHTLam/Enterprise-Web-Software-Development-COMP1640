@@ -44,7 +44,7 @@ const App = () => {
         />
 
         <Route
-          path="/st_edit_post"
+          path="/st_edit_post/:id"
           element={
             <Layout>
               <StEditPost />
