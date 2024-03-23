@@ -1,12 +1,13 @@
 import PostInfor from "../components/PostInfor"
 import { useState, useEffect, useRef } from "react";
 import imageInput from "../assets/add_image.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
 import React from 'react'
+const API_BASE = process.env.REACT_APP_API_KEY|| "";
 
 function StEditPost(props) {
+    const {id} = useParams();
     const navigate = useNavigate();
     const onFileChange = (files) => {
         console.log(files)
@@ -14,11 +15,13 @@ function StEditPost(props) {
     const [imageList, setImageList] = useState([]);
     const fileInputRef = useRef(null);
     const [postData, setPostData] = useState();
-    const API_KEY_URL = process.env.REACT_APP_API_KEY|| "";
     useEffect(() => {
-        axios.get(`https://6fdd-2001-ee0-1a2d-ee72-8c6b-c998-e5b-db15.ngrok-free.app/api/Article/93`, {
+        const token = localStorage.getItem("token");
+        axios.get(`${API_BASE}/article/get/${id}`, {
             headers: {
-                'ngrok-skip-browser-warning': 'true'
+                'ngrok-skip-browser-warning': 'true',
+                Authorization: `Bearer ${token}`
+                
             },staleTime: 0
         })
             .then(data => {
@@ -36,7 +39,7 @@ function StEditPost(props) {
         e.preventDefault();
         try {
             const response = await axios.delete(
-                `https://6fdd-2001-ee0-1a2d-ee72-8c6b-c998-e5b-db15.ngrok-free.app/api/Article/93`,
+                `${API_BASE}/article/delete`,
             );
             if (response.status === 200) {
                 navigate("/st_submit_post");
