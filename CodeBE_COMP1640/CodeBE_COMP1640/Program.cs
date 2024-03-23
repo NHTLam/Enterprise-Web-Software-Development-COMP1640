@@ -68,7 +68,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
-builder.Services.AddScoped<IEmailService, EmailService>();
+// builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 
