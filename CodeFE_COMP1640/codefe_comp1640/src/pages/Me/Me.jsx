@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import "./Style.css"
 import axios from 'axios';
 import { useEffect } from 'react';
+const token = localStorage.getItem("token");
 
 const API_BASE = process.env.REACT_APP_API_KEY;
-const token = localStorage.getItem("token");
 
 function Me() {
     const [userData, setUserData] = useState();

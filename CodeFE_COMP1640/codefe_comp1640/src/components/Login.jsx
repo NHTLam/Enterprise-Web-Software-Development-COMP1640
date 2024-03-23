@@ -34,7 +34,7 @@ const Login = () => {
     console.log("click")
     try {
       const response = await axios.post(
-        `${API_BASE}/app-user/login`,
+      `${API_BASE}/app-user/login`,
         {
           email,
           password,
