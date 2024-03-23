@@ -1,41 +1,108 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types'
-import './Style.css'
+import './Style.css';
 import imageInput from '../../assets/add_image.png';
 import { Link, useNavigate } from "react-router-dom";
-
+const API_BASE = process.env.REACT_APP_API_KEY;
 
 const PostSubmit = props => {
-    const navigate = useNavigate();
-    const [imageList, setImageList] = useState([]);
-    const [userId,setUserId] = useState(2);
-    const [departmentId,setDepartmentId] = useState(1);
-
-    const [content,setContent] = useState("test delete");
+    //decalre value
     const fileInputRef = useRef(null);
+    const navigate = useNavigate();
+    const userId = localStorage.getItem("user_id");
+    const token = localStorage.getItem("token");
+    //State
+    const [imageList, setImageList] = useState([]);
+    const [selectedFile, setSelectedFile] = useState("");
+    const [departmentId, setDepartmentId] = useState(1);
+    const [credentials, setCredentials] = useState({});
 
-    const handleClickSubmit = async (e) => {
-        e.preventDefault();
+    //functions
+    const handleChange = (e) => {
+        setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+    };
+    const handleClickSubmit = async (event) => {
+        event.preventDefault();
+
+        if (!selectedFile) {
+            alert('Please select a file to upload.');
+            return;
+        }
+
+        console.log(selectedFile)
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
         try {
-            const response = await axios.post(
-                `https://6fdd-2001-ee0-1a2d-ee72-8c6b-c998-e5b-db15.ngrok-free.app/api/Article`,
+            const response = await axios.post(`${API_BASE}/article/upload-file`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const res = await axios.post(
+                `${API_BASE}/article/create`,
                 {
                     departmentId,
                     userId,
-                    content
+                    ...credentials,
+                }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
-            );
+            });
             const postData = response.data;
-            if (response.status === 200) {
+            if (res.status === 200) {
                 console.log("Submit successful", postData);
-            } else if (response.status === 400) {
+            } else if (res.status === 400) {
                 console.log("some thing went wrong");
             }
-        } catch (err) {
-            console.log("Error " + err);
+            if (response.status === 200) { // Assuming successful upload has status 200
+                console.log('File uploaded successfully!');
+                setSelectedFile(null); // Clear file selection
+            } else {
+                console.error('Error uploading file:', response.data); // Access error details from response
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
     };
+
+    // const handleClickSubmit = async (e) => {
+    //     e.preventDefault();
+
+    //     const data = new FormData();
+    //     data.append("file", file);
+    //     axios.post(`${API_BASE}/article/upload-file`, data, {
+    //         headers: {
+    //             Authorization: `Bearer ${token}`
+    //         }
+    //     }).then(res => console.log(res.data))
+    //     .catch(err => console.log(err))
+    //     try {
+    //         const response = await axios.post(
+    //             `${API_BASE}/article/create`,
+    //             {
+    //                 departmentId,
+    //                 userId,
+    //                 fileData: data,
+    //                 ...credentials,
+    //             }, {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`
+    //             }
+    //         });
+    //         const postData = response.data;
+    //         if (response.status === 200) {
+    //             console.log("Submit successful", postData);
+    //         } else if (response.status === 400) {
+    //             console.log("some thing went wrong");
+    //         }
+    //     } catch (err) {
+    //         console.log("Error " + err);
+    //     }
+    // };
 
     // const handleChange = (e) => {
     //     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -71,7 +138,7 @@ const PostSubmit = props => {
                 <form>
                     <div className='bg-light'>
                         <div className="mb-3 mt-5">
-                            <input className="form-control" type="file" id="fileData" multiple />
+                            <input className="form-control" type="file" id="fileData" onChange={(e) => setSelectedFile(e.target.files)} />
                         </div>
                     </div>
                     <div className="drop_card form-control">
@@ -91,7 +158,7 @@ const PostSubmit = props => {
 
                     <div className="input-group mt-3">
                         <span className="input-group-text">With textarea</span>
-                        <textarea className="form-control" aria-label="With textarea"  id="content"></textarea>
+                        <textarea className="form-control" aria-label="With textarea" id="content" onChange={handleChange}></textarea>
                     </div>
 
                     <button type="submit" className="btn btn-secondary float-end mt-3" onClick={handleClickSubmit}>Submit</button>
