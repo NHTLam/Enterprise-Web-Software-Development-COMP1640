@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+const token = localStorage.getItem("token");
+const API_BASE = process.env.REACT_APP_API_KEY;
 
 const Feedback = () => {
   const [feedback, setFeedback] = useState("");
@@ -13,7 +15,20 @@ const Feedback = () => {
   const handleFeedback = async () => {
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
-      // const response = await axios.post(
+      const saveFeedback = axios.post(
+        `${API_BASE}/feedback/create`,
+        {
+          userId,
+          articleId,
+          feedback,
+          feedbackTime,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const newFeedback = {
         userId: userId,
         articleId: articleId,
