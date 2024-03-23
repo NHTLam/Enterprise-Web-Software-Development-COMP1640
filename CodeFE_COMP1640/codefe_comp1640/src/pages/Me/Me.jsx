@@ -3,6 +3,8 @@ import "./Style.css"
 import axios from 'axios';
 import { useEffect } from 'react';
 
+const token = localStorage.getItem("token");
+
 function Me() {
     const API_BASE = process.env.REACT_APP_API_KEY;
 
@@ -11,7 +13,6 @@ function Me() {
 
     useEffect(()=>{
         const getUserId = async()=>{
-            const token = localStorage.getItem("token");
             const response = await axios.post(`${API_BASE}/app-user/get-user-id`,null, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -20,17 +21,23 @@ function Me() {
             setUserId(response.data);
         }
         getUserId();
-    })
+    }, [])
 
     useEffect(() => {
-        const getAccount = async () => {
-            const response = await axios.post(`${API_BASE}/app-user/get`,{userId: userId});
-            const data = response.data;
-            setUserData(data);
+        if (userId != 0 && userId != null){
+            const getAccount = async () => {
+                const response = await axios.post(`${API_BASE}/app-user/get`,{userId: userId}, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const data = response.data;
+                setUserData(data);
+            }
+            getAccount();
         }
-        getAccount();
-      });
-      if (userData == null) return <></>
+    }, []);
+    if (userData == null) return <></>
 
 
 

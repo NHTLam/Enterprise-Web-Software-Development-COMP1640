@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+
+const token = localStorage.getItem("token");
+
 const Account = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -13,7 +16,6 @@ const Account = () => {
   const [accounts, setAccount] = useState([]);
   const API_BASE = process.env.REACT_APP_API_KEY;
   const handlNewAccount = async (e) => {
-    const token = localStorage.getItem("token");
     e.preventDefault();
     try {
       const response = await axios.post(
@@ -59,7 +61,11 @@ const Account = () => {
   useEffect(() => {
     const listAcount = async () => {
       try {
-        const res = await axios.post(`${API_BASE}/app-user/list`);
+        const res = await axios.post(`${API_BASE}/app-user/list`, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setAccount(res.data);
         console.table("List of accounts:", JSON.stringify(res.data));
       } catch (err) {

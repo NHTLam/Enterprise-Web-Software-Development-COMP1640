@@ -15,11 +15,11 @@ import Manage from "./pages/Manage";
 import Account from "./components/Manage/Account";
 import EditAccount from "./components/Manage/EditAccount";
 import Feedback from "./components/Manage/Feedback";
+import ManagerRole from "./components/Manage/ManagerRole";
 const App = () => {
   return (
     <Router>
       <Routes>
-
         {/* STUDENT ROUTES */}
         <Route
           path="/"
@@ -90,10 +90,28 @@ const App = () => {
         />
 
         <Route
+          path="/ad_manage/feedback"
+          element={
+            <LayoutAdmin>
+              <Feedback />
+            </LayoutAdmin>
+          }
+        />
+
+        <Route
           path="/edit_account/:id"
           element={
             <LayoutAdmin>
               <EditAccount />
+            </LayoutAdmin>
+          }
+        />
+
+        <Route
+          path="/manager_role"
+          element={
+            <LayoutAdmin>
+              <ManagerRole />
             </LayoutAdmin>
           }
         />
