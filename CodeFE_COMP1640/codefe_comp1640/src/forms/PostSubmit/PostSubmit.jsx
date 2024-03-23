@@ -33,6 +33,7 @@ const PostSubmit = props => {
         console.log(selectedFile)
         const formData = new FormData();
         formData.append('file', selectedFile);
+        console.log(formData.get('file'));
 
         try {
             const response = await axios.post(`${API_BASE}/article/upload-file`, formData, {
@@ -138,7 +139,7 @@ const PostSubmit = props => {
                 <form>
                     <div className='bg-light'>
                         <div className="mb-3 mt-5">
-                            <input className="form-control" type="file" id="fileData" onChange={(e) => setSelectedFile(e.target.files)} />
+                            <input className="form-control" type="file" id="file" onChange={(e) => setSelectedFile(e.target.files[0])} />
                         </div>
                     </div>
                     <div className="drop_card form-control">

@@ -1,7 +1,18 @@
 import React from 'react';
 import './Style.css';
-
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+const API_BASE = process.env.REACT_APP_API_KEY;
 function ManageTopic() {
+  const [topicData, setTopicData] = useState([]);
+
+  useEffect(() => {
+    axios.get()
+      .then(data => {
+        setTopicData(data.data);
+      })
+      .catch(err => console.log(err))
+  })
   return (
     <div className="topic_table">
     <table className="table align-middle mb-0 bg-white table-bordered mt-5">
@@ -43,7 +54,7 @@ function ManageTopic() {
               Public
             </button>
             <button type="button" className="btn btn-danger btn-sm btn-rounded">
-              Delete
+              View
             </button>
           </td>
         </tr>
