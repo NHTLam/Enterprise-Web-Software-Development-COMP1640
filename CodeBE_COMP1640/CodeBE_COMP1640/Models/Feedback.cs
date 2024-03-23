@@ -16,4 +16,5 @@ public partial class Feedback
     public DateTime? FeedbackTime { get; set; }
 
     public virtual Article Article { get; set; } = null!;
+    public virtual User User { get; set; } = null!;
 }

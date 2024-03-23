@@ -13,6 +13,9 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using CodeBE_COMP1640.Services.FeedbackS;
 using CodeBE_COMP1640.Services.DashboardS;
+using CodeBE_COMP1640.Services.EmailS;
+
+
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -64,6 +67,8 @@ builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 

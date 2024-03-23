@@ -1,9 +1,14 @@
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Services.FeedbackS;
+using CodeBE_COMP1640.Services.UserS;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using CodeBE_COMP1640.Services.EmailS;
+
 
 namespace CodeBE_COMP1640.Controllers.FeedbackController
 {
@@ -12,10 +17,15 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
     public class FeedbackController : ControllerBase
     {
         private readonly IFeedbackService _feedbackService;
+        private readonly IEmailService _emailService;
+        private readonly IUserService _userService;
+        private readonly ILogger<FeedbackController> _logger;
 
-        public FeedbackController(IFeedbackService feedbackService)
+        public FeedbackController(IFeedbackService feedbackService, IEmailService emailService)
         {
             _feedbackService = feedbackService ?? throw new ArgumentNullException(nameof(feedbackService));
+            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+             
         }
 
         [HttpGet]
@@ -47,12 +57,40 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
                     FeedbackContent = feedbackDTO.FeedbackContent,
                     FeedbackTime = feedbackDTO.FeedbackTime
                 };
+                //gửi email
+                
 
                 // Gọi phương thức tạo mới feedback từ service
                 await _feedbackService.CreateFeedback(feedback);
-
+                await SendFeedbackEmailAsync(feedback);
                 return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
+                
+
             }
+            private async Task SendFeedbackEmailAsync(Feedback feedback)
+                {
+                     try
+            {
+                if (feedback == null)
+                {
+                    throw new ArgumentNullException(nameof(feedback), "Feedback object is null.");
+                }
+
+                // Prepare email content
+                string toEmail = feedback.User.Email; // Assuming User object has Email property
+                string subject = "New Feedback Submitted";
+                string content = "Your feedback has been submitted successfully.";
+
+                // Send email
+                await _emailService.SendEmailAsync(toEmail, subject, content);
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                _logger.LogError($"Failed to send email: {ex.Message}");
+                 
+            }
+                }
 
         [HttpPut("{id}")]
        public async Task<IActionResult> UpdateFeedback(int id, FeedbackDTO feedbackDTO)

@@ -1,5 +1,5 @@
 using System.Net.Mail;
-namespace CodeBE_COMP1640.Services.UserS{
+namespace CodeBE_COMP1640.Services.EmailS{
 public interface IEmailService
     {
         Task SendEmailAsync(string toEmail, string subject, string content);
