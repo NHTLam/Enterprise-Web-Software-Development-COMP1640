@@ -26,7 +26,7 @@ const Home = () => {
             }
         }
         navigate("/");
-    })
+    },[])
     localStorage.setItem("user_id", userId);
     return (
         <div className="container">
