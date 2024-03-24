@@ -4,10 +4,10 @@ import imageInput from "../assets/add_image.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import React from 'react'
-const API_BASE = process.env.REACT_APP_API_KEY|| "";
+const API_BASE = process.env.REACT_APP_API_KEY || "";
 
-function StEditPost(props) {
-    const {id} = useParams();
+function MarketingCFeedb(props) {
+    const { id } = useParams();
     const navigate = useNavigate();
     const onFileChange = (files) => {
         console.log(files)
@@ -21,8 +21,8 @@ function StEditPost(props) {
             headers: {
                 'ngrok-skip-browser-warning': 'true',
                 Authorization: `Bearer ${token}`
-                
-            },staleTime: 0
+
+            }, staleTime: 0
         })
             .then(data => {
                 setPostData(data.data.data)
@@ -100,16 +100,16 @@ function StEditPost(props) {
                         </div>
 
                         <div className="input-group mt-3">
-                            <span className="input-group-text" >With textarea</span>
-                            <p>{postData.content}</p>
+                            <span className="input-group-text">Note</span>
+                            <textarea
+                                className="form-control"
+                                aria-label="With textarea"
+                                value={postData.content}
+                            ></textarea>
                         </div>
-                        <button type="submit" className="btn btn-secondary float-end mt-3">Save</button>
-                        <button type="submit" className="btn btn-secondary float-end mt-3 me-2" onClick={handleClickDelete}>Detele</button>
+                        <button type="submit" className="btn btn-secondary float-end mt-3">Download Contribution</button>
+                        <button type="submit" className="btn btn-success float-end mt-3">Public</button>
                     </form>
-
-
-
-
                 </div>
 
             </>
@@ -117,4 +117,4 @@ function StEditPost(props) {
     )
 }
 
-export default StEditPost
+export default MarketingCFeedb

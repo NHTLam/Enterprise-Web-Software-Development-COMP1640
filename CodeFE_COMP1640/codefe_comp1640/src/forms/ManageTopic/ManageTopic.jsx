@@ -55,7 +55,7 @@ function ManageTopic() {
                 Public
               </button>
               <button type="button" className="btn btn-danger btn-sm btn-rounded">
-                <Link to={`contribute/view/edit/${topicId}`}> View</Link>
+                <Link to={`contribute/view/${topicId}`}> View</Link>
               </button>
             </td>
           </tr>
@@ -64,8 +64,20 @@ function ManageTopic() {
       <div className="btn btn-success m-2">
         Add new request Topic
       </div>
+
+
+      {/* Topic approved and have contribute of student */}
+      <div class="card mt-5">
+        <h5 class="card-header">Topic Name</h5>
+        <div class="card-body">
+          <h5 class="card-title">Topic Title</h5>
+
+          <p class="card-text">Topic Description</p>
+          <p class="card-text">Contribution: 30</p>
+          <a href="!#" class="btn btn-primary">View Submition</a>
+        </div>
+      </div>
     </div>
   )
 }
-
 export default ManageTopic
