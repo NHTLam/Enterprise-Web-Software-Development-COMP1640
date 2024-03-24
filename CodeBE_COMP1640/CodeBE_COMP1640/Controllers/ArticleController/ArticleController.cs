@@ -1,10 +1,10 @@
 ﻿using CodeBE_COMP1640.Factories.Implements;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IO.Compression;
 
 namespace CodeBE_COMP1640.Controllers.ArticleController
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class ArticleController : ControllerBase
     {
@@ -19,7 +19,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             _repositoryFactory = serviceProvider.GetService<RepositoryFactory>();
         }
 
-        [HttpGet("{id}")]
+        [Route(ArticleRoute.Get), HttpGet, Authorize]
         public IActionResult Get(int id)
         {
             try
@@ -39,7 +39,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
 
-        [HttpPost]
+        [Route(ArticleRoute.Create), HttpPost, Authorize]
         public IActionResult Add(ArticlePost request)
         {
             try
@@ -59,7 +59,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
 
-        [HttpPut("{id}")]
+        [Route(ArticleRoute.Update), HttpPut, Authorize]
         public IActionResult Update(int id, ArticlePut request)
         {
             try
@@ -81,7 +81,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
 
-        [HttpDelete("{id}")]
+        [Route(ArticleRoute.Delete), HttpDelete, Authorize]
         public IActionResult Delete(int id)
         {
             try
@@ -121,7 +121,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         //    }
         //}
 
-        [HttpGet("byUser/{userId}")]
+        [Route(ArticleRoute.GetByUser), HttpGet, Authorize]
         public IActionResult GetByUser(int userId)
         {
             try
@@ -140,7 +140,8 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 });
             }
         }
-        [HttpPost("File")]
+
+        [Route(ArticleRoute.UploadFile), HttpPost, Authorize]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             string _uploadFolder = "./UploadFile";
@@ -162,7 +163,8 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
 
             return Ok("File uploaded successfully");
         }
-        [HttpGet("export")]
+
+        [Route(ArticleRoute.Export), HttpGet, Authorize]
         public IActionResult ExportFiles()
         {
             string _uploadFolder = "./UploadFile";

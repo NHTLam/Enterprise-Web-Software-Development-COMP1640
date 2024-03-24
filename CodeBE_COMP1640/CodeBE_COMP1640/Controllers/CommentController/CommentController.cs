@@ -18,7 +18,7 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             this.CommentService = CommentService;
         }
 
-        [Route(CommentRoute.List), HttpPost]
+        [Route(CommentRoute.List), HttpPost, Authorize]
         public async Task<ActionResult<List<CommentDTO>>> List()
         {
             if (!ModelState.IsValid)
@@ -29,18 +29,18 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             return CommentDTOs;
         }
 
-        [Route(CommentRoute.ListByAtical), HttpPost]
-        public async Task<ActionResult<List<CommentDTO>>> ListByAtical([FromBody] int ArticalId)
+        [Route(CommentRoute.ListByAtical), HttpPost, Authorize]
+        public async Task<ActionResult<List<CommentDTO>>> ListByAtical([FromBody] CommentDTO CommentDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            List<Comment> Comments = await CommentService.List(ArticalId);
+            List<Comment> Comments = await CommentService.List(CommentDTO.ArticleId ?? 0);
             List<CommentDTO> CommentDTOs = Comments.Select(x => new CommentDTO(x)).ToList();
             return CommentDTOs;
         }
 
-        [Route(CommentRoute.Get), HttpPost]
+        [Route(CommentRoute.Get), HttpPost, Authorize]
         public async Task<ActionResult<CommentDTO>> Get([FromBody] CommentDTO CommentDTO)
         {
             if (!ModelState.IsValid)
@@ -52,7 +52,7 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             return CommentDTO;
         }
 
-        [Route(CommentRoute.Create), HttpPost]
+        [Route(CommentRoute.Create), HttpPost, Authorize]
         public async Task<ActionResult<bool>> Create([FromBody] CommentDTO CommentDTO)
         {
             if (!ModelState.IsValid)
@@ -66,7 +66,7 @@ namespace CodeBE_COMP1640.Controllers.CommentController
                 return BadRequest("Commentname already exists");
         }
 
-        [Route(CommentRoute.Update), HttpPost]
+        [Route(CommentRoute.Update), HttpPost, Authorize]
         public async Task<ActionResult<CommentDTO>> Update([FromBody] CommentDTO CommentDTO)
         {
             if (!ModelState.IsValid)
@@ -81,7 +81,7 @@ namespace CodeBE_COMP1640.Controllers.CommentController
                 return BadRequest(Comment);
         }
 
-        [Route(CommentRoute.Delete), HttpPost]
+        [Route(CommentRoute.Delete), HttpPost, Authorize]
         public async Task<ActionResult<CommentDTO>> Delete([FromBody] CommentDTO CommentDTO)
         {
             if (!ModelState.IsValid)

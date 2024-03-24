@@ -1,6 +1,7 @@
 ﻿using CodeBE_COMP1640.Controllers.PermissionController;
 using CodeBE_COMP1640.Controllers.UserController;
 using CodeBE_COMP1640.Models;
+using CodeBE_COMP1640.Services.PermissionS;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security;

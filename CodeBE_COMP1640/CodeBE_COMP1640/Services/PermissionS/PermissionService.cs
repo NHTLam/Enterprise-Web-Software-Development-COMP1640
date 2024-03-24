@@ -11,6 +11,10 @@ using Microsoft.EntityFrameworkCore;
 using CodeBE_COMP1640.Controllers.UserController;
 using CodeBE_COMP1640.Controllers.PermissionController;
 using System.Linq;
+using CodeBE_COMP1640.Controllers.FeedbackController;
+using CodeBE_COMP1640.Controllers.DashboardController;
+using CodeBE_COMP1640.Controllers.CommentController;
+using CodeBE_COMP1640.Controllers.ArticleController;
 
 namespace CodeBE_COMP1640.Services.PermissionS
 {
@@ -20,6 +24,8 @@ namespace CodeBE_COMP1640.Services.PermissionS
         Task<List<string>> ListPath(User User);
         Task<List<string>> ListAllPath();
         Task<List<Role>> ListRole();
+        Task<List<Permission>> ListPermission();
+        Task<List<Permission>> ListPermissionByRole(int RoleId);
         Task<Role> GetRole(long Id);
         Task<bool> CreateRole (Role Role);
         Task<Role> UpdateRole(Role Role);
@@ -52,6 +58,10 @@ namespace CodeBE_COMP1640.Services.PermissionS
                 Dictionary<string, List<string>> DictionaryPaths = new Dictionary<string, List<string>>();
                 DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, UserRoute.DictionaryPath);
                 DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, PermissionRoute.DictionaryPath);
+                DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, FeedbackRoute.DictionaryPath);
+                DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, DashboardRoute.DictionaryPath);
+                DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, CommentRoute.DictionaryPath);
+                DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, ArticleRoute.DictionaryPath);
                 List<Permission> Permissions = new List<Permission>();
                 foreach (var DictionaryPath in DictionaryPaths)
                 {
@@ -70,9 +80,10 @@ namespace CodeBE_COMP1640.Services.PermissionS
                 }
                 await UOW.PermissionRepository.Init(Permissions);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception();
+                Console.WriteLine(ex.Message);
+                throw;
             }
         }
 
@@ -104,6 +115,34 @@ namespace CodeBE_COMP1640.Services.PermissionS
                 List<Permission> AllowPermission = await UOW.PermissionRepository.ListPermission();
                 List<string> AllowPath = AllowPermission.Where(x => permissionIds.Contains(x.PermissionId)).Select(x => x.Path).ToList();
                 return AllowPath;
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
+        }
+
+        public async Task<List<Permission>> ListPermission()
+        {
+            try
+            {
+                return await UOW.PermissionRepository.ListPermission();
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
+        }
+
+        public async Task<List<Permission>> ListPermissionByRole(int RoleId)
+        {
+            try
+            {
+                Role Role = await UOW.PermissionRepository.GetRole(RoleId);
+                List<int> PermissionIds = Role.PermissonRoleMappings.Select(x => x.PermissionId).ToList();
+                List<Permission> Permissions = await UOW.PermissionRepository.ListPermission();
+                Permissions = Permissions.Where(x => PermissionIds.Contains(x.PermissionId)).ToList();
+                return Permissions;
             }
             catch (Exception)
             {
