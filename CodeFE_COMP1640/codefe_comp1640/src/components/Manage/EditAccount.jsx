@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+
+const token = localStorage.getItem("token");
+
 const EditAccount = () => {
+  const [Roles, setRoles] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
   const userId = parseInt(id);
-  console.log("userId", userId);
   // const navigate = useNavigate();
   const [account, setAccount] = useState({
     email: "",
@@ -13,12 +16,32 @@ const EditAccount = () => {
     class: "",
     phone: "",
     address: "",
+    roleUserMappings: []
   });
   const API_BASE = process.env.REACT_APP_API_KEY;
   useEffect(() => {
+    const listRole = async () => {
+      try {
+        const res = await axios.post(`${API_BASE}/role/list-role`, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setRoles(res.data);
+        console.table("List of Roles:", res.data);
+      } catch (err) {
+        console.log("Failed to list Role! " + err);
+      }
+    };
+
     const getAccount = async () => {
       const response = await axios.post(`${API_BASE}/app-user/get`, {
         userId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       const data = response.data;
       setAccount(data);
@@ -37,7 +60,7 @@ const EditAccount = () => {
       //   console.log("Edit failed!" + err);
       // }
     };
-
+    listRole();
     getAccount();
   }, [userId]);
 
@@ -46,7 +69,12 @@ const EditAccount = () => {
     try {
       await axios.post(
         `${API_BASE}/app-user/update/`,
-        account // Gửi dữ liệu từ state account
+        account, // Gửi dữ liệu từ state account
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       console.log("Account updated successfully!");
       // navigate("/");
@@ -57,7 +85,8 @@ const EditAccount = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAccount({ ...account, [name]: value });
+    setAccount({ ...account, [name]: JSON.parse(value)})
+    console.log(account)
   };
 
   return (
@@ -122,7 +151,7 @@ const EditAccount = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <label htmlFor="clas" className="form-label">
               Class
             </label>
@@ -135,6 +164,25 @@ const EditAccount = () => {
               value={account.class}
               onChange={handleChange}
             />
+          </div> */}
+          <div className="mb-3">
+            <label htmlFor="roleUserMappings" className="form-label">
+              Role
+            </label>
+            <select
+              name="roleUserMappings"
+              id="roleUserMappings"
+              className="form-control"
+              onChange={handleChange}
+              placeholder="Set Role"
+              defaultValue=""
+            >
+              {Roles.map((role) => (
+                <option key={role.id} value={JSON.stringify([{userId: userId, roleId: role.roleId}])}>
+                  {role.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="modal-footer mb-2">

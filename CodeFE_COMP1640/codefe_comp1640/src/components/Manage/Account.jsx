@@ -14,6 +14,7 @@ const Account = () => {
   const [address, setAddress] = useState("");
   const [departmentId, setdepartmentId] = useState(1);
   const [accounts, setAccount] = useState([]);
+  const [Roles, setRoles] = useState([]);
   const API_BASE = process.env.REACT_APP_API_KEY;
   const handlNewAccount = async (e) => {
     e.preventDefault();
@@ -59,6 +60,20 @@ const Account = () => {
   };
 
   useEffect(() => {
+    const listRole = async () => {
+      try {
+        const res = await axios.post(`${API_BASE}/role/list-role`, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setRoles(res.data);
+        console.table("List of Roles:", JSON.stringify(res.data));
+      } catch (err) {
+        console.log("Failed to list Role! " + err);
+      }
+    };
+
     const listAcount = async () => {
       try {
         const res = await axios.post(`${API_BASE}/app-user/list`, null, {
@@ -72,6 +87,7 @@ const Account = () => {
         console.log("Failed to list account! " + err);
       }
     };
+    listRole();
     listAcount();
   }, []);
 
@@ -95,9 +111,11 @@ const Account = () => {
           <th>Email</th>
           <th>username</th>
           <th>Phone</th>
-          <th>Class</th>
+          {/* <th>Class</th> */}
           <th>Address</th>
+          <th>Role</th>
           <th>Action</th>
+          {/* <th>Role</th> */}
         </tr>
         {accounts.map((account) => (
           <tr key={account.userId}>
@@ -105,8 +123,9 @@ const Account = () => {
             <td>{account.email}</td>
             <td>{account.username}</td>
             <td>{account.phone}</td>
-            <td>{account.class}</td>
+            {/* <td>{account.class}</td> */}
             <td>{account.address}</td>
+            <td>{Roles.filter(r => account.roleUserMappings.map(r => r.roleId).includes(r.roleId)).map(r => r.name).join(",")}</td>
             <td>
               <Link
                 to={`/edit_account/${account.userId}`}
@@ -236,7 +255,7 @@ const Account = () => {
                     onChange={(e) => setAddress(e.target.value)}
                   />
                 </div>
-                <div className="mb-3">
+                {/* <div className="mb-3">
                   <label for="className" className="form-label">
                     Class
                   </label>
@@ -249,7 +268,7 @@ const Account = () => {
                     value={className}
                     onChange={(e) => setClass(e.target.value)}
                   />
-                </div>
+                </div> */}
               </div>
               <div className="modal-footer">
                 <button
