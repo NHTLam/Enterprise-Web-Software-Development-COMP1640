@@ -16,6 +16,7 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
         public const string ListAllPath = Module + "/list-all-path";
         public const string ListPath = Module + "/list-path";
         public const string ListPermission = Module + "/list-permission";
+        public const string ListPermissionByRole = Module + "/list-permission-by-role";
 
         public const string ListRole = RoleModule + "/list-role";
         public const string GetRole = RoleModule + "/get-role";
@@ -42,7 +43,7 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
             },
             { ActionEnum.READ.Name, new List<string>()
                 {
-                    ListRole, GetRole, ListPermission, ListPath, ListAllPath
+                    ListRole, GetRole, ListPermission, ListPath, ListAllPath, ListPermissionByRole
                 }
             }
         };

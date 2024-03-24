@@ -30,12 +30,12 @@ namespace CodeBE_COMP1640.Controllers.CommentController
         }
 
         [Route(CommentRoute.ListByAtical), HttpPost, Authorize]
-        public async Task<ActionResult<List<CommentDTO>>> ListByAtical([FromBody] int ArticalId)
+        public async Task<ActionResult<List<CommentDTO>>> ListByAtical([FromBody] CommentDTO CommentDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            List<Comment> Comments = await CommentService.List(ArticalId);
+            List<Comment> Comments = await CommentService.List(CommentDTO.ArticleId ?? 0);
             List<CommentDTO> CommentDTOs = Comments.Select(x => new CommentDTO(x)).ToList();
             return CommentDTOs;
         }

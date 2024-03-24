@@ -25,6 +25,7 @@ namespace CodeBE_COMP1640.Services.PermissionS
         Task<List<string>> ListAllPath();
         Task<List<Role>> ListRole();
         Task<List<Permission>> ListPermission();
+        Task<List<Permission>> ListPermissionByRole(int RoleId);
         Task<Role> GetRole(long Id);
         Task<bool> CreateRole (Role Role);
         Task<Role> UpdateRole(Role Role);
@@ -79,9 +80,10 @@ namespace CodeBE_COMP1640.Services.PermissionS
                 }
                 await UOW.PermissionRepository.Init(Permissions);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception();
+                Console.WriteLine(ex.Message);
+                throw;
             }
         }
 
@@ -125,6 +127,22 @@ namespace CodeBE_COMP1640.Services.PermissionS
             try
             {
                 return await UOW.PermissionRepository.ListPermission();
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
+        }
+
+        public async Task<List<Permission>> ListPermissionByRole(int RoleId)
+        {
+            try
+            {
+                Role Role = await UOW.PermissionRepository.GetRole(RoleId);
+                List<int> PermissionIds = Role.PermissonRoleMappings.Select(x => x.PermissionId).ToList();
+                List<Permission> Permissions = await UOW.PermissionRepository.ListPermission();
+                Permissions = Permissions.Where(x => PermissionIds.Contains(x.PermissionId)).ToList();
+                return Permissions;
             }
             catch (Exception)
             {

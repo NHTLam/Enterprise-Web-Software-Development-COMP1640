@@ -108,7 +108,7 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
             return NoContent();
         }
 
-        [Route(FeedbackRoute.Update), HttpDelete, Authorize]
+        [Route(FeedbackRoute.Delete), HttpDelete, Authorize]
         public async Task<IActionResult> DeleteFeedback(int id)
         {
             await _feedbackService.DeleteFeedback(id);

@@ -59,6 +59,22 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
             return PermissionDTOs;
         }
 
+        [Route(PermissionRoute.ListPermissionByRole), HttpPost, Authorize]
+        public async Task<ActionResult<List<PermissionDTO>>> ListPermissionByRole([FromBody] RoleDTO RoleDTO)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
+
+            List<Permission> Permissions = await PermissionService.ListPermissionByRole(RoleDTO.RoleId);
+            List<PermissionDTO> PermissionDTOs = Permissions.Select(x => new PermissionDTO(x)).ToList();
+            return PermissionDTOs;
+        }
+
         [Route(PermissionRoute.ListRole), HttpPost, Authorize]
         public async Task<ActionResult<List<RoleDTO>>> ListRole()
         {

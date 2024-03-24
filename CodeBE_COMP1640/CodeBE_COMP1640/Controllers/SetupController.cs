@@ -16,15 +16,15 @@ namespace CodeBE_COMP1640.Controllers
         }
 
         [HttpGet, Route("/setup/init")]
-        public ActionResult InitEnum()
+        public async Task<ActionResult> InitEnum()
         {
-            InitDepartmentEnum();
-            InitPermission();
-            InitPermissionForAdmin();
+            await InitDepartmentEnum();
+            await InitPermission();
+            await InitPermissionForAdmin();
             return Ok();
         }
 
-        private async void InitDepartmentEnum()
+        private async Task InitDepartmentEnum()
         {
             List<Department> DepartmentEnumList = DepartmentEnum.DepartmentEnumList.Select(item => new Department
             {
@@ -32,15 +32,15 @@ namespace CodeBE_COMP1640.Controllers
                 Code = item.Code,
                 DepartmentName = item.DepartmentName,
             }).ToList();
-            DataContext.Departments.BulkSynchronize(DepartmentEnumList);
+            await DataContext.BulkMergeAsync(DepartmentEnumList);
         }
 
-        private async void InitPermission()
+        private async Task InitPermission()
         {
             await PermissionService.Init();
         }
 
-        private async void InitPermissionForAdmin()
+        private async Task InitPermissionForAdmin()
         {
             await DataContext.PermissonRoleMappings.Where(x => x.RoleId == 1).DeleteFromQueryAsync();
             List<Permission> AllPermissions = await PermissionService.ListPermission();
