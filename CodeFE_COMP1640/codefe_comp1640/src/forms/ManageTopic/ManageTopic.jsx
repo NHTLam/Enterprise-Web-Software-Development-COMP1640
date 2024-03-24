@@ -55,8 +55,7 @@ function ManageTopic() {
                 Public
               </button>
               <button type="button" className="btn btn-danger btn-sm btn-rounded">
-                <Link to={`st_edit_post/${topicId}`}> View</Link>
-
+                <Link to={`contribute/view/edit/${topicId}`}> View</Link>
               </button>
             </td>
           </tr>

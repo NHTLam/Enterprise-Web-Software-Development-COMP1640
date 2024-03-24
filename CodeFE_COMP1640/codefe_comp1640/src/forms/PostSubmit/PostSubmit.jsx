@@ -4,7 +4,9 @@ import PropTypes from "prop-types";
 import "./Style.css";
 import imageInput from "../../assets/add_image.png";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 const API_BASE = process.env.REACT_APP_API_KEY;
+
 
 const PostSubmit = (props) => {
   //decalre value
@@ -75,17 +77,67 @@ const PostSubmit = (props) => {
       const postData = response.data;
       if (res.status === 200) {
         console.log("Submit successful", postData);
+        toast.success('Submit Success!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light"
+        });
       } else if (res.status === 400) {
         console.log("some thing went wrong");
+        toast.error('Some thing went wrong', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light"
+          });
       }
       if (response.status === 200) {
         // Assuming successful upload has status 200
         console.log("File uploaded successfully!");
+        toast.success('Submit Success!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light"
+        });
         setSelectedFile(null); // Clear file selection
       } else {
+        toast.error('Some thing went wrong', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light"
+          });
         console.error("Error uploading file:", response.data); // Access error details from response
       }
     } catch (error) {
+      toast.error('Some thing went wrong', {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light"
+        });
       console.error("Error:", error);
     }
   };
