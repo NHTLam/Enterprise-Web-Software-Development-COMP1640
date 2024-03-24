@@ -31,9 +31,9 @@ public class PermissonRoleMappingDTO
 
     public int PermissionId { get; set; }
 
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
-    public PermissionDTO Permission { get; set; }
+    public PermissionDTO? Permission { get; set; }
 
     public PermissonRoleMappingDTO() { }
 

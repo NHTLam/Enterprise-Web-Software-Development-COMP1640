@@ -47,6 +47,8 @@ public partial class RoleUserMappingDTO
     public int UserId { get; set; }
 
     public int Id { get; set; }
+
+    public string? RoleName { get; set; }
     
     public RoleUserMappingDTO() { }
 

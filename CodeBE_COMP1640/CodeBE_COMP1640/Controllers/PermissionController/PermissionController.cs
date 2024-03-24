@@ -190,7 +190,7 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
             role.Name = RoleDTO.Name;
             role.PermissonRoleMappings = RoleDTO.PermissonRoleMappings?.Select(x => new PermissonRoleMapping
             {
-                Id = x.Id,
+                Id = x.Id ?? 0,
                 RoleId = x.RoleId,
                 PermissionId = x.PermissionId
             }).ToList();
