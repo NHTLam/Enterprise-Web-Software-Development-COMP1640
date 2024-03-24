@@ -45,12 +45,12 @@ const ManagerRole = () => {
     try {
       await axios.post(`${API_BASE}/role/delete-role`, {
         userId,
-      },        
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
       console.log("Delete success");
       setRoles(Roles.filter((Role) => Role.userId !== userId));
       // navigate("/");
@@ -94,11 +94,11 @@ const ManagerRole = () => {
 
   async function handleSubmitPermission(event) {
     event.preventDefault();
-  
+
     const checkedPermissions = [];
   
     const checkboxes = document.querySelectorAll('#setPermission input[type="checkbox"]:checked');
-  
+
     checkboxes.forEach(checkbox => {
       const permissionId = parseInt(checkbox.parentNode.parentNode.querySelector('td:nth-child(1)').textContent, 10); // Extract permission ID from its table cell
       checkedPermissions.push(permissionId);
@@ -368,78 +368,79 @@ const ManagerRole = () => {
       </form>
       
       {/* <!-- Modal for permission --> */}
-        <form>
-          <div
-            className="modal fade"
-            id="setPermission"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-          >
-            <div className="modal-dialog modal-lg">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLabel">
-                    Set Permission
-                  </h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <table className="table table-striped mt-2 text-center">
-                  <tr>
-                    <th>STT</th>
-                    <th>Action</th>
-                    <th>Menu Name</th>
-                    <th>Description</th>
-                    <th>Asigned</th>
+      <form>
+        <div
+          className="modal fade"
+          id="setPermission"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">
+                  Set Permission
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <table className="table table-striped mt-2 text-center">
+                <tr>
+                  <th>STT</th>
+                  <th>Action</th>
+                  <th>Menu Name</th>
+                  <th>Description</th>
+                  <th>Asigned</th>
+                </tr>
+                {Permissions.map((Permission, index) => (
+                  <tr key={Permission.permissionId}>
+                    <td>{index + 1}</td>
+                    <td>{Permission.name}</td>
+                    <td>{Permission.menuName}</td>
+                    <td>{Permission.description}</td>
+                    <td>
+                      <input 
+                        type="checkbox"
+                        checked={PermissionsByRole.some(PermissionByRole => PermissionByRole.permissionId === Permission.permissionId)}
+                        onChange={(e) => {
+                          if (e.target.checked === false){
+                            setPermissionsByRole(PermissionsByRole.filter(e => e.permissionId !== Permission.permissionId))
+                          }
+                          else {
+                            setPermissionsByRole(Permissions.filter(e => PermissionsByRole.map(p => p.permissionId).includes(e.permissionId) || e.permissionId === Permission.permissionId))
+                          }
+                        }}
+                      />
+                    </td>
                   </tr>
-                  {Permissions.map((Permission, index) => (
-                    <tr key={Permission.permissionId}>
-                      <td>{index + 1}</td>
-                      <td>{Permission.name}</td>
-                      <td>{Permission.menuName}</td>
-                      <td>{Permission.description}</td>
-                      <td>
-                        <input 
-                          type="checkbox"
-                          checked={PermissionsByRole.some(PermissionByRole => PermissionByRole.permissionId === Permission.permissionId)}
-                          onChange={(e) => {
-                            if (e.target.checked === false){
-                              setPermissionsByRole(PermissionsByRole.filter(e => e.permissionId !== Permission.permissionId))
-                            }
-                            else {
-                              setPermissionsByRole(Permissions.filter(e => PermissionsByRole.map(p => p.permissionId).includes(e.permissionId) || e.permissionId === Permission.permissionId))
-                            }
-                          }}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </table>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    data-bs-dismiss="modal"
-                    onClick={handleSubmitPermission}
-                  >
-                    Save
-                  </button>
-                </div>
+                ))}
+              </table>
+
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  data-bs-dismiss="modal"
+                  onClick={handleSubmitPermission}
+                >
+                  Save
+                </button>
               </div>
             </div>
           </div>
-        </form>
+        </div>
+      </form>
     </div>
   );
 };

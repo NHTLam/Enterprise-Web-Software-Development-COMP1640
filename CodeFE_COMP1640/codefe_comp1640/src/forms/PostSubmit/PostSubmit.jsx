@@ -48,7 +48,6 @@ const PostSubmit = (props) => {
     console.log(selectedFile);
     const formData = new FormData();
     formData.append("file", selectedFile);
-    console.log(formData.get("file"));
 
     try {
       const response = await axios.post(
