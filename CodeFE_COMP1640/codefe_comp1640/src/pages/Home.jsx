@@ -33,7 +33,7 @@ const Home = () => {
             <div className="row">
 
                 <div className="col">
-                    <Link to={"/st_submit_post"}>
+                    <Link to={"/topic/view"}>
                         <div className="card">
                             <img src="https://www.analyticsinsight.net/wp-content/uploads/2021/07/Technology-Can-Boost-Your-Business-Productivity.jpg" className="card-img-top" alt="..." />
                             <div className="card-body">

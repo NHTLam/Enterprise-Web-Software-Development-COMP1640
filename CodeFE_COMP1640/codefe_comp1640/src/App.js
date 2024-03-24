@@ -21,7 +21,6 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        {/* STUDENT ROUTES */}
         <Route
           path="/"
           element={
@@ -36,7 +35,17 @@ const App = () => {
         <Route path="/login" element={<Login />} />
 
         <Route
-          path="/st_submit_post"
+          path="/me"
+          element={
+            <Layout>
+              <Me />
+            </Layout>
+          }
+        />
+
+        {/* STUDENT ROUTES */}
+        <Route
+          path="/topic/view"//need id of topic here
           element={
             <Layout>
               <StAddPost />
@@ -44,28 +53,18 @@ const App = () => {
           }
         />
         <Route
-          path="/history"
-          element={
-            <Layout>
-              <PostHistory/>
-            </Layout>
-          }
-        />
-
-        <Route
-          path="/st_edit_post/:id"
+          path="/contribute/view/edit/:id"
           element={
             <Layout>
               <StEditPost />
             </Layout>
           }
         />
-
         <Route
-          path="/me"
+          path="/history"
           element={
             <Layout>
-              <Me />
+              <PostHistory />
             </Layout>
           }
         />
