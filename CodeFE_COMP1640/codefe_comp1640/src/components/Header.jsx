@@ -13,12 +13,12 @@ const Header = () => {
     if (token != null) setIsLogin(true);
   }, 1);
 
-  console.log(islogin);
-  console.log("token got: ", token);
-
   const handleClickLogOut = (e) => {
     e.preventDefault();
-    localStorage.removeItem("token");
+    // localStorage.clear();
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('token');
+
     setIsLogin(false);
     navigate("/");
   };
@@ -39,7 +39,7 @@ const Header = () => {
                   ></Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item>
-                      <Link to="/me">Profile</Link>
+                      <Link to="/me"><div>Profile</div></Link>
                     </Dropdown.Item>
                     <Dropdown.Item>
                       <Link to="/ad_manage">Admin Home</Link>
@@ -52,7 +52,11 @@ const Header = () => {
                         Marketing Conidator Home
                       </Link>
                     </Dropdown.Item>
-                    <Dropdown.Item>Post History</Dropdown.Item>
+                    <Dropdown.Item>
+                      <Link to={"/history"}>
+                        <div>Post History</div>                      
+                      </Link>
+                    </Dropdown.Item>
                     <Dropdown.Item onClick={handleClickLogOut}>
                       Logout
                     </Dropdown.Item>

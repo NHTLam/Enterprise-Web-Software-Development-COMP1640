@@ -2,10 +2,15 @@ using CodeBE_COMP1640.Controllers.ArticleController;
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Services.FeedbackS;
 using Microsoft.AspNetCore.Authorization;
+using CodeBE_COMP1640.Services.UserS;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using CodeBE_COMP1640.Services.EmailS;
+
 
 namespace CodeBE_COMP1640.Controllers.FeedbackController
 {
@@ -14,13 +19,21 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
     {
         private readonly IFeedbackService _feedbackService;
 
-        public FeedbackController(IFeedbackService feedbackService)
+        private readonly IEmailSender _emailSender;
+
+        private readonly IUserService _userService;
+
+        public FeedbackController(IFeedbackService feedbackService, IEmailSender emailSender, IUserService userService)
         {
             _feedbackService = feedbackService ?? throw new ArgumentNullException(nameof(feedbackService));
+
+            this._emailSender = emailSender;
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+
         }
 
         [Route(FeedbackRoute.List), HttpGet, Authorize]
-        public async Task<ActionResult<List<Feedback>>> GetAllFeedbacks() 
+        public async Task<ActionResult<List<Feedback>>> GetAllFeedbacks()
         {
             var feedbacks = await _feedbackService.GetFeedbacks();
             return Ok(feedbacks);
@@ -40,20 +53,41 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
         [Route(FeedbackRoute.Create), HttpPost, Authorize]
         public async Task<IActionResult> CreateFeedback(FeedbackDTO feedbackDTO)
         {
+
+
             // Tạo mới đối tượng Feedback từ dữ liệu trong request body
             var feedback = new Feedback
+
             {
                 UserId = feedbackDTO.UserId,
                 ArticleId = feedbackDTO.ArticleId,
                 FeedbackContent = feedbackDTO.FeedbackContent,
-                FeedbackTime = feedbackDTO.FeedbackTime
-            };
+                FeedbackTime = feedbackDTO.FeedbackTime,
 
+            };
             // Gọi phương thức tạo mới feedback từ service
             await _feedbackService.CreateFeedback(feedback);
+            // Lấy thông tin người dùng từ UserService
+            var user = await _userService.Get(feedbackDTO.UserId);
 
+            //gửi email
+            if (user != null)
+            {
+                var receiver = user.Email;
+                var subject = "Test";
+                var message = "Hello";
+                await _emailSender.SendEmailAsync(receiver, subject, message);
+            }
+
+
+
+            // await SendFeedbackEmailAsync(feedback);
             return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
+
+
         }
+
+
 
         [Route(FeedbackRoute.Update), HttpPut, Authorize]
         public async Task<IActionResult> UpdateFeedback(int id, FeedbackDTO feedbackDTO)
