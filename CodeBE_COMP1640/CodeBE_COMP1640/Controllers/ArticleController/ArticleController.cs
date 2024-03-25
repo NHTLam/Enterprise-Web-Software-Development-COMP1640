@@ -180,6 +180,26 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 });
             }
         }
+        
+        [Route(ArticleRoute.GetByDepartment), HttpGet, Authorize]
+        public IActionResult GetByDepartment(int departmentId)
+        {
+            try
+            {
+                var data = _repositoryFactory.ArticleRepository.GetListByDepartmentId(departmentId);
+                return Ok(new
+                {
+                    Data = data,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new
+                {
+                    Error = ex,
+                });
+            }
+        }
 
         [Route(ArticleRoute.UploadFile), HttpPost, Authorize]
         public async Task<IActionResult> UploadFile(IFormFile file)

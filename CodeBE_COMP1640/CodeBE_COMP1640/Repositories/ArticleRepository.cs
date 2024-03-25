@@ -58,5 +58,9 @@ namespace CodeBE_COMP1640.Repositories
         {
             return _context.Articles.Where(x => x.UserId == userId);
         }
+        public IEnumerable<Article> GetListByDepartmentId(int departmentId)
+        {
+            return _context.Articles.Where(x => x.DepartmentId == departmentId);
+        }
     }
 }

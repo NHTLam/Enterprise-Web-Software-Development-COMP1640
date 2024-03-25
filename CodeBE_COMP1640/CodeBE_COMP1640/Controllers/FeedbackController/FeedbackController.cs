@@ -79,10 +79,7 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
                         var message = "Hello";
                         await _emailSender.SendEmailAsync(receivers, subject, message);
                     }
-                    
-                
-                
-              
+            
                 return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
                 
         
