@@ -1,6 +1,6 @@
-import PostInfor from "../forms/PostInfor/PostInfor"
+import PostInfor from "../../forms/PostInfor/PostInfor"
 import { useState, useEffect, useRef } from "react";
-import imageInput from "../assets/add_image.png";
+import imageInput from "../../assets/add_image.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import React from 'react'
