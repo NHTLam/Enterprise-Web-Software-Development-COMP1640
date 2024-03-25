@@ -4,7 +4,6 @@ using CodeBE_COMP1640.Services.UserS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IO.Compression;
-using System.Net.Mail;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -17,23 +16,23 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         private readonly IConfiguration _configuration;
         private readonly RepositoryFactory _repositoryFactory;
         private readonly IEmailSender _emailSender;
-     
-         private readonly IUserService _userService;
+
+        private readonly IUserService _userService;
         private readonly JsonSerializerOptions _jsonSerializerOptions;
         private static readonly Dictionary<int, (string originalFileName, byte[] fileBytes)> _articleFiles = new Dictionary<int, (string originalFileName, byte[] fileBytes)>();
 
-        public ArticleController(IServiceProvider serviceProvider, IConfiguration configuration,IEmailSender emailSender,IUserService userService)
+        public ArticleController(IServiceProvider serviceProvider, IConfiguration configuration, IEmailSender emailSender, IUserService userService)
         {
             _serviceProvider = serviceProvider;
             _configuration = configuration;
             _repositoryFactory = serviceProvider.GetService<RepositoryFactory>();
-             this._emailSender = emailSender;
+            this._emailSender = emailSender;
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _jsonSerializerOptions = new JsonSerializerOptions
             {
                 ReferenceHandler = ReferenceHandler.Preserve,
                 MaxDepth = 16
-                
+
                 // Các tuỳ chọn khác có thể được cấu hình tại đây nếu cần
             };
         }
@@ -61,17 +60,17 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         [Route(ArticleRoute.Create), HttpPost, Authorize]
         public async Task<IActionResult> Add(ArticlePost request)
         {
-            
-                var data = _repositoryFactory.ArticleRepository.Create(request.ToEntity());
-               await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
-           
-        
+
+            var data = _repositoryFactory.ArticleRepository.Create(request.ToEntity());
+            await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
+
+
             return Ok(new
             {
                 Data = data,
             });
-                
-            
+
+
         }
         private async Task SendEmailToUsersWithMatchingDepartmentID(int departmentId)
         {
@@ -163,7 +162,6 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         //}
 
         [Route(ArticleRoute.GetByUser), HttpGet, Authorize]
-        [HttpGet("byUser/{userId}")]
         public IActionResult GetByUser(int userId)
         {
             try
@@ -182,7 +180,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 });
             }
         }
-        
+
         [Route(ArticleRoute.GetByDepartment), HttpGet, Authorize]
         public IActionResult GetByDepartment(int departmentId)
         {
@@ -204,7 +202,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
 
         [Route(ArticleRoute.UploadFile), HttpPost, Authorize]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        public async Task<IActionResult> UploadFile(int articleId, IFormFile file)
         {
             try
             {
@@ -224,7 +222,8 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
 
-        [HttpGet("File/{articleId}")]
+        [Route(ArticleRoute.GetFile), HttpPost, Authorize]
+
         public IActionResult GetFile(int articleId)
         {
             if (_articleFiles.TryGetValue(articleId, out (string originalFileName, byte[] fileBytes) fileData))
@@ -300,25 +299,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }*/
 
-        [HttpGet("List/{departmentId}")]
-        public IActionResult GetByDepartment(int departmentId)
-        {
-            try
-            {
-                var data = _repositoryFactory.ArticleRepository.GetArticlesDepartmentId(departmentId);
-                return Ok(new
-                {
-                    Data = data,
-                });
-            }
-            catch (Exception ex)
-            {
-                return Ok(new
-                {
-                    Error = ex,
-                });
-            }
-        }
+
     }
 
     public static class FormFileExtensions
