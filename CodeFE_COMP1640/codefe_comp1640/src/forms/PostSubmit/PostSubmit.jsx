@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import "./Style.css";
@@ -6,14 +6,14 @@ import imageInput from "../../assets/add_image.png";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 const API_BASE = process.env.REACT_APP_API_KEY;
+const userId = localStorage.getItem("user_id");
+const token = localStorage.getItem("token");
 
 
 const PostSubmit = (props) => {
   //decalre value
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
-  const userId = localStorage.getItem("user_id");
-  const token = localStorage.getItem("token");
   //State
   const [imageList, setImageList] = useState([]);
   const [selectedFile, setSelectedFile] = useState("");
@@ -21,6 +21,77 @@ const PostSubmit = (props) => {
   const [credentials, setCredentials] = useState({});
   const [checkBox, setCheckBox] = useState(false);
   const [disable, setDisable] = useState(true);
+  const [comment, setComment] = useState("");
+  const [listCmt, setListCmt] = useState([]);
+
+  //Feedback
+  const [feedback, setFeedback] = useState("");
+  const [articleId, setArticleId] = useState(6);
+  const [feedbackTime, setFeedbackTime] = useState(new Date());
+  const [isSending, setIsSending] = useState(false);
+  const [isChanging, setIsChanging] = useState(false);
+  const [feedbackList, setFeedbackList] = useState([]);
+
+  console.log("Cmt: " + comment);
+  console.log("FB: " + feedback);
+  console.log("Cmt: " + comment);
+  ////
+
+  //functions feedback
+  const handleFeedback = async () => {
+    try {
+      console.log("đâsdsadas");
+      const formattedFeedbackTime = feedbackTime.toISOString();
+      const response = await axios.post(
+        `${API_BASE}/feedback/create`,
+        {
+          userId: userId,
+          articleId,
+          feedbackContent: feedback,
+          feedbackTime: formattedFeedbackTime,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Create feedback success!");
+      console.log("Feedback: ", response.data);
+      const newFeedback = {
+        userId: userId,
+        articleId: articleId,
+        context: feedback,
+        feedbackTime: formattedFeedbackTime,
+      };
+
+      const FeedbackIndex = feedbackList.findIndex(
+        (item) => item.userId === userId && item.articleId === articleId
+      );
+
+      if (FeedbackIndex !== -1) {
+        const updatedFeedbackList = [...feedbackList];
+        updatedFeedbackList[FeedbackIndex] = newFeedback;
+        setFeedbackList(updatedFeedbackList);
+      } else {
+        setFeedbackList([...feedbackList, newFeedback]);
+      }
+      setIsSending(true);
+      setIsChanging(true);
+    } catch (err) {
+      console.error("Error sending feedback:", err);
+    }
+  };
+
+  const handleUpdate = () => {
+    console.log("đâsdasd");
+    setIsSending(false);
+    setIsChanging(false);
+  };
+
+  // useEffect(() => {
+  //   console.log("Feedback list updated:", feedbackList);
+  // }, [feedbackList]);
 
   //functions
   const handleChange = (e) => {
@@ -36,6 +107,51 @@ const PostSubmit = (props) => {
       setDisable(false); // Enable the button
     }
   };
+
+  const handleSubmitComment = async (e) => {
+    if (e.key === "Enter") {
+      try {
+        const response = await axios.post(
+          `${API_BASE}/comment/create`,
+          {
+            articleId: 6,
+            userId: userId,
+            commentContent: comment,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Create comment success!");
+        console.log("ab: ", response.data);
+        const newComment = [...listCmt, response.data];
+        console.log("newComment: ", newComment);
+        setListCmt(newComment);
+        setComment("");
+      } catch (error) {
+        console.error("Error creating comment:", error); // Handle network or other errors
+      }
+    }
+  };
+
+  useEffect(() => {
+    const listCmt = async () => {
+      try {
+        const res = await axios.post(`${API_BASE}/comment/list`, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setListCmt(res.data);
+        console.table("List of commnet:", JSON.stringify(res.data));
+      } catch (err) {
+        console.log("Failed to list account! " + err);
+      }
+    };
+    listCmt();
+  }, []);
 
   const handleClickSubmit = async (event) => {
     event.preventDefault();
@@ -245,6 +361,97 @@ const PostSubmit = (props) => {
             </div>
           </div>
 
+          {/* Comment */}
+          <div className="form-comment border border-2 mt-3">
+            <div className="input-group">
+              <span className="input-group-text">Comment</span>
+              <textarea
+                className="form-control"
+                aria-label="With textarea"
+                id="content"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                onKeyDown={handleSubmitComment}
+              ></textarea>
+            </div>
+
+            {listCmt.map((cmt) => (
+              <div key={cmt.userId} className="bg-light rounded-4 p-0 mt-2">
+                <h4 className="fw-bold text-black ms-3">{cmt.userId}</h4>
+                <p className="text-black ms-3">{cmt.commentContent}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Feedback */}
+          <div className="form-feedback border border-2 mt-3">
+            <h3>Feedback</h3>
+            <div className="container">
+              <table className="table table-striped mt-5">
+                <thead>
+                  <tr>
+                    <th scope="col" className="col-3"></th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">UserID</th>
+                    <td>{userId}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">ArticleID</th>
+                    <td>{articleId}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Date</th>
+                    <td>{feedbackTime.toLocaleString()}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Feedback</th>
+                    <td>
+                      <textarea
+                        textarea
+                        class="form-control shadow-none"
+                        rows="5"
+                        value={feedback}
+                        onChange={(e) => setFeedback(e.target.value)}
+                        disabled={isSending ? true : false}
+                      ></textarea>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div className="mb-2">
+                <button
+                  className="btn btn-group btn-outline-primary mr-2"
+                  type="submit"
+                  onClick={isChanging ? handleUpdate : handleFeedback}
+                >
+                  {isChanging ? "update" : "save"}
+                </button>
+              </div>
+            </div>
+
+            <hr />
+            <table className="table table-striped mt-2 text-center">
+              <tr>
+                <th>userID</th>
+                <th>ArticleID</th>
+                <th>Date</th>
+                <th>Feedback</th>
+              </tr>
+              {feedbackList.map((feedbackk) => (
+                <tr key={feedbackk.userId}>
+                  <td>{feedbackk.userId}</td>
+                  <td>{feedbackk.articleId}</td>
+                  <td>{feedbackk.feedbackTime}</td>
+                  <td>{feedbackk.context}</td>
+                </tr>
+              ))}
+            </table>
+          </div>
+
           <div className="input-group mt-3">
             <span className="input-group-text">With textarea</span>
             <textarea
@@ -407,4 +614,5 @@ const PostSubmit = (props) => {
 PostSubmit.protoTypes = {
   onFileChange: PropTypes.func,
 };
+
 export default PostSubmit;

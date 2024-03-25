@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 const token = localStorage.getItem("token");
 const API_BASE = process.env.REACT_APP_API_KEY;
+const userId = localStorage.getItem("user_id");
 
 const Feedback = () => {
   const [feedback, setFeedback] = useState("");
   const [articleId, setArticleId] = useState(6);
-  const [userId, setUserId] = useState(2);
   const [feedbackTime, setFeedbackTime] = useState(new Date());
   const [isSending, setIsSending] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
@@ -24,7 +24,10 @@ const Feedback = () => {
       const saveFeedback = await axios.post(
         `${API_BASE}/feedback/create`,
         {
-          newFeedback,
+          userId: userId,
+          articleId,
+          feedbackContent: feedback,
+          feedbackTime,
         },
         {
           headers: {
@@ -32,8 +35,8 @@ const Feedback = () => {
           },
         }
       );
-      console.log("Feedback saved successfully:", saveFeedback.data);
-
+      console.log("Create feedback success");
+      console.log("asdasd: " + saveFeedback.data);
       const FeedbackIndex = feedbackList.findIndex(
         (item) => item.userId === userId && item.articleId === articleId
       );
