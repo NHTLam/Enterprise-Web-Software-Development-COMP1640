@@ -1,6 +1,5 @@
 ﻿using CodeBE_COMP1640.Enums;
 using System.ComponentModel;
-using System.Reflection;
 
 namespace CodeBE_COMP1640.Controllers.ArticleController
 {
@@ -16,14 +15,15 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         public const string Update = Module + "/update/{id}";
         public const string Delete = Module + "/delete/{id}";
         public const string UploadFile = Module + "/upload-file";
+        public const string GetFile = Module + "/GetFile";
         public const string Export = Module + "/export";
 
-        public static Dictionary<string, List<string>> DictionaryPath = new Dictionary<string, List<string>> 
+        public static Dictionary<string, List<string>> DictionaryPath = new Dictionary<string, List<string>>
         {
-            { ActionEnum.CREATE.Name, new List<string>() 
+            { ActionEnum.CREATE.Name, new List<string>()
                 {
                     Create,
-                } 
+                }
             },
             { ActionEnum.UPDATE.Name, new List<string>()
                 {
@@ -48,6 +48,11 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             { ActionEnum.UPLOAD_FILE.Name, new List<string>()
                 {
                     UploadFile
+                }
+            },
+            { ActionEnum.READ.Name, new List<string>()
+                {
+                    GetFile
                 }
             },
         };

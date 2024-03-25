@@ -4,7 +4,6 @@ using CodeBE_COMP1640.Services.UserS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IO.Compression;
-using System.Net.Mail;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -17,22 +16,23 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         private readonly IConfiguration _configuration;
         private readonly RepositoryFactory _repositoryFactory;
         private readonly IEmailSender _emailSender;
-     
-         private readonly IUserService _userService;
-        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-        public ArticleController(IServiceProvider serviceProvider, IConfiguration configuration,IEmailSender emailSender,IUserService userService)
+        private readonly IUserService _userService;
+        private readonly JsonSerializerOptions _jsonSerializerOptions;
+        private static readonly Dictionary<int, (string originalFileName, byte[] fileBytes)> _articleFiles = new Dictionary<int, (string originalFileName, byte[] fileBytes)>();
+
+        public ArticleController(IServiceProvider serviceProvider, IConfiguration configuration, IEmailSender emailSender, IUserService userService)
         {
             _serviceProvider = serviceProvider;
             _configuration = configuration;
             _repositoryFactory = serviceProvider.GetService<RepositoryFactory>();
-             this._emailSender = emailSender;
+            this._emailSender = emailSender;
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _jsonSerializerOptions = new JsonSerializerOptions
             {
                 ReferenceHandler = ReferenceHandler.Preserve,
                 MaxDepth = 16
-                
+
                 // Các tuỳ chọn khác có thể được cấu hình tại đây nếu cần
             };
         }
@@ -60,17 +60,17 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         [Route(ArticleRoute.Create), HttpPost, Authorize]
         public async Task<IActionResult> Add(ArticlePost request)
         {
-            
-                var data = _repositoryFactory.ArticleRepository.Create(request.ToEntity());
-               await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
-           
-        
+
+            var data = _repositoryFactory.ArticleRepository.Create(request.ToEntity());
+            await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
+
+
             return Ok(new
             {
                 Data = data,
             });
-                
-            
+
+
         }
         private async Task SendEmailToUsersWithMatchingDepartmentID(int departmentId)
         {
@@ -180,7 +180,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 });
             }
         }
-        
+
         [Route(ArticleRoute.GetByDepartment), HttpGet, Authorize]
         public IActionResult GetByDepartment(int departmentId)
         {
@@ -202,34 +202,56 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
 
         [Route(ArticleRoute.UploadFile), HttpPost, Authorize]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        public async Task<IActionResult> UploadFile(int articleId, IFormFile file)
         {
-            string _uploadFolder = "./UploadFile";
-            if (file == null || file.Length == 0)
-                return BadRequest("File not selected");
-
-            if (!Directory.Exists(_uploadFolder))
-                Directory.CreateDirectory(_uploadFolder);
-
-            var filePath = Path.Combine(_uploadFolder, file.FileName);
-
-            if (System.IO.File.Exists(filePath))
-                return Conflict("File already exists");
-
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            try
             {
-                await file.CopyToAsync(fileStream);
+                if (file == null || file.Length == 0)
+                    return BadRequest("File not selected");
+
+                var originalFileName = file.FileName;
+                var fileBytes = await file.GetBytesAsync();
+
+                _articleFiles[articleId] = (originalFileName, fileBytes);
+
+                return Ok($"File uploaded successfully for ArticleId: {articleId}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to upload file: {ex.Message}");
+            }
+        }
+
+        [Route(ArticleRoute.GetFile), HttpPost, Authorize]
+
+        public IActionResult GetFile(int articleId)
+        {
+            if (_articleFiles.TryGetValue(articleId, out (string originalFileName, byte[] fileBytes) fileData))
+            {
+                var memory = new MemoryStream();
+                using (var zipArchive = new ZipArchive(memory, ZipArchiveMode.Create, true))
+                {
+                    var entry = zipArchive.CreateEntry(fileData.originalFileName);
+
+                    using (var entryStream = entry.Open())
+                    {
+                        entryStream.Write(fileData.fileBytes, 0, fileData.fileBytes.Length);
+                    }
+                }
+                memory.Position = 0;
+
+                return File(memory, "application/octet-stream", $"Article_{articleId}_Files.zip");
             }
 
-            return Ok("File uploaded successfully");
+            return NotFound("No file found for the specified ArticleId");
         }
 
         [Route(ArticleRoute.Export), HttpGet, Authorize]
         public IActionResult ExportFiles()
         {
-            string _uploadFolder = "./UploadFile";
+            string uploadFolder = "./UploadFile";
 
-            if (!Directory.Exists(_uploadFolder) || !Directory.EnumerateFiles(_uploadFolder).Any())
+            if (!Directory.Exists(uploadFolder) || !Directory.EnumerateFiles(uploadFolder).Any())
                 return NotFound("No files found to export");
 
             var zipFileName = $"ExportedFiles_{DateTime.Now.ToString("yyyyMMddHHmmss")}.zip";
@@ -237,10 +259,15 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
 
             using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
             {
-                var files = Directory.GetFiles(_uploadFolder);
+                var files = Directory.GetFiles(uploadFolder);
                 foreach (var file in files)
                 {
-                    zipArchive.CreateEntryFromFile(file, Path.GetFileName(file));
+                    var fileBytes = System.IO.File.ReadAllBytes(file);
+                    var entry = zipArchive.CreateEntry(Path.GetFileName(file));
+                    using (var entryStream = entry.Open())
+                    {
+                        entryStream.Write(fileBytes, 0, fileBytes.Length);
+                    }
                 }
             }
 
@@ -251,11 +278,39 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
             memory.Position = 0;
 
-            // Xóa tệp ZIP sau khi đã truyền dữ liệu từ nó
             System.IO.File.Delete(zipFilePath);
 
             return File(memory, "application/zip", zipFileName);
         }
 
+        /*private string GetFileExtension(byte[] fileBytes)
+        {
+            if (fileBytes.Length >= 2 && fileBytes[0] == 0x25 && fileBytes[1] == 0x50)
+            {
+                return "pdf";
+            }
+            else if (fileBytes.Length >= 4 && fileBytes[0] == 0x50 && fileBytes[1] == 0x4B && fileBytes[2] == 0x03 && fileBytes[3] == 0x04)
+            {
+                return "zip";
+            }
+            else
+            {
+                return "dat"; 
+            }
+        }*/
+
+
+    }
+
+    public static class FormFileExtensions
+    {
+        public static async Task<byte[]> GetBytesAsync(this IFormFile file)
+        {
+            using (var ms = new MemoryStream())
+            {
+                await file.CopyToAsync(ms);
+                return ms.ToArray();
+            }
+        }
     }
 }
