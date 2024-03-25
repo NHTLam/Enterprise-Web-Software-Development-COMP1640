@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import "./Style.css";
 import imageInput from "../../assets/add_image.png";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
+import * as Toast from "../../components/Toast"
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 
@@ -73,113 +73,24 @@ const PostSubmit = (props) => {
           },
         }
       );
-      const postData = response.data;
-      if (res.status === 200) {
-        console.log("Submit successful", postData);
-        toast.success('Submit Success!', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light"
-        });
-      } else if (res.status === 400) {
-        console.log("some thing went wrong");
-        toast.error('Some thing went wrong', {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light"
-          });
+      if(res.status === 200){
       }
       if (response.status === 200) {
         // Assuming successful upload has status 200
         console.log("File uploaded successfully!");
-        toast.success('Submit Success!', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light"
-        });
-        setSelectedFile(null); // Clear file selection
+        Toast.toastSuccess("Submit Success");
+        setSelectedFile(null); 
+        setTimeout(()=>{
+          navigate("/history");
+        },3000)    // Clear file selection
       } else {
-        toast.error('Some thing went wrong', {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light"
-          });
-        console.error("Error uploading file:", response.data); // Access error details from response
+        Toast.toastErorr("Some thing went wrong");// Access error details from response
       }
     } catch (error) {
-      toast.error('Some thing went wrong', {
-        position: "top-right",
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light"
-        });
+      Toast.toastErorr("Submit Erorr");
       console.error("Error:", error);
     }
   };
-
-  // const handleClickSubmit = async (e) => {
-  //     e.preventDefault();
-
-  //     const data = new FormData();
-  //     data.append("file", file);
-  //     axios.post(`${API_BASE}/article/upload-file`, data, {
-  //         headers: {
-  //             Authorization: `Bearer ${token}`
-  //         }
-  //     }).then(res => console.log(res.data))
-  //     .catch(err => console.log(err))
-  //     try {
-  //         const response = await axios.post(
-  //             `${API_BASE}/article/create`,
-  //             {
-  //                 departmentId,
-  //                 userId,
-  //                 fileData: data,
-  //                 ...credentials,
-  //             }, {
-  //             headers: {
-  //                 Authorization: `Bearer ${token}`
-  //             }
-  //         });
-  //         const postData = response.data;
-  //         if (response.status === 200) {
-  //             console.log("Submit successful", postData);
-  //         } else if (response.status === 400) {
-  //             console.log("some thing went wrong");
-  //         }
-  //     } catch (err) {
-  //         console.log("Error " + err);
-  //     }
-  // };
-
-  // const handleChange = (e) => {
-  //     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
-  // };
-
   function onFileInput(e) {
     const files = e.target.files;
     if (files.length === 0) return;

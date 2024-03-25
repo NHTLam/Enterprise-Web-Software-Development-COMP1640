@@ -1,14 +1,44 @@
 import React, { useState } from 'react'
 import "./Style.css"
 import axios from 'axios';
+
+import * as Toast from "../../components/Toast"
 import { useEffect } from 'react';
 
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 function Me() {
+    const [credentials, setCredentials] = useState({});
     const userId = localStorage.getItem("user_id");
     const [userData, setUserData] = useState();
 
+    const handleChange = (e) => {
+        setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+    };
+    const handleClickUpdate = async (e) => {
+        const token = localStorage.getItem("token");
+        e.preventDefault();
+         const res = await axios.post(`${API_BASE}/app-user/update`, {
+            userId: userId,
+            username: userData.username,
+            departmentId: userData.departmentId,
+            email: userData.email,
+            password: userData.password,
+            class: userData.class,
+            roleUserMapping: [],
+            ...credentials}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if(res.status === 200){
+            console.log("success", res)
+            Toast.toastSuccess("User updated successfully");
+        }
+        // }else{
+        //     Toast.toastErorr("Error updating user");
+        // }
+    }
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (userId !== undefined) {
@@ -38,33 +68,33 @@ function Me() {
                     </div>
                     <form class="file-upload">
                         <div class="row">
-                            <div class="col col-8 mb-xxl-0">
+                            <div class="col mb-xxl-0">
                                 <div class="bg-secondary-soft px-4 py-5 rounded">
                                     <div class="row g-3">
                                         <h4 class="mb-4 mt-0">Contact detail</h4>
                                         <div class="col-md-6">
-                                            <label class="form-label">First Name *</label>
-                                            <input type="text" class="form-control" placeholder="" aria-label="First name" />
+                                            <label class="form-label">Id</label>
+                                            <input type="text" class="form-control" placeholder="" aria-label="Student Id" value={userData.userId} />
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Last Name *</label>
-                                            <input type="text" class="form-control" placeholder="" aria-label="Last name" />
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Student Id *</label>
-                                            <input type="text" class="form-control" placeholder="" aria-label="Student Id" />
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Class</label>
-                                            <input type="text" class="form-control" placeholder="" aria-label="Class" />
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="inputEmail4" class="form-label">Email *</label>
+                                            <label for="inputEmail4" class="form-label">Email</label>
                                             <input type="email" class="form-control" id="inputEmail4" value={userData.email} />
                                         </div>
                                         <div class="col-md-6">
+                                            <label class="form-label">User Name</label>
+                                            <input type="text" class="form-control" placeholder="" aria-label="Last name" value={userData.username} />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Class</label>
+                                            <input type="text" class="form-control" placeholder="" aria-label="Class" value={userData.class} />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Address</label>
+                                            <input type="text" class="form-control" placeholder={userData.address} aria-label="First name" onChange={handleChange} id="address"/>
+                                        </div>
+                                        <div class="col-md-6">
                                             <label class="form-label">Phone</label>
-                                            <input type="text" class="form-control" placeholder="" aria-label="Phone number" />
+                                            <input type="text" class="form-control" placeholder={userData.phone} aria-label="Phone number" onChange={handleChange} id="phone" />
                                         </div>
                                     </div>
                                 </div>
@@ -93,7 +123,7 @@ function Me() {
                                 </div> */}
 
                             </div>
-                            <div class="col-4">
+                            {/* <div class="col-4">
                                 <div class="bg-secondary-soft px-4 py-5 rounded">
                                     <div class="row g-3">
                                         <h4 class="mb-4 mt-0">Upload your profile photo</h4>
@@ -108,6 +138,9 @@ function Me() {
                                         </div>
                                     </div>
                                 </div>
+                            </div> */}
+                            <div className="btn btn-success mt-5" onClick={handleClickUpdate}>
+                                Update
                             </div>
                         </div>
                     </form>

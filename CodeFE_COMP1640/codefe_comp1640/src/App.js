@@ -9,7 +9,7 @@ import Home from "./pages/Home";
 import Login from "./components/Login";
 import StAddPost from "./pages/StAddPost";
 import StEditPost from "./pages/StEditPost";
-import MarketingC from "./pages/MarketingC";
+import MarketingC from "./pages/MarketingC/MarketingC";
 import Me from "./pages/Me/Me";
 import Manage from "./pages/Manage";
 import Account from "./components/Manage/Account";
@@ -17,7 +17,7 @@ import EditAccount from "./components/Manage/EditAccount";
 import Feedback from "./components/Manage/Feedback";
 import ManagerRole from "./components/Manage/ManagerRole";
 import PostHistory from "./pages/PostHistory";
-import MarketingCFeedb from "./pages/MarketingCFeedb";
+import MarketingCFeedb from "./pages/MarketingC/MarketingCFeedb";
 const App = () => {
   return (
     <Router>
