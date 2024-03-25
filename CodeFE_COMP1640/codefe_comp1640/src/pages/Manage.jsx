@@ -1,39 +1,23 @@
 import { Link } from "react-router-dom";
 import { Chart } from "react-google-charts";
-import React from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+const token = localStorage.getItem("token");
+const API_BASE = process.env.REACT_APP_API_KEY;
 
 const Manage = () => {
-  const fetchdata = {
-    PieChart: [
-      ["Business", 11],
-      ["Design", 2],
-      ["IT", 2],
-    ],
-    BarChart: [
-      ["Copper", 8.94, "#b87333"], // RGB value
-      ["Silver", 10.49, "silver"], // English color name
-      ["Gold", 19.3, "gold"],
-      ["Platinum", 18.2, "color: #e5e4e2"], // CSS-style declaration
-    ],
-    LineChart: [
-      [1, 37.8, 80.8, 41.8],
-      [2, 40, 69.5, 32.4],
-      [3, 25.4, 57, 25.7],
-      [4, 11.7, 18.8, 10.5],
-      [5, 11.9, 17.6, 10.4],
-      [6, 8.8, 13.6, 7.7],
-      [7, 7.6, 12.3, 9.6],
-      [8, 12.3, 29.2, 10.6],
-      [9, 16.9, 42.9, 14.8],
-      [10, 12.8, 30.9, 11.6],
-      [11, 5.3, 7.9, 4.7],
-      [12, 6.6, 8.4, 5.2],
-    ],
-  };
+  const [listDashBoard, setlistDashBoard] = useState({
+    pieChartSimplifys: [],
+    barChartSimplifys: [],
+    lineChartSimplifys: [],
+  });
+  // TypeError: pieChart is not iterable
+  const pieChart = listDashBoard.pieChartSimplifys;
+  const barChart = listDashBoard.barChartSimplifys;
+  const lineChart = listDashBoard.lineChartSimplifys;
 
-  const pieChart = fetchdata.PieChart;
-
-  //Pie Chart % đóng góp
+  // // //Pie Chart % đóng góp
   const data = [["Department", "Number of contributions"], ...pieChart];
 
   const options = {
@@ -41,13 +25,7 @@ const Manage = () => {
   };
 
   //Column Chart (Số lượng đóng góp theo khoa or các tháng)
-  const data2 = [
-    ["Element", "null", { role: "style" }],
-    // ["Copper", 8.94, "#b87333"], // RGB value
-    // ["Silver", 10.49, "silver"], // English color name
-    // ["Gold", 19.3, "gold"],
-    // ["Platinum", 18.2, "color: #e5e4e2"], // CSS-style declaration
-  ];
+  const data2 = [["Element", "topic", { role: "style" }], ...barChart];
 
   //Line Chart
   // Top 10 topic được đóng góp nhiều nhất.
@@ -55,31 +33,42 @@ const Manage = () => {
   // Top 10 học sinh có nhiều đóng góp nhất.
   const data3 = [
     [
-      "Day",
-      "Guardians of the Galaxy",
-      "The Avengers",
-      "Transformers: Age of Extinction",
+      "Month",
+      "Business and Economics",
+      "Engineering",
+      "Arts and Humanities",
+      "Law",
+      "Science",
     ],
-    [1, 37.8, 80.8, 41.8],
-    [2, 40, 69.5, 32.4],
-    [3, 25.4, 57, 25.7],
-    [4, 11.7, 18.8, 10.5],
-    [5, 11.9, 17.6, 10.4],
-    [6, 8.8, 13.6, 7.7],
-    [7, 7.6, 12.3, 9.6],
-    [8, 12.3, 29.2, 10.6],
-    [9, 16.9, 42.9, 14.8],
-    [10, 12.8, 30.9, 11.6],
-    [11, 5.3, 7.9, 4.7],
-    [12, 6.6, 8.4, 5.2],
+    ...lineChart,
   ];
 
   const options3 = {
     chart: {
-      title: "Box Office Earnings in First Two Weeks of Opening",
-      subtitle: "in millions of dollars (USD)",
+      title: "Number of topics reported each month",
     },
   };
+
+  useEffect(() => {
+    const dashBoard = async () => {
+      try {
+        const res = await axios.post(`${API_BASE}/dashboard/get-data`, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setlistDashBoard({
+          pieChartSimplifys: res.data.pieChartSimplifys,
+          barChartSimplifys: res.data.barChartSimplifys,
+          lineChartSimplifys: res.data.lineChartSimplifys,
+        });
+        console.table("List of dashboard:", JSON.stringify(res.data));
+      } catch (err) {
+        console.log("Failed to list account! " + err);
+      }
+    };
+    dashBoard();
+  }, []);
 
   return (
     <div className="container">

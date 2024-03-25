@@ -18,7 +18,7 @@ namespace CodeBE_COMP1640.Controllers.DashboardController
             this.DashboardService = DashboardService;
         }
 
-        [Route(DashboardRoute.GetData), HttpPost]
+        [Route(DashboardRoute.GetData), HttpPost, Authorize]
         public async Task<ActionResult<DashboardDTO>> GetData()
         {
             if (!ModelState.IsValid)

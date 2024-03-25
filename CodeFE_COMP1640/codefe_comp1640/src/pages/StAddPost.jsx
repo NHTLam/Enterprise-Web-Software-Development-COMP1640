@@ -1,4 +1,4 @@
-import PostInfor from "../components/PostInfor"
+import PostInfor from "../forms/PostInfor/PostInfor"
 import PostSubmit from "../forms/PostSubmit/PostSubmit";
 
 import React from 'react'

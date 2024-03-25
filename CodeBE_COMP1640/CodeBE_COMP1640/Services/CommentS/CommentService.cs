@@ -35,6 +35,7 @@ namespace CodeBE_COMP1640.Services.CommentS
         {
             try
             {
+                Comment.CommentTime = DateTime.Now;
                 await UOW.CommentRepository.Create(Comment);
                 Comment = await UOW.CommentRepository.Get(Comment.CommentId);
                 return true;
@@ -97,7 +98,7 @@ namespace CodeBE_COMP1640.Services.CommentS
             try
             {
                 var oldData = await UOW.CommentRepository.Get(Comment.CommentId);
-
+                Comment.CommentTime = DateTime.Now;
                 await UOW.CommentRepository.Update(Comment);
 
                 Comment = await UOW.CommentRepository.Get(Comment.CommentId);

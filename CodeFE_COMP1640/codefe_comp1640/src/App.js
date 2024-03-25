@@ -16,11 +16,12 @@ import Account from "./components/Manage/Account";
 import EditAccount from "./components/Manage/EditAccount";
 import Feedback from "./components/Manage/Feedback";
 import ManagerRole from "./components/Manage/ManagerRole";
+import PostHistory from "./pages/PostHistory";
+import MarketingCFeedb from "./pages/MarketingCFeedb";
 const App = () => {
   return (
     <Router>
       <Routes>
-        {/* STUDENT ROUTES */}
         <Route
           path="/"
           element={
@@ -35,28 +36,36 @@ const App = () => {
         <Route path="/login" element={<Login />} />
 
         <Route
-          path="/st_submit_post"
+          path="/me"
+          element={
+            <Layout>
+              <Me />
+            </Layout>
+          }
+        />
+
+        {/* STUDENT ROUTES */}
+        <Route
+          path="/topic/view" //need id of topic here
           element={
             <Layout>
               <StAddPost />
             </Layout>
           }
         />
-
         <Route
-          path="/st_edit_post"
+          path="/contribute/view/edit/:id"
           element={
             <Layout>
               <StEditPost />
             </Layout>
           }
         />
-
         <Route
-          path="/me"
+          path="/history"
           element={
             <Layout>
-              <Me />
+              <PostHistory />
             </Layout>
           }
         />
@@ -67,6 +76,15 @@ const App = () => {
           element={
             <Layout>
               <MarketingC />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="mk_manage_topic/contribute/view/:id"
+          element={
+            <Layout>
+              <MarketingCFeedb />
             </Layout>
           }
         />
