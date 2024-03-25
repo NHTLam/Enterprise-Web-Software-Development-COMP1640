@@ -72,15 +72,16 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
                 //gửi email
                  if (user != null)
                     {   
-                        var receiver = user.Email;
+                        var receivers = new List<string>();
+                        receivers.Add(user.Email);
                         var subject = "Test";
                         var message = "Hello";
-                        await _emailSender.SendEmailAsync(receiver, subject, message);
+                        await _emailSender.SendEmailAsync(receivers, subject, message);
                     }
                     
                 
                 
-                // await SendFeedbackEmailAsync(feedback);
+              
                 return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
                 
 

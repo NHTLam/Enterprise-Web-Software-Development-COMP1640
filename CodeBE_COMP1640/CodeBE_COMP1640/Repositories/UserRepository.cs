@@ -11,6 +11,7 @@ namespace CodeBE_COMP1640.Repositories
         Task<bool> Create(User User);
         Task<bool> Update(User User);
         Task<bool> Delete(User User);
+        Task<List<User>> GetUsersByDepartmentId(int departmentId);                                                                                                                                          
     }
 
     public class UserRepository : IUserRepository
@@ -117,5 +118,9 @@ namespace CodeBE_COMP1640.Repositories
                 await DataContext.BulkMergeAsync(RoleUserMappings);
             }
         }
+        public async Task<List<User>> GetUsersByDepartmentId(int departmentId)
+    {
+        return await DataContext.Users.Where(u => u.DepartmentId == departmentId).ToListAsync();
+    }
     }
 }

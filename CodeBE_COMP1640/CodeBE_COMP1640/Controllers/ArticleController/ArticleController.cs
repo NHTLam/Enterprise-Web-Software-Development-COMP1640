@@ -1,6 +1,11 @@
 ﻿using CodeBE_COMP1640.Factories.Implements;
+using CodeBE_COMP1640.Services.EmailS;
+using CodeBE_COMP1640.Services.UserS;
 using Microsoft.AspNetCore.Mvc;
 using System.IO.Compression;
+using System.Net.Mail;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CodeBE_COMP1640.Controllers.ArticleController
 {
@@ -11,12 +16,25 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         private readonly IServiceProvider _serviceProvider;
         private readonly IConfiguration _configuration;
         private readonly RepositoryFactory _repositoryFactory;
+        private readonly IEmailSender _emailSender;
+     
+         private readonly IUserService _userService;
+        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-        public ArticleController(IServiceProvider serviceProvider, IConfiguration configuration)
+        public ArticleController(IServiceProvider serviceProvider, IConfiguration configuration,IEmailSender emailSender,IUserService userService)
         {
             _serviceProvider = serviceProvider;
             _configuration = configuration;
             _repositoryFactory = serviceProvider.GetService<RepositoryFactory>();
+             this._emailSender = emailSender;
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _jsonSerializerOptions = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve,
+                MaxDepth = 16
+                
+                // Các tuỳ chọn khác có thể được cấu hình tại đây nếu cần
+            };
         }
 
         [HttpGet("{id}")]
@@ -40,22 +58,44 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
 
         [HttpPost]
-        public IActionResult Add(ArticlePost request)
+        public async Task<IActionResult> Add(ArticlePost request)
+        {
+            
+                var data = _repositoryFactory.ArticleRepository.Create(request.ToEntity());
+               await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
+           
+        
+            return Ok(new
+            {
+                Data = data,
+            });
+                
+            
+        }
+        private async Task SendEmailToUsersWithMatchingDepartmentID(int departmentId)
         {
             try
             {
-                var data = _repositoryFactory.ArticleRepository.Create(request.ToEntity());
-                return Ok(new
+                var users = await _userService.GetUsersByDepartmentId(departmentId);
+
+                if (users != null && users.Count > 0)
                 {
-                    Data = data,
-                });
+                    var emailRecipients = new List<string>();
+                    foreach (var user in users)
+                    {
+                        emailRecipients.Add(user.Email);
+                    }
+
+                    var subject = "New Article Created";
+                    var message = "A new article has been created in your department. Please check it out!";
+
+                    await _emailSender.SendEmailAsync(emailRecipients, subject, message);
+                }
             }
             catch (Exception ex)
             {
-                return Ok(new
-                {
-                    Error = ex,
-                });
+                // Xử lý ngoại lệ nếu cần
+                Console.WriteLine($"Error sending email: {ex.Message}");
             }
         }
 
