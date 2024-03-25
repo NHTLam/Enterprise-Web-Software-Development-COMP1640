@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 const token = localStorage.getItem("token");
 const API_BASE = process.env.REACT_APP_API_KEY;
+const userId = localStorage.getItem("user_id");
 
 const Feedback = () => {
   const [feedback, setFeedback] = useState("");
   const [articleId, setArticleId] = useState(6);
-  const [userId, setUserId] = useState(2);
   const [feedbackTime, setFeedbackTime] = useState(new Date());
   const [isSending, setIsSending] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
@@ -15,12 +15,18 @@ const Feedback = () => {
   const handleFeedback = async () => {
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
-      const saveFeedback = axios.post(
+      const newFeedback = {
+        userId: userId,
+        articleId: articleId,
+        feedback: feedback,
+        feedbackTime: formattedFeedbackTime,
+      };
+      const saveFeedback = await axios.post(
         `${API_BASE}/feedback/create`,
         {
-          userId,
+          userId: userId,
           articleId,
-          feedback,
+          feedbackContent: feedback,
           feedbackTime,
         },
         {
@@ -29,13 +35,8 @@ const Feedback = () => {
           },
         }
       );
-      const newFeedback = {
-        userId: userId,
-        articleId: articleId,
-        context: feedback,
-        feedbackTime: formattedFeedbackTime,
-      };
-
+      console.log("Create feedback success");
+      console.log("asdasd: " + saveFeedback.data);
       const FeedbackIndex = feedbackList.findIndex(
         (item) => item.userId === userId && item.articleId === articleId
       );
@@ -54,9 +55,40 @@ const Feedback = () => {
     }
   };
 
-  const handleUpdate = () => {
-    setIsSending(false);
-    setIsChanging(false);
+  const handleUpdate = async () => {
+    try {
+      const formattedFeedbackTime = feedbackTime.toISOString();
+      const updateFeedback = {
+        userId: userId,
+        articleId: articleId,
+        feedback: feedback,
+        feedbackTime: formattedFeedbackTime,
+      };
+      const saveFeedback = await axios.post(
+        `${API_BASE}/feedback/update`,
+        {
+          updateFeedback,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Feedback updated successfully:", saveFeedback.data);
+      setIsSending(false);
+      setIsChanging(false);
+      const FeedbackIndex = feedbackList.findIndex(
+        (item) => item.userId === userId && item.articleId === articleId
+      );
+      if (FeedbackIndex !== -1) {
+        const updatedFeedbackList = [...feedbackList];
+        updatedFeedbackList[FeedbackIndex] = updateFeedback;
+        setFeedbackList(updatedFeedbackList);
+      }
+    } catch (err) {
+      console.log("Error updating feedback:", err);
+    }
   };
 
   useEffect(() => {
@@ -77,15 +109,15 @@ const Feedback = () => {
           <tbody>
             <tr>
               <th scope="row">UserID</th>
-              <td>1</td>
+              <td>{userId}</td>
             </tr>
             <tr>
               <th scope="row">ArticleID</th>
-              <td>1</td>
+              <td>{articleId}</td>
             </tr>
             <tr>
               <th scope="row">Date</th>
-              <td>Friday, 18 March 2022, 4:47 PM</td>
+              <td>{feedbackTime.toLocaleString()}</td>
             </tr>
             <tr>
               <th scope="row">Feedback</th>
