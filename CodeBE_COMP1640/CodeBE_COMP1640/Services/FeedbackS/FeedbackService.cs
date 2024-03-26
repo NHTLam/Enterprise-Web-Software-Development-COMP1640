@@ -18,6 +18,7 @@ namespace CodeBE_COMP1640.Services.FeedbackS
         Task CreateFeedback(Feedback feedback);
         Task UpdateFeedback(Feedback feedback);
         Task DeleteFeedback(int id);
+        Task<List<Feedback>> GetFeedbackByArticleId(int articleId);
     }
 
   public class FeedbackService : IFeedbackService
@@ -66,5 +67,8 @@ namespace CodeBE_COMP1640.Services.FeedbackS
         {
             await _uow.FeedbackRepository.DeleteFeedback(id);
         }
+         public async Task<List<Feedback>>  GetFeedbackByArticleId(int articleId){
+               return await _uow.FeedbackRepository.GetFeedbackByArticleId(articleId);      
+           }
     }
 }

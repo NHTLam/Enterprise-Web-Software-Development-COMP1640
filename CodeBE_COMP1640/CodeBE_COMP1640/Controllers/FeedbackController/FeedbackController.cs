@@ -49,6 +49,16 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
             }
             return Ok(feedback);
         }
+        [Route(FeedbackRoute.GetbyArticleID), HttpGet, Authorize]
+        public async Task<ActionResult<Feedback>> GetFeedbackByArticleId(int articleId)
+        {
+            var feedback = await _feedbackService.GetFeedbackByArticleId(articleId);
+            if (feedback == null)
+            {
+                return NotFound();
+            }
+            return Ok(feedback);
+        }
 
         [Route(FeedbackRoute.Create), HttpPost, Authorize]
         public async Task<IActionResult> CreateFeedback(FeedbackDTO feedbackDTO)

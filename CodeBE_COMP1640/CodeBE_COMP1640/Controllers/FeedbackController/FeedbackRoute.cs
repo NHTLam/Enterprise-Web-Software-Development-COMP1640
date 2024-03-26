@@ -9,6 +9,8 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
         public const string Module = "/feedback";
         public const string List = Module + "/list";
         public const string Get = Module + "/get/{id}";
+        public const string GetbyArticleID = Module + "/getbyarticleID";
+        
         public const string Create = Module + "/create";
         public const string Update = Module + "/update/{id}";
         public const string Delete = Module + "/delete/{id}";
