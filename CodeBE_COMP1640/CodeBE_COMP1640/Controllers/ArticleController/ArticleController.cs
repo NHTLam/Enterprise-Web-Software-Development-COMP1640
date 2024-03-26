@@ -58,16 +58,29 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         [Route(ArticleRoute.Create), HttpPost, Authorize]
         public async Task<IActionResult> Add(ArticlePost request)
         {
-
-            var data = _repositoryFactory.ArticleRepository.Create(request.ToEntity());
-            await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
-
-
-            return Ok(new
+            try
             {
-                Data = data,
-            });
+                // Tạo entity từ request và đặt IsApproved là false
+                var articleEntity = request.ToEntity();
+                articleEntity.IsApproved = false;
+
+                var data = _repositoryFactory.ArticleRepository.Create(articleEntity);
+                await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
+
+                return Ok(new
+                {
+                    Data = data,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new
+                {
+                    Error = ex,
+                });
+            }
         }
+
 
         private async Task SendEmailToUsersWithMatchingDepartmentID(int departmentId)
         {
@@ -196,6 +209,38 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 });
             }
         }
+        [Route(ArticleRoute.Approve), HttpPut, Authorize(Roles = "Admin")]
+        public IActionResult ApproveArticle(int articleId)
+        {
+            try
+            {
+                // Lấy article từ repository
+                var article = _repositoryFactory.ArticleRepository.Get(articleId);
+
+                // Kiểm tra xem article có tồn tại không
+                if (article == null)
+                {
+                    return NotFound("Article not found");
+                }
+
+                // Cập nhật trạng thái IsApproved thành true
+                article.IsApproved = true;
+                _repositoryFactory.ArticleRepository.Update(article);
+
+                return Ok(new
+                {
+                    Message = "Article approved successfully",
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new
+                {
+                    Error = ex,
+                });
+            }
+        }
+
 
         [Route(ArticleRoute.UploadFile), HttpPost, Authorize]
         public async Task<IActionResult> UploadFile(string articleId, List<IFormFile> files)
