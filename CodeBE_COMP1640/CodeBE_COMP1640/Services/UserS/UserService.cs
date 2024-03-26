@@ -19,6 +19,7 @@ namespace CodeBE_COMP1640.Services.UserS
         Task<User> GetPasswordHash(User User);
         Task<string> CreateToken(User user);
         Task<List<User>> GetUsersByDepartmentId(int DepartmentId);
+        Task<bool> UpdateCheckbox(int id, bool isChecked);
     }
     public class UserService : IUserService
     {
@@ -167,6 +168,12 @@ namespace CodeBE_COMP1640.Services.UserS
                     throw new Exception("Error occurred while fetching users by department ID", ex);
                 }
             }
+             public async Task<bool> UpdateCheckbox(int id, bool isChecked)
+        {
+            return await UOW.UserRepository.UpdateCheckbox(id, isChecked);
+        }
+
+        
       
 
      

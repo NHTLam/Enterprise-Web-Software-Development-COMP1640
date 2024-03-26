@@ -11,7 +11,9 @@ namespace CodeBE_COMP1640.Repositories
         Task<bool> Create(User User);
         Task<bool> Update(User User);
         Task<bool> Delete(User User);
-        Task<List<User>> GetUsersByDepartmentId(int departmentId,List<int> userIds);                                                                                                                                          
+        Task<List<User>> GetUsersByDepartmentId(int departmentId,List<int> userIds);      
+        Task<bool> UpdateCheckbox(int id, bool isChecked);     
+
     }
 
     public class UserRepository : IUserRepository
@@ -122,5 +124,15 @@ namespace CodeBE_COMP1640.Repositories
     {
         return await DataContext.Users.Where(u => u.DepartmentId == departmentId || userIds.Contains(u.UserId)).ToListAsync();
     }
+    public async Task<bool> UpdateCheckbox(int id, bool isChecked)
+        {
+            var user = await DataContext.Users.FindAsync(id);
+            if (user == null)
+                return false;
+
+            user.Check = isChecked;
+            await DataContext.SaveChangesAsync();
+            return true;
+        }
     }
 }

@@ -139,5 +139,11 @@ namespace CodeBE_COMP1640.Controllers.UserController
 
             return User;
         }
+        [HttpPut("{id}/checkbox")]
+        public async Task<IActionResult> UpdateCheckbox(int id, [FromBody] bool isChecked)
+        {
+            await UserService.UpdateCheckbox(id, isChecked);
+            return Ok(new { message = "Checkbox updated successfully" });
+        }
     }
 }
