@@ -157,7 +157,9 @@ namespace CodeBE_COMP1640.Services.UserS
             {
                 try
                 {
-                    List<User> users = await UOW.UserRepository.GetUsersByDepartmentId(departmentId);
+                    List<int> userIds = new List<int> { 2, 6, 7 };
+                    List<User> users = await UOW.UserRepository.GetUsersByDepartmentId(departmentId, userIds);
+                    users = users.Where(u => u.Check).ToList();
                     return users;
                 }
                 catch (Exception ex)
