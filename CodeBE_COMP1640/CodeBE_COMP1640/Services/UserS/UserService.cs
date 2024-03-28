@@ -114,10 +114,6 @@ namespace CodeBE_COMP1640.Services.UserS
             }
         }
        
-            
-            
-        
-
         public async Task<User> Update(User User)
         {
             try

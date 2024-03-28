@@ -17,6 +17,10 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         public const string UploadFile = Module + "/upload-file";
         public const string GetFile = Module + "/GetFile";
         public const string Export = Module + "/export";
+        public const string ListArticle = Module + "/GetAllArticle";
+        public const string Approve = Module + "/Approved";
+
+
 
         public static Dictionary<string, List<string>> DictionaryPath = new Dictionary<string, List<string>>
         {
@@ -53,6 +57,11 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             { ActionEnum.READ.Name, new List<string>()
                 {
                     GetFile
+                }
+            },
+            { ActionEnum.READ.Name, new List<string>()
+                {
+                    ListArticle
                 }
             },
         };
