@@ -61,11 +61,11 @@ const Feedback = () => {
       const updateFeedback = {
         userId: userId,
         articleId: articleId,
-        feedback: feedback,
+        feedbackContent: feedback,
         feedbackTime: formattedFeedbackTime,
       };
-      const saveFeedback = await axios.post(
-        `${API_BASE}/feedback/update`,
+      const saveFeedback = await axios.put(
+        `${API_BASE}/feedback/update/${userId}`,
         {
           updateFeedback,
         },

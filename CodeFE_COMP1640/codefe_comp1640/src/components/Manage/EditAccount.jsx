@@ -68,7 +68,7 @@ const EditAccount = () => {
     e.preventDefault();
     try {
       await axios.post(
-        `${API_BASE}/app-user/update/`,
+        `${API_BASE}/app-user/update`,
         account, // Gửi dữ liệu từ state account
         {
           headers: {
@@ -85,7 +85,12 @@ const EditAccount = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAccount({ ...account, [name]: JSON.parse(value)})
+    if (name === "roleUserMappings"){
+      setAccount({ ...account, [name]: JSON.parse(value)})
+    }
+    else{
+      setAccount({ ...account, [name]: value})
+    }
     console.log(account)
   };
 

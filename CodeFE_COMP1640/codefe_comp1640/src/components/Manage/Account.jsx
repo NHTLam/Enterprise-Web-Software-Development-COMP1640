@@ -39,6 +39,7 @@ const Account = () => {
       console.log("Create account success!");
       const newAccount = [...accounts, response.data];
       setAccount(newAccount);
+      console.log(newAccount)
       navigate("/ad_manage/account");
     } catch (err) {
       console.log("Create account failed!");
@@ -50,6 +51,11 @@ const Account = () => {
     try {
       await axios.post(`${API_BASE}/app-user/delete`, {
         userId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       console.log("Delete success");
       setAccount(accounts.filter((account) => account.userId !== userId));
