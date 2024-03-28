@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Chart } from "react-google-charts";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import * as Toast from "../components/Toast";
 const token = localStorage.getItem("token");
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 const Manage = () => {
+  const navigate = useNavigate();
   const [listDashBoard, setlistDashBoard] = useState({
     pieChartSimplifys: [],
     barChartSimplifys: [],
@@ -57,6 +59,13 @@ const Manage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        if (res.status === 403){
+          console.log("No Permission!");
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(()=>{
+            navigate("/");
+          },1000)  
+        }
         setlistDashBoard({
           pieChartSimplifys: res.data.pieChartSimplifys,
           barChartSimplifys: res.data.barChartSimplifys,

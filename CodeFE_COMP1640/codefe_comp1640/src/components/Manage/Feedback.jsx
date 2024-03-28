@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import * as Toast from "../../components/Toast";
+
 const token = localStorage.getItem("token");
 const API_BASE = process.env.REACT_APP_API_KEY;
 const userId = localStorage.getItem("user_id");
@@ -11,6 +14,7 @@ const Feedback = () => {
   const [isSending, setIsSending] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
+  const navigate = useNavigate();
 
   const handleFeedback = async () => {
     try {
@@ -35,6 +39,13 @@ const Feedback = () => {
           },
         }
       );
+      if (saveFeedback.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
+      }
       console.log("Create feedback success");
       console.log("asdasd: " + saveFeedback.data);
       const FeedbackIndex = feedbackList.findIndex(
@@ -75,6 +86,13 @@ const Feedback = () => {
           },
         }
       );
+      if (saveFeedback.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
+      }
       console.log("Feedback updated successfully:", saveFeedback.data);
       setIsSending(false);
       setIsChanging(false);

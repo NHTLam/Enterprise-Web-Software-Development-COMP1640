@@ -41,7 +41,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             },
             { ActionEnum.READ.Name, new List<string>()
                 {
-                    List, Get, GetByUser
+                    List, Get, GetByUser, GetFile, ListArticle
                 }
             },
             { ActionEnum.EXPORT.Name, new List<string>()
@@ -53,17 +53,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 {
                     UploadFile
                 }
-            },
-            { ActionEnum.READ.Name, new List<string>()
-                {
-                    GetFile
-                }
-            },
-            { ActionEnum.READ.Name, new List<string>()
-                {
-                    ListArticle
-                }
-            },
+            }
         };
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CodeBE_COMP1640.Enums;
 using CodeBE_COMP1640.Models;
+using CodeBE_COMP1640.Repositories;
 using CodeBE_COMP1640.Services.PermissionS;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,6 +54,12 @@ namespace CodeBE_COMP1640.Controllers
                 PermissonRoleMappings.Add(permissonRoleMapping);
             }
             await DataContext.BulkMergeAsync(PermissonRoleMappings);
+
+            RoleUserMapping RoleUserMapping = new RoleUserMapping();
+            RoleUserMapping.RoleId = 1;
+            RoleUserMapping.UserId = 2;
+            DataContext.RoleUserMappings.Add(RoleUserMapping);
+            await DataContext.SaveChangesAsync();           
         }
     }
 }

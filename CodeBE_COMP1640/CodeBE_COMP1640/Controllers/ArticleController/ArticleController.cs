@@ -209,7 +209,8 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 });
             }
         }
-        [Route(ArticleRoute.Approve), HttpPut, Authorize(Roles = "Admin")]
+
+        [Route(ArticleRoute.Approve), HttpPut, Authorize]
         public IActionResult ApproveArticle(int articleId)
         {
             try
