@@ -92,7 +92,7 @@ const Account = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container bg-light">
       <h2>LIST ACCOUNT</h2>
       <div className="d-flex justify-content-end">
         <button
@@ -125,7 +125,13 @@ const Account = () => {
             <td>{account.phone}</td>
             {/* <td>{account.class}</td> */}
             <td>{account.address}</td>
-            <td>{Roles.filter(r => account.roleUserMappings.map(r => r.roleId).includes(r.roleId)).map(r => r.name).join(",")}</td>
+            <td>
+              {Roles.filter((r) =>
+                account.roleUserMappings.map((r) => r.roleId).includes(r.roleId)
+              )
+                .map((r) => r.name)
+                .join(",")}
+            </td>
             <td>
               <Link
                 to={`/edit_account/${account.userId}`}

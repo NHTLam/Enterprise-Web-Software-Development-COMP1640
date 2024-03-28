@@ -14,6 +14,8 @@ const Feedback = () => {
 
   const handleFeedback = async () => {
     try {
+      setIsSending(true);
+      setIsChanging(true);
       const formattedFeedbackTime = feedbackTime.toISOString();
       const newFeedback = {
         userId: userId,
@@ -48,8 +50,6 @@ const Feedback = () => {
       } else {
         setFeedbackList([...feedbackList, newFeedback]);
       }
-      setIsSending(true);
-      setIsChanging(true);
     } catch (err) {
       console.error("Error sending feedback:", err);
     }

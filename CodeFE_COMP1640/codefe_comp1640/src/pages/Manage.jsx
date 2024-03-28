@@ -72,8 +72,87 @@ const Manage = () => {
 
   return (
     <div className="container">
-      <h1 className="fw-bold">Dashboard</h1>
-      <div className="row w-100 bg-light mb-3">
+      <h2 className="fw-bold">Dashboard</h2>
+      <div className="mt-2">
+        <div className="row mt-2">
+          {/* row */}
+          <div className="col-12 col-md-4 ">
+            <div className="card border-0 bg-light">
+              <div className="card-body py-4">
+                <h5 className="mb-2 fw-bold">Total Account</h5>
+                <div className="d-flex">
+                  <p className="mb-2 fw-bold">50</p>
+                  <i class="bi bi-person ms-2"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-12 col-md-4">
+            <div className="card border-0 bg-light">
+              <div className="card-body py-4">
+                <h5 className="mb-2 fw-bold">Total topic</h5>
+                <div className="d-flex">
+                  <p className="mb-2 fw-bold">50</p>
+                  <i class="bi bi-card-text ms-2"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-12 col-md-4 ">
+            <div className="card border-0 bg-light">
+              <div className="card-body py-4">
+                <h5 className="mb-2 fw-bold">Total Role</h5>
+                <div className="d-flex">
+                  <p className="mb-2 fw-bold">50</p>
+                  <i class="bi bi-person-lines-fill ms-2"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* row */}
+        </div>
+        <hr />
+        <div className="container">
+          <div className="row bg-light">
+            <h4>Đánh giá</h4>
+            <div>
+              <Chart
+                chartType="PieChart"
+                data={data}
+                options={options}
+                width={"100%"}
+                height={"400px"}
+              />
+            </div>
+          </div>
+          <hr />
+          <div className="row bg-light">
+            <h4>Đánh giá 2</h4>
+            <div>
+              <Chart
+                chartType="ColumnChart"
+                width={"100%"}
+                height={"400px"}
+                data={data2}
+              />
+            </div>
+          </div>
+          <hr />
+          <div className="row bg-light">
+            <h4>Đánh giá 3</h4>
+            <div>
+              <Chart
+                chartType="Line"
+                width="100%"
+                height="400px"
+                data={data3}
+                options={options3}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* <div className="row w-100 bg-light mb-3">
         <h3>Pie Chart</h3>
         <Chart
           chartType="PieChart"
@@ -101,7 +180,7 @@ const Manage = () => {
           data={data3}
           options={options3}
         />
-      </div>
+      </div> */}
     </div>
   );
 };
