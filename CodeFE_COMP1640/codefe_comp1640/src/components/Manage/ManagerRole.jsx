@@ -216,7 +216,7 @@ const ManagerRole = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container bg-light">
       <h2>LIST Role</h2>
       <div className="d-flex justify-content-end">
         <button
