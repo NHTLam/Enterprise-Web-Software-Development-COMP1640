@@ -6,6 +6,7 @@ const token = localStorage.getItem("token");
 
 const EditAccount = () => {
   const [Roles, setRoles] = useState([]);
+  const [department, setDepartment] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
   const userId = parseInt(id);
@@ -13,10 +14,11 @@ const EditAccount = () => {
   const [account, setAccount] = useState({
     email: "",
     username: "",
-    class: "",
+    // class: "",
     phone: "",
     address: "",
-    roleUserMappings: []
+    department: "",
+    roleUserMappings: [],
   });
   const API_BASE = process.env.REACT_APP_API_KEY;
   useEffect(() => {
@@ -34,15 +36,32 @@ const EditAccount = () => {
       }
     };
 
+    const listDepartment = async () => {
+      try {
+        const res = await axios.post(`${API_BASE}/department/list`, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setDepartment(res.data);
+        console.table("List of Department:", res.data);
+      } catch (err) {
+        console.log("Failed to list Department! " + err);
+      }
+    };
+
     const getAccount = async () => {
-      const response = await axios.post(`${API_BASE}/app-user/get`, {
-        userId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await axios.post(
+        `${API_BASE}/app-user/get`,
+        {
+          userId,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = response.data;
       setAccount(data);
       console.log("Edit success!");
@@ -62,6 +81,7 @@ const EditAccount = () => {
     };
     listRole();
     getAccount();
+    listDepartment();
   }, [userId]);
 
   const handleEditAccount = async (e) => {
@@ -85,8 +105,8 @@ const EditAccount = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAccount({ ...account, [name]: JSON.parse(value)})
-    console.log(account)
+    setAccount({ ...account, [name]: JSON.parse(value) });
+    console.log(account);
   };
 
   return (
@@ -151,20 +171,20 @@ const EditAccount = () => {
               onChange={handleChange}
             />
           </div>
-          {/* <div className="mb-3">
-            <label htmlFor="clas" className="form-label">
-              Class
-            </label>
-            <input
-              name="class"
-              type="text"
-              className="form-control"
-              id="class"
-              placeholder="Enter Class"
-              value={account.class}
+          <div className="mb-3">
+            <label className="form-label">Department</label>
+            <select
+              name="department"
+              value={account.department}
               onChange={handleChange}
-            />
-          </div> */}
+            >
+              {department.map((department) => (
+                <option key={department.id} value={department.id}>
+                  {department.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="mb-3">
             <label htmlFor="roleUserMappings" className="form-label">
               Role
@@ -178,7 +198,12 @@ const EditAccount = () => {
               defaultValue=""
             >
               {Roles.map((role) => (
-                <option key={role.id} value={JSON.stringify([{userId: userId, roleId: role.roleId}])}>
+                <option
+                  key={role.id}
+                  value={JSON.stringify([
+                    { userId: userId, roleId: role.roleId },
+                  ])}
+                >
                   {role.name}
                 </option>
               ))}

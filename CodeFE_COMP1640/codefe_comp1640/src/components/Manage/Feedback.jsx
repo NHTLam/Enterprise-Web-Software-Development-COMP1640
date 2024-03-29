@@ -57,6 +57,8 @@ const Feedback = () => {
 
   const handleUpdate = async () => {
     try {
+      setIsSending(false);
+      setIsChanging(false);
       const formattedFeedbackTime = feedbackTime.toISOString();
       const updateFeedback = {
         userId: userId,
@@ -76,8 +78,6 @@ const Feedback = () => {
         }
       );
       console.log("Feedback updated successfully:", saveFeedback.data);
-      setIsSending(false);
-      setIsChanging(false);
       const FeedbackIndex = feedbackList.findIndex(
         (item) => item.userId === userId && item.articleId === articleId
       );
