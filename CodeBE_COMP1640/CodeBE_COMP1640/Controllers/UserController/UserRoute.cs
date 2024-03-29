@@ -21,22 +21,22 @@ namespace CodeBE_COMP1640.Controllers.UserController
         {
             { ActionEnum.CREATE.Name, new List<string>() 
                 {
-                    Create, Login, CheckBox
+                    Create, CheckBox
                 } 
             },
             { ActionEnum.UPDATE.Name, new List<string>()
                 {
-                    Update, Login, CheckBox
+                    Update, CheckBox
                 }
             },
             { ActionEnum.DELETE.Name, new List<string>()
                 {
-                    Delete, Login
+                    Delete
                 }
             },
             { ActionEnum.READ.Name, new List<string>()
                 {
-                    List, Get, Login
+                    List, Get
                 }
             }
         };

@@ -15,7 +15,6 @@ const EditAccount = () => {
   const [account, setAccount] = useState({
     email: "",
     username: "",
-    // class: "",
     phone: "",
     address: "",
     department: "",

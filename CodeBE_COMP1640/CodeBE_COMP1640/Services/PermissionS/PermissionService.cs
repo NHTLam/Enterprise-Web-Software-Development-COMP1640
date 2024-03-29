@@ -226,14 +226,14 @@ namespace CodeBE_COMP1640.Services.PermissionS
         {
             try
             {
-                var oldData = await UOW.PermissionRepository.GetRole(Role.RoleId);
+                //var oldData = await UOW.PermissionRepository.GetRole(Role.RoleId);
 
                 await UOW.PermissionRepository.UpdateRole(Role);
 
                 Role = await UOW.PermissionRepository.GetRole(Role.RoleId);
                 return Role;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw new Exception();
             }
