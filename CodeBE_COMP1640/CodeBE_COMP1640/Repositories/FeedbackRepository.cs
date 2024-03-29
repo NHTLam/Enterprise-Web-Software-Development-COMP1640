@@ -14,6 +14,7 @@ namespace CodeBE_COMP1640.Repositories
         Task CreateFeedback(Feedback feedback);
         Task UpdateFeedback(Feedback feedback);
         Task DeleteFeedback(int id);
+        Task<List<Feedback>> GetFeedbackByArticleId(int articleId);
     }
 
     public class FeedbackRepository : IFeedbackRepository
@@ -68,5 +69,9 @@ namespace CodeBE_COMP1640.Repositories
             _context.Feedbacks.Remove(feedback);
             await _context.SaveChangesAsync();
         }
+         public async Task<List<Feedback>> GetFeedbackByArticleId(int articleId)
+    {
+        return await _context.Feedbacks.Where(u => u.ArticleId == articleId ).ToListAsync();
+    }
     }
 }
