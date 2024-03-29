@@ -45,17 +45,12 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             },
             { ActionEnum.READ.Name, new List<string>()
                 {
-                    List, Get, GetByUser, GetFile, ListArticle
+                    List, Get, GetByUser, GetFile, ListArticle, GetUploadedFiles
                 }
             },
             { ActionEnum.EXPORT.Name, new List<string>()
                 {
                     Export,
-                }
-            },
-            { ActionEnum.READ.Name, new List<string>()
-                {
-                    GetUploadedFiles,
                 }
             },
             { ActionEnum.UPLOAD_FILE.Name, new List<string>()

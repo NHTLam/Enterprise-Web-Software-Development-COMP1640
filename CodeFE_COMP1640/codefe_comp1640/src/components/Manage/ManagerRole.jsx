@@ -42,7 +42,7 @@ const ManagerRole = () => {
       console.log("Create Role success!");
       const newRole = [...Roles, response.data];
       setRoles(newRole);
-      navigate("/ad_manage/Role");
+      navigate("/manager_role");
     } catch (err) {
       console.log("Create Role failed!");
     }
@@ -93,7 +93,7 @@ const ManagerRole = () => {
         },1000)  
       }
       console.log("Role updated successfully!");
-      // navigate("/");
+      navigate("ad_manage/account");
     } catch (err) {
       console.log("Failed to update role!" + err);
     }
@@ -130,7 +130,7 @@ const ManagerRole = () => {
     const checkboxes = document.querySelectorAll('#setPermission input[type="checkbox"]:checked');
 
     checkboxes.forEach(checkbox => {
-      const permissionId = parseInt(checkbox.parentNode.parentNode.querySelector('td:nth-child(1)').textContent, 10); // Extract permission ID from its table cell
+      const permissionId = parseInt(checkbox.parentNode.parentNode.querySelector('td:nth-child(2)').textContent, 10); // Extract permission ID from its table cell
       checkedPermissions.push(permissionId);
     });
   
@@ -147,7 +147,7 @@ const ManagerRole = () => {
 
     try {
       var res = await axios.post(
-        `${API_BASE}/role/update-role/`,
+        `${API_BASE}/role/update-role`,
         Role,
         {
           headers: {
@@ -236,7 +236,7 @@ const ManagerRole = () => {
         </tr>
         {Roles.map((Role, index) => (
           <tr key={Role.roleId}>
-            <td>{index + 1}</td>
+            <td className="hidden">{Role.roleId}</td>
             <td>{Role.name}</td>
             <td>{Role.description}</td>
             <td>
@@ -426,7 +426,7 @@ const ManagerRole = () => {
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
         >
-          <div className="modal-dialog modal-lg">
+          <div className="modal-dialog modal-xl">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLabel">
@@ -439,9 +439,10 @@ const ManagerRole = () => {
                   aria-label="Close"
                 ></button>
               </div>
-              <table className="table table-striped mt-2 text-center">
+              <table className="table table-info mt-2 text-center">
                 <tr>
                   <th>STT</th>
+                  <th hidden>Id</th>
                   <th>Action</th>
                   <th>Menu Name</th>
                   <th>Description</th>
@@ -450,6 +451,7 @@ const ManagerRole = () => {
                 {Permissions.map((Permission, index) => (
                   <tr key={Permission.permissionId}>
                     <td>{index + 1}</td>
+                    <td hidden>{Permission.permissionId}</td>
                     <td>{Permission.name}</td>
                     <td>{Permission.menuName}</td>
                     <td>{Permission.description}</td>

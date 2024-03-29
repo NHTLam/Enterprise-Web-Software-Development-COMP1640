@@ -10,16 +10,18 @@ namespace CodeBE_COMP1640.Controllers
     {
         private DataContext DataContext; 
         private IPermissionService PermissionService; 
-        public SetupController(DataContext DataContext, IPermissionService PermissionService)
+        private IUOW UOW; 
+        public SetupController(DataContext DataContext, IPermissionService PermissionService, IUOW uOW)
         {
             this.DataContext = DataContext;
             this.PermissionService = PermissionService;
+            UOW = uOW;
         }
 
         [HttpGet, Route("/setup/init")]
         public async Task<ActionResult> InitEnum()
         {
-            await InitDepartmentEnum();
+            //await InitDepartmentEnum();
             await InitPermission();
             await InitPermissionForAdmin();
             return Ok();
@@ -55,11 +57,15 @@ namespace CodeBE_COMP1640.Controllers
             }
             await DataContext.BulkMergeAsync(PermissonRoleMappings);
 
-            RoleUserMapping RoleUserMapping = new RoleUserMapping();
-            RoleUserMapping.RoleId = 1;
-            RoleUserMapping.UserId = 2;
-            DataContext.RoleUserMappings.Add(RoleUserMapping);
-            await DataContext.SaveChangesAsync();           
+            var User = await UOW.UserRepository.Get(2);
+            if (User.RoleUserMappings == null || User.RoleUserMappings.Count == 0)
+            {
+                RoleUserMapping RoleUserMapping = new RoleUserMapping();
+                RoleUserMapping.RoleId = 1;
+                RoleUserMapping.UserId = 2;
+                DataContext.RoleUserMappings.Add(RoleUserMapping);
+                await DataContext.SaveChangesAsync();
+            }     
         }
     }
 }

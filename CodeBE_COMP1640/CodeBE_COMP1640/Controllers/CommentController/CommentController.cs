@@ -1,5 +1,7 @@
-﻿using CodeBE_COMP1640.Models;
+﻿using CodeBE_COMP1640.Controllers.PermissionController;
+using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Services.CommentS;
+using CodeBE_COMP1640.Services.PermissionS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -10,12 +12,15 @@ namespace CodeBE_COMP1640.Controllers.CommentController
     public class CommentController : ControllerBase
     {
         private ICommentService CommentService;
+        private IPermissionService PermissionService;
 
         public CommentController(
-            ICommentService CommentService
+            ICommentService CommentService,
+            IPermissionService PermissionService
         )
         {
             this.CommentService = CommentService;
+            this.PermissionService = PermissionService;
         }
 
         [Route(CommentRoute.List), HttpPost, Authorize]
@@ -23,6 +28,11 @@ namespace CodeBE_COMP1640.Controllers.CommentController
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
 
             List<Comment> Comments = await CommentService.List();
             List<CommentDTO> CommentDTOs = Comments.Select(x => new CommentDTO(x)).ToList();
@@ -35,6 +45,11 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
+
             List<Comment> Comments = await CommentService.List(CommentDTO.ArticleId ?? 0);
             List<CommentDTO> CommentDTOs = Comments.Select(x => new CommentDTO(x)).ToList();
             return CommentDTOs;
@@ -45,6 +60,11 @@ namespace CodeBE_COMP1640.Controllers.CommentController
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
 
             Comment Comment = ConvertDTOToEntity(CommentDTO);
             Comment = await CommentService.Get(Comment.CommentId);
@@ -57,6 +77,11 @@ namespace CodeBE_COMP1640.Controllers.CommentController
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
 
             Comment Comment = ConvertDTOToEntity(CommentDTO);
             bool isRegisterSuccess = await CommentService.Create(Comment);
@@ -72,6 +97,11 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
+
             Comment Comment = ConvertDTOToEntity(CommentDTO);
             Comment = await CommentService.Update(Comment);
             CommentDTO = new CommentDTO(Comment);
@@ -86,6 +116,11 @@ namespace CodeBE_COMP1640.Controllers.CommentController
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
 
             Comment Comment = ConvertDTOToEntity(CommentDTO);
             Comment = await CommentService.Delete(Comment);

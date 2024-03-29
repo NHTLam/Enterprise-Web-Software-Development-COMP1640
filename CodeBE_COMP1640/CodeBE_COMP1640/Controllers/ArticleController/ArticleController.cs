@@ -1,5 +1,7 @@
-﻿using CodeBE_COMP1640.Factories.Implements;
+﻿using CodeBE_COMP1640.Controllers.PermissionController;
+using CodeBE_COMP1640.Factories.Implements;
 using CodeBE_COMP1640.Services.EmailS;
+using CodeBE_COMP1640.Services.PermissionS;
 using CodeBE_COMP1640.Services.UserS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +19,11 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         private readonly RepositoryFactory _repositoryFactory;
         private readonly IEmailSender _emailSender;
         private readonly IUserService _userService;
+        private readonly IPermissionService PermissionService;
         private readonly JsonSerializerOptions _jsonSerializerOptions;
         private static readonly Dictionary<string, List<(string originalFileName, byte[] fileBytes)>> _articleFiles = new Dictionary<string, List<(string originalFileName, byte[] fileBytes)>>();
 
-        public ArticleController(IServiceProvider serviceProvider, IConfiguration configuration, IEmailSender emailSender, IUserService userService)
+        public ArticleController(IServiceProvider serviceProvider, IConfiguration configuration, IEmailSender emailSender, IUserService userService, IPermissionService permissionService)
         {
             _serviceProvider = serviceProvider;
             _configuration = configuration;
@@ -32,13 +35,19 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 ReferenceHandler = ReferenceHandler.Preserve,
                 MaxDepth = 16
             };
+            PermissionService = permissionService;
         }
 
         [Route(ArticleRoute.Get), HttpGet, Authorize]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
+                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                {
+                    return Forbid();
+                }
+
                 var data = _repositoryFactory.ArticleRepository.Get(id);
                 return Ok(new
                 {
@@ -59,6 +68,12 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
+                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                {
+                    return Forbid();
+                }
+
+                // Tạo entity từ request và đặt IsApproved là false
                 var articleEntity = request.ToEntity();
                 articleEntity.IsApproved = false;
                 articleEntity.SubmissionTime = DateTime.Now;
@@ -110,10 +125,15 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
 
         [Route(ArticleRoute.Update), HttpPut, Authorize]
-        public IActionResult Update(int id, ArticlePut request)
+        public async Task<IActionResult> Update(int id, ArticlePut request)
         {
             try
             {
+                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                {
+                    return Forbid();
+                }
+
                 // Chuyển đổi dữ liệu từ request thành đối tượng Article
                 var articleEntity = request.ToEntity();
 
@@ -149,10 +169,15 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
 
         [Route(ArticleRoute.Delete), HttpDelete, Authorize]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
+                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                {
+                    return Forbid();
+                }
+
                 var data = _repositoryFactory.ArticleRepository.Delete(id);
                 return Ok(new
                 {
@@ -189,10 +214,15 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
 
         [Route(ArticleRoute.GetByUser), HttpGet, Authorize]
-        public IActionResult GetByUser(int userId)
+        public async Task<IActionResult> GetByUser(int userId)
         {
             try
             {
+                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                {
+                    return Forbid();
+                }
+
                 var data = _repositoryFactory.ArticleRepository.GetListByUserId(userId);
                 return Ok(new
                 {
@@ -209,10 +239,15 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
 
         [Route(ArticleRoute.GetByDepartment), HttpGet, Authorize]
-        public IActionResult GetByDepartment(int departmentId)
+        public async Task<IActionResult> GetByDepartment(int departmentId)
         {
             try
             {
+                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                {
+                    return Forbid();
+                }
+
                 var data = _repositoryFactory.ArticleRepository.GetListByDepartmentId(departmentId);
                 return Ok(new
                 {
@@ -229,10 +264,16 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
 
         [Route(ArticleRoute.Approve), HttpPut, Authorize]
-        public IActionResult ApproveArticle(int articleId)
+        public async Task<IActionResult> ApproveArticle(int articleId)
         {
             try
             {
+                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                {
+                    return Forbid();
+                }
+
+                // Lấy article từ repository
                 var article = _repositoryFactory.ArticleRepository.Get(articleId);
                 if (article == null)
                 {
@@ -263,6 +304,11 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
 
             try
             {
+                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                {
+                    return Forbid();
+                }
+
                 if (string.IsNullOrEmpty(articleId))
                     return BadRequest("Invalid articleId");
 
@@ -309,8 +355,13 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
 
         [Route(ArticleRoute.GetFile), HttpGet, Authorize]
-        public IActionResult GetFile(string articleId)
+        public async Task<IActionResult> GetFile(string articleId)
         {
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
+
             if (_articleFiles.ContainsKey(articleId))
             {
                 var fileList = _articleFiles[articleId];
@@ -341,8 +392,13 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
 
         [Route(ArticleRoute.GetUploadedFiles), HttpGet, Authorize]
-        public IActionResult GetUploadedFiles(string articleId)
+        public async Task<IActionResult> GetUploadedFiles(string articleId)
         {
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
+
             if (_articleFiles.ContainsKey(articleId))
             {
                 var fileList = _articleFiles[articleId];

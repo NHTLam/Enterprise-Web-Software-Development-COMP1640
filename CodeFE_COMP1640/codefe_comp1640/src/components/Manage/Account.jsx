@@ -32,8 +32,6 @@ const Account = () => {
     3: "Science",
   };
 
-  // console.log(changeDepartment[1]);
-  // console.log(departments[1].Name);
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [accounts, setAccount] = useState([]);
   const [Roles, setRoles] = useState([]);
@@ -66,10 +64,9 @@ const Account = () => {
         }, 1000);
       }
       console.log("Create account success!");
-      const newAccount = [...accounts, response.data];
-      setAccount(newAccount);
-      console.log(newAccount);
-      navigate("/ad_manage/account");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000)
     } catch (err) {
       console.log("Create account failed!");
     }

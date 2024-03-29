@@ -49,7 +49,7 @@ namespace CodeBE_COMP1640.Services.UserS
                 User = await UOW.UserRepository.Get(User.UserId);
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw new Exception();
             }
