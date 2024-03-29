@@ -19,7 +19,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
 
         private readonly IUserService _userService;
         private readonly JsonSerializerOptions _jsonSerializerOptions;
-        private static readonly Dictionary<int, (string originalFileName, byte[] fileBytes)> _articleFiles = new Dictionary<int, (string originalFileName, byte[] fileBytes)>();
+        private static readonly Dictionary<string, List<(string originalFileName, byte[] fileBytes)>> _articleFiles = new Dictionary<string, List<(string originalFileName, byte[] fileBytes)>>();
 
         public ArticleController(IServiceProvider serviceProvider, IConfiguration configuration, IEmailSender emailSender, IUserService userService)
         {
@@ -32,8 +32,6 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             {
                 ReferenceHandler = ReferenceHandler.Preserve,
                 MaxDepth = 16
-
-                // Các tuỳ chọn khác có thể được cấu hình tại đây nếu cần
             };
         }
 
@@ -60,18 +58,30 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         [Route(ArticleRoute.Create), HttpPost, Authorize]
         public async Task<IActionResult> Add(ArticlePost request)
         {
-
-            var data = _repositoryFactory.ArticleRepository.Create(request.ToEntity());
-            await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
-
-
-            return Ok(new
+            try
             {
-                Data = data,
-            });
+                // Tạo entity từ request và đặt IsApproved là false
+                var articleEntity = request.ToEntity();
+                articleEntity.IsApproved = false;
+                articleEntity.SubmissionTime = DateTime.Now;
+                var data = _repositoryFactory.ArticleRepository.Create(articleEntity);
+                await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
 
-
+                return Ok(new
+                {
+                    Data = data,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new
+                {
+                    Error = ex,
+                });
+            }
         }
+
+
         private async Task SendEmailToUsersWithMatchingDepartmentID(int departmentId)
         {
             try
@@ -94,7 +104,6 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
             catch (Exception ex)
             {
-                // Xử lý ngoại lệ nếu cần
                 Console.WriteLine($"Error sending email: {ex.Message}");
             }
         }
@@ -104,8 +113,11 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
+
+                var articleEntity = request.ToEntity();
                 var entity = request.ToEntity();
                 entity.ArticleId = id;
+                articleEntity.SubmissionTime = DateTime.Now;
                 var data = _repositoryFactory.ArticleRepository.Update(request.ToEntity());
                 return Ok(new
                 {
@@ -141,25 +153,25 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
 
-        //[HttpGet("byTopic/{topicId}")]
-        //public IActionResult GetByTopic(int topicId)
-        //{
-        //    try
-        //    {
-        //        var data = _repositoryFactory.ArticleRepository.GetListByTopicId(topicId);
-        //        return Ok(new
-        //        {
-        //            Data = data,
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Ok(new
-        //        {
-        //            Error = ex,
-        //        });
-        //    }
-        //}
+        [Route(ArticleRoute.ListArticle), HttpGet, Authorize]
+        public IActionResult GetAllArticles()
+        {
+            try
+            {
+                var allArticles = _repositoryFactory.ArticleRepository.GetAll();
+                return Ok(new
+                {
+                    Data = allArticles,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new
+                {
+                    Error = ex,
+                });
+            }
+        }
 
         [Route(ArticleRoute.GetByUser), HttpGet, Authorize]
         public IActionResult GetByUser(int userId)
@@ -201,50 +213,159 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
 
-        [Route(ArticleRoute.UploadFile), HttpPost, Authorize]
-        public async Task<IActionResult> UploadFile(int articleId, IFormFile file)
+        [Route(ArticleRoute.Approve), HttpPut, Authorize]
+        public IActionResult ApproveArticle(int articleId)
         {
             try
             {
-                if (file == null || file.Length == 0)
-                    return BadRequest("File not selected");
+                // Lấy article từ repository
+                var article = _repositoryFactory.ArticleRepository.Get(articleId);
 
-                var originalFileName = file.FileName;
-                var fileBytes = await file.GetBytesAsync();
+                // Kiểm tra xem article có tồn tại không
+                if (article == null)
+                {
+                    return NotFound("Article not found");
+                }
 
-                _articleFiles[articleId] = (originalFileName, fileBytes);
+                // Cập nhật trạng thái IsApproved thành true
+                article.IsApproved = true;
+                _repositoryFactory.ArticleRepository.Update(article);
 
-                return Ok($"File uploaded successfully for ArticleId: {articleId}");
+                return Ok(new
+                {
+                    Message = "Article approved successfully",
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest($"Failed to upload file: {ex.Message}");
+                return Ok(new
+                {
+                    Error = ex,
+                });
             }
         }
 
-        [Route(ArticleRoute.GetFile), HttpPost, Authorize]
 
-        public IActionResult GetFile(int articleId)
+        [Route(ArticleRoute.UploadFile), HttpPost, Authorize]
+        public async Task<IActionResult> UploadFile(string articleId, List<IFormFile> files)
         {
-            if (_articleFiles.TryGetValue(articleId, out (string originalFileName, byte[] fileBytes) fileData))
+            string uploadFolder = "./UploadFile";
+
+            try
             {
-                var memory = new MemoryStream();
-                using (var zipArchive = new ZipArchive(memory, ZipArchiveMode.Create, true))
+                if (string.IsNullOrEmpty(articleId))
+                    return BadRequest("Invalid articleId");
+
+                if (files == null || files.Count == 0)
+                    return BadRequest("No files selected");
+
+                if (_articleFiles.ContainsKey(articleId))
                 {
-                    var entry = zipArchive.CreateEntry(fileData.originalFileName);
-
-                    using (var entryStream = entry.Open())
-                    {
-                        entryStream.Write(fileData.fileBytes, 0, fileData.fileBytes.Length);
-                    }
+                    _articleFiles[articleId].Clear();
                 }
-                memory.Position = 0;
 
-                return File(memory, "application/octet-stream", $"Article_{articleId}_Files.zip");
+                foreach (var file in files)
+                {
+                    if (file == null || file.Length == 0)
+                        return BadRequest("File not selected");
+
+                    // Kiểm tra định dạng của file
+                    var allowedContentTypes = new[] { "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "image/jpeg", "image/png", "image/gif" };
+                    if (!allowedContentTypes.Contains(file.ContentType))
+                        return BadRequest($"Invalid file format for file {file.FileName}. Only docx, jpeg, png, or gif files are allowed.");
+
+                    var originalFileName = file.FileName;
+                    var fileBytes = await file.GetBytesAsync();
+
+                    // Kiểm tra xem có danh sách các file đã được tải lên cho articleId này chưa
+                    if (!_articleFiles.ContainsKey(articleId))
+                    {
+                        // Nếu chưa có, tạo mới danh sách các file và thêm vào từ điển
+                        _articleFiles[articleId] = new List<(string originalFileName, byte[] fileBytes)>();
+                    }
+                    var filePath = Path.Combine(uploadFolder, file.FileName);
+
+                    // Lưu trữ tệp tin trên máy chủ local
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    // Thêm cặp giá trị (tên file gốc và dữ liệu byte) vào danh sách các file cho articleId này
+                    _articleFiles[articleId].Add((originalFileName, fileBytes));
+                }
+
+                return Ok($"Files uploaded successfully for ArticleId: {articleId}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to upload files: {ex.Message}");
+            }
+        }
+
+        [Route(ArticleRoute.GetFile), HttpGet, Authorize]
+        public IActionResult GetFile(string articleId)
+        {
+            if (_articleFiles.ContainsKey(articleId))
+            {
+                var fileList = _articleFiles[articleId];
+                if (fileList != null && fileList.Any())
+                {
+                    var firstFileData = fileList.First();
+
+                    var memory = new MemoryStream();
+                    using (var zipArchive = new ZipArchive(memory, ZipArchiveMode.Create, true))
+                    {
+                        foreach (var fileData in fileList)
+                        {
+                            var entry = zipArchive.CreateEntry(fileData.originalFileName);
+
+                            using (var entryStream = entry.Open())
+                            {
+                                entryStream.Write(fileData.fileBytes, 0, fileData.fileBytes.Length);
+                            }
+                        }
+                    }
+                    memory.Position = 0;
+
+                    return File(memory, "application/zip", $"{firstFileData.originalFileName}.zip");
+                }
             }
 
             return NotFound("No file found for the specified ArticleId");
         }
+
+        [Route(ArticleRoute.GetUploadedFiles), HttpGet, Authorize]
+        public IActionResult GetUploadedFiles(string articleId)
+        {
+            if (_articleFiles.ContainsKey(articleId))
+            {
+                var fileList = _articleFiles[articleId];
+                if (fileList != null && fileList.Any())
+                {
+                    // Tạo một danh sách các đường dẫn hoặc thông tin về các file để trả về cho người dùng
+                    var fileInfos = fileList.Select(fileData => new
+                    {
+                        FileName = fileData.originalFileName,
+                        // Tạo đường dẫn tới một endpoint khác để tải xuống file
+                        DownloadUrl = Url.Action("DownloadFile", "Article", new { articleId = articleId, fileName = fileData.originalFileName })
+                    });
+
+                    return Ok(new
+                    {
+                        Data = fileInfos
+                    });
+                }
+            }
+
+            return NotFound("No file found for the specified ArticleId");
+        }
+
+
+
+
+
+
 
         [Route(ArticleRoute.Export), HttpGet, Authorize]
         public IActionResult ExportFiles()
@@ -282,24 +403,6 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
 
             return File(memory, "application/zip", zipFileName);
         }
-
-        /*private string GetFileExtension(byte[] fileBytes)
-        {
-            if (fileBytes.Length >= 2 && fileBytes[0] == 0x25 && fileBytes[1] == 0x50)
-            {
-                return "pdf";
-            }
-            else if (fileBytes.Length >= 4 && fileBytes[0] == 0x50 && fileBytes[1] == 0x4B && fileBytes[2] == 0x03 && fileBytes[3] == 0x04)
-            {
-                return "zip";
-            }
-            else
-            {
-                return "dat"; 
-            }
-        }*/
-
-
     }
 
     public static class FormFileExtensions
@@ -314,3 +417,4 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
     }
 }
+

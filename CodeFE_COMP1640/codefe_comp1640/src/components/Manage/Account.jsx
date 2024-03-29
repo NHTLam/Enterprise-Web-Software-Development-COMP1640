@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import * as Toast from "../../components/Toast";
 
 const token = localStorage.getItem("token");
 
@@ -36,9 +37,18 @@ const Account = () => {
           },
         }
       );
+
+      if (response.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
+      }
       console.log("Create account success!");
       const newAccount = [...accounts, response.data];
       setAccount(newAccount);
+      console.log(newAccount)
       navigate("/ad_manage/account");
     } catch (err) {
       console.log("Create account failed!");
@@ -48,9 +58,21 @@ const Account = () => {
   const handleDelete = async (userId) => {
     console.log(userId);
     try {
-      await axios.post(`${API_BASE}/app-user/delete`, {
+      var res = await axios.post(`${API_BASE}/app-user/delete`, {
         userId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+      if (res.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
+      }
       console.log("Delete success");
       setAccount(accounts.filter((account) => account.userId !== userId));
       // navigate("/");
@@ -67,6 +89,13 @@ const Account = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        if (res.status === 403){
+          console.log("No Permission!");
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(()=>{
+            navigate("/");
+          },1000)  
+        }
         setRoles(res.data);
         console.table("List of Roles:", JSON.stringify(res.data));
       } catch (err) {
@@ -81,6 +110,13 @@ const Account = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        if (res.status === 403){
+          console.log("No Permission!");
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(()=>{
+            navigate("/");
+          },1000)  
+        }
         setAccount(res.data);
         console.table("List of accounts:", JSON.stringify(res.data));
       } catch (err) {
@@ -92,7 +128,7 @@ const Account = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container bg-light">
       <h2>LIST ACCOUNT</h2>
       <div className="d-flex justify-content-end">
         <button
@@ -125,7 +161,13 @@ const Account = () => {
             <td>{account.phone}</td>
             {/* <td>{account.class}</td> */}
             <td>{account.address}</td>
-            <td>{Roles.filter(r => account.roleUserMappings.map(r => r.roleId).includes(r.roleId)).map(r => r.name).join(",")}</td>
+            <td>
+              {Roles.filter((r) =>
+                account.roleUserMappings.map((r) => r.roleId).includes(r.roleId)
+              )
+                .map((r) => r.name)
+                .join(",")}
+            </td>
             <td>
               <Link
                 to={`/edit_account/${account.userId}`}

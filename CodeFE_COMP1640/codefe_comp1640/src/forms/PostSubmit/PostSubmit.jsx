@@ -58,6 +58,15 @@ const PostSubmit = (props) => {
           },
         }
       );
+
+      if (response.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
+      }
+
       console.log("Create feedback success!");
       console.log("Feedback: ", response.data);
       const newFeedback = {
@@ -126,6 +135,14 @@ const PostSubmit = (props) => {
             },
           }
         );
+
+        if (response.status === 403){
+          console.log("No Permission!");
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(()=>{
+            navigate("/");
+          },1000)  
+        }
         console.log("Create comment success!");
         console.log("ab: ", response.data);
         const newComment = [...listCmt, response.data];
@@ -146,6 +163,13 @@ const PostSubmit = (props) => {
             Authorization: `Bearer ${token}`,
           },
         });
+        if (res.status === 403){
+          console.log("No Permission!");
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(()=>{
+            navigate("/");
+          },1000)  
+        }
         setListCmt(res.data);
         console.table("List of commnet:", JSON.stringify(res.data));
       } catch (err) {

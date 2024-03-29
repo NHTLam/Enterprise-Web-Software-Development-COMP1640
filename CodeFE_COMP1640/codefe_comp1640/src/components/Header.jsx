@@ -16,8 +16,8 @@ const Header = () => {
   const handleClickLogOut = (e) => {
     e.preventDefault();
     // localStorage.clear();
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('token');
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("token");
 
     setIsLogin(false);
     navigate("/");
@@ -39,22 +39,16 @@ const Header = () => {
                   ></Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item>
-                      <Link to="/me"><div>Profile</div></Link>
+                      <Link to="/me">
+                        <div>Profile</div>
+                      </Link>
                     </Dropdown.Item>
                     <Dropdown.Item>
                       <Link to="/ad_manage">Admin Home</Link>
                     </Dropdown.Item>
                     <Dropdown.Item>
-                      <Link to="/ad_manage">Manager Home</Link>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                      <Link to="/mk_manage_topic">
-                        Marketing Conidator Home
-                      </Link>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
                       <Link to={"/history"}>
-                        <div>Post History</div>                      
+                        <div>Post History</div>
                       </Link>
                     </Dropdown.Item>
                     <Dropdown.Item onClick={handleClickLogOut}>
