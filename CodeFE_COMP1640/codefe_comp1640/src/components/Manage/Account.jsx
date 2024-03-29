@@ -10,10 +10,23 @@ const Account = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [className, setClass] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [departmentId, setdepartmentId] = useState(1);
+  const departments = [
+    {
+      Id: 1,
+      Name: "Law",
+    },
+    {
+      Id: 2,
+      Name: "Engineering",
+    },
+    {
+      Id: 3,
+      Name: "Science",
+    },
+  ];
+  const [selectedDepartment, setSelectedDepartment] = useState("");
   const [accounts, setAccount] = useState([]);
   const [Roles, setRoles] = useState([]);
   const API_BASE = process.env.REACT_APP_API_KEY;
@@ -27,9 +40,8 @@ const Account = () => {
           username,
           phone,
           password,
-          class: className,
           address,
-          departmentId,
+          department: selectedDepartment,
         },
         {
           headers: {
@@ -128,7 +140,7 @@ const Account = () => {
   }, []);
 
   return (
-    <div className="container bg-light">
+    <div className="container">
       <h2>LIST ACCOUNT</h2>
       <div className="d-flex justify-content-end">
         <button
@@ -141,49 +153,52 @@ const Account = () => {
           CREATE NEW ACCOUNT
         </button>
       </div>
-      <table className="table table-striped mt-2 text-center">
+      <table className="table mt-2 text-center table-info">
         <tr>
-          <th>ID</th>
+          <th scope="col">ID</th>
           <th>Email</th>
-          <th>username</th>
+          <th>Username</th>
           <th>Phone</th>
-          {/* <th>Class</th> */}
           <th>Address</th>
+          <th>Department</th>
           <th>Role</th>
           <th>Action</th>
-          {/* <th>Role</th> */}
         </tr>
         {accounts.map((account) => (
-          <tr key={account.userId}>
-            <td>{account.userId}</td>
-            <td>{account.email}</td>
-            <td>{account.username}</td>
-            <td>{account.phone}</td>
-            {/* <td>{account.class}</td> */}
-            <td>{account.address}</td>
-            <td>
-              {Roles.filter((r) =>
-                account.roleUserMappings.map((r) => r.roleId).includes(r.roleId)
-              )
-                .map((r) => r.name)
-                .join(",")}
-            </td>
-            <td>
-              <Link
-                to={`/edit_account/${account.userId}`}
-                className="btn btn-warning"
-              >
-                EDIT
-              </Link>
-              <button
-                className="btn btn-danger"
-                type="button"
-                onClick={() => handleDelete(account.userId)}
-              >
-                DELETE
-              </button>
-            </td>
-          </tr>
+          <tbody>
+            <tr key={account.userId}>
+              <td>{account.userId}</td>
+              <td>{account.email}</td>
+              <td>{account.username}</td>
+              <td>{account.phone}</td>
+              <td>{account.address}</td>
+              <td>{account.department}</td>
+              <td>
+                {Roles.filter((r) =>
+                  account.roleUserMappings
+                    .map((r) => r.roleId)
+                    .includes(r.roleId)
+                )
+                  .map((r) => r.name)
+                  .join(",")}
+              </td>
+              <td className="ms-1">
+                <Link
+                  to={`/edit_account/${account.userId}`}
+                  className="btn btn-warning"
+                >
+                  EDIT
+                </Link>
+                <button
+                  className="btn btn-danger ms-1"
+                  type="button"
+                  onClick={() => handleDelete(account.userId)}
+                >
+                  DELETE
+                </button>
+              </td>
+            </tr>
+          </tbody>
         ))}
       </table>
 
@@ -226,7 +241,7 @@ const Account = () => {
                 </div>
                 <div className="mb-3">
                   <label for="username" className="form-label">
-                    Name
+                    Username
                   </label>
                   <input
                     name="username"
@@ -238,23 +253,6 @@ const Account = () => {
                     onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
-                {/* <div class="mb-3">
-                  <label for="Role" className="form-label">
-                    Role
-                  </label>
-                  <select
-                    name="roomType"
-                    id="dropdown1"
-                    className="form-select"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                  >
-                    <option value="">Student</option>
-                    <option value="">Guest</option>
-                    <option value="">Marketing Coordinator</option>
-                    <option value="">Marketing Manager</option>
-                  </select>
-                </div> */}
                 <div className="mb-3">
                   <label for="password" className="form-label">
                     Password
@@ -297,20 +295,24 @@ const Account = () => {
                     onChange={(e) => setAddress(e.target.value)}
                   />
                 </div>
-                {/* <div className="mb-3">
-                  <label for="className" className="form-label">
-                    Class
+                <div class="mb-3">
+                  <label for="department" className="form-label">
+                    Department
                   </label>
-                  <input
-                    name="className"
-                    type="text"
-                    className="form-control"
-                    id="className"
-                    placeholder="Enter Class"
-                    value={className}
-                    onChange={(e) => setClass(e.target.value)}
-                  />
-                </div> */}
+                  <select
+                    id="dropdown"
+                    className="form-select"
+                    value={selectedDepartment}
+                    onChange={(e) => setSelectedDepartment(e.target.value)}
+                  >
+                    <option>Select a department</option>
+                    {departments.map((department) => (
+                      <option key={department.Id} value={department.Name}>
+                        {department.Name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <div className="modal-footer">
                 <button
