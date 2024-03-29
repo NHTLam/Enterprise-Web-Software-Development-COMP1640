@@ -52,7 +52,6 @@ const Login = () => {
     }
   };
 
-  // background-image: url(https://eskipaper.com/images/tumblr-wallpaper-8.jpg);
   return (
     <section className="vh-100 bg-custom">
       <div className="container h-100">

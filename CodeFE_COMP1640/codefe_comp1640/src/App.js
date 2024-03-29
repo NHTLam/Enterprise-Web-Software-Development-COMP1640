@@ -74,9 +74,9 @@ const App = () => {
         <Route
           path="/mk_manage_topic"
           element={
-            <Layout>
+            <LayoutAdmin>
               <MarketingC />
-            </Layout>
+            </LayoutAdmin>
           }
         />
 

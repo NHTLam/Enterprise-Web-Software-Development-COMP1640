@@ -4,10 +4,12 @@ import imageInput from "../assets/add_image.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import React from 'react'
+import * as Toast from "../components/Toast"
 const API_BASE = process.env.REACT_APP_API_KEY|| "";
 
 function StEditPost(props) {
     const {id} = useParams();
+
     const navigate = useNavigate();
     const onFileChange = (files) => {
         console.log(files)
@@ -15,6 +17,7 @@ function StEditPost(props) {
     const [imageList, setImageList] = useState([]);
     const fileInputRef = useRef(null);
     const [postData, setPostData] = useState();
+    const [fileData, setFileData] = useState([]);
     useEffect(() => {
         const token = localStorage.getItem("token");
         axios.get(`${API_BASE}/article/get/${id}`, {
@@ -29,7 +32,20 @@ function StEditPost(props) {
                 // console.log(data.data)
             })
             .catch(err => console.log(err))
-    })
+    },[])
+    useEffect(()=>{
+        const token = localStorage.getItem("token");
+        axios.get(`${API_BASE}/article/GetUpLoadedFiles?articleId=${id}`, {
+            headers: {
+                'ngrok-skip-browser-warning': 'true',
+                Authorization: `Bearer ${token}`
+            }
+        }).then(data => {
+            setFileData(data.data.data)
+        })
+           .catch(err => console.log(err))
+    },[])
+    console.log("fileData",fileData)
     // console.log(postData);       
     if (!postData) {
         return <></>;
@@ -46,7 +62,13 @@ function StEditPost(props) {
                 console.log("delete sucess");
             } else if (response.status === 400) {
                 console.log("some thing went wrong");
-            }
+            }  else if (response.status === 403){
+                console.log("No Permission!");
+                Toast.toastErorr("You do not have permission to perform this action");
+                setTimeout(()=>{
+                  navigate("/");
+                },1000)  
+              }
         } catch (err) {
             console.log("Error " + err);
         }
@@ -77,7 +99,15 @@ function StEditPost(props) {
             <PostInfor />
             <>
                 <div className='mt-5 mb-5 max-width m-auto'>
-
+                    <div className="file_preview">
+                    {
+                        fileData.map((file,index)=>{
+                            return(
+                                <a href="!#" className="d-flex">{file.fileName}</a>
+                            )
+                        })
+                    }
+                    </div>
                     <form>
                         <div className='bg-light'>
                             <div className="mb-3 mt-5">

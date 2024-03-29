@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import * as Toast from "../../components/Toast";
 
 const token = localStorage.getItem("token");
 
@@ -31,6 +32,13 @@ const ManagerRole = () => {
           },
         }
       );
+      if (response.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
+      }
       console.log("Create Role success!");
       const newRole = [...Roles, response.data];
       setRoles(newRole);
@@ -43,14 +51,21 @@ const ManagerRole = () => {
   const handleDelete = async (userId) => {
     console.log(userId);
     try {
-      await axios.post(`${API_BASE}/role/delete-role`, {
+      var res = await axios.post(`${API_BASE}/role/delete-role`, {
         userId,
       },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
+      }
       console.log("Delete success");
       setRoles(Roles.filter((Role) => Role.userId !== userId));
       // navigate("/");
@@ -61,7 +76,7 @@ const ManagerRole = () => {
 
   const handleEditRole = async (e) => {
     try {
-      await axios.post(
+      var res = await axios.post(
         `${API_BASE}/role/update-role/`,
         Role,
         {
@@ -70,6 +85,13 @@ const ManagerRole = () => {
           },
         }
       );
+      if (res.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
+      }
       console.log("Role updated successfully!");
       // navigate("/");
     } catch (err) {
@@ -85,6 +107,14 @@ const ManagerRole = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (res.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
+      }
       setPermissionsByRole(res.data);
       console.table("List of Permission:", JSON.stringify(res.data));
     } catch (err) {
@@ -116,7 +146,7 @@ const ManagerRole = () => {
     console.log(UpdateRole)
 
     try {
-      await axios.post(
+      var res = await axios.post(
         `${API_BASE}/role/update-role/`,
         Role,
         {
@@ -125,6 +155,13 @@ const ManagerRole = () => {
           },
         }
       );
+      if (res.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
+      }
       console.log("Role updated successfully!");
       // navigate("/");
     } catch (err) {
@@ -140,6 +177,13 @@ const ManagerRole = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        if (res.status === 403){
+          console.log("No Permission!");
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(()=>{
+            navigate("/");
+          },1000)  
+        }
         setRoles(res.data);
         console.table("List of Roles:", JSON.stringify(res.data));
       } catch (err) {
@@ -154,6 +198,13 @@ const ManagerRole = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        if (res.status === 403){
+          console.log("No Permission!");
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(()=>{
+            navigate("/");
+          },1000)  
+        }
         setPermissions(res.data);
         console.table("List of Permissions:", JSON.stringify(res.data));
       } catch (err) {
@@ -165,7 +216,7 @@ const ManagerRole = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container bg-light">
       <h2>LIST Role</h2>
       <div className="d-flex justify-content-end">
         <button
