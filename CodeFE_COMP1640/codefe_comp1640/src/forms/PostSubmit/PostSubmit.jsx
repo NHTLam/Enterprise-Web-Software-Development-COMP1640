@@ -189,18 +189,7 @@ const PostSubmit = (props) => {
     }
     const formData = new FormData();
     formData.append("file", selectedFile);
-    
     try {
-      // const response = await axios.post(
-      //   `${API_BASE}/article/upload-file`,
-      //   formData,
-      //   {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   }
-      // );
       const res = await axios.post(
         `${API_BASE}/article/create`,
         {
@@ -230,17 +219,6 @@ const PostSubmit = (props) => {
           }
         );
       }
-      // if (response.status === 200) {
-      //   // Assuming successful upload has status 200
-      //   console.log("File uploaded successfully!");
-      //   Toast.toastSuccess("Submit Success");
-      //   setSelectedFile(null); 
-      //   setTimeout(()=>{
-      //     navigate("/history");
-      //   },3000)    // Clear file selection
-      // } else {
-      //   Toast.toastErorr("Some thing went wrong");// Access error details from response
-      // }
     } catch (error) {
       Toast.toastErorr("Submit Erorr");
       console.error("Error:", error);
