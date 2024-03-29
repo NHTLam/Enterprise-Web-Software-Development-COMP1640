@@ -31,7 +31,8 @@ const Home = () => {
     return (
         <div className="container">
             <div className="row">
-
+            <h1 className='mt-5'>Topic</h1>
+            <hr></hr>
                 <div className="col">
                     <Link to={"/topic/view"}>
                         <div className="card">
@@ -52,6 +53,9 @@ const Home = () => {
                     </div>
                 </div>
             </div>
+
+            <h1 className='mt-5'>Top contribution</h1>
+            <hr></hr>
             <div className="row mt-4">
                 <div className="col">
                     <div className="card">
