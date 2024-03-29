@@ -49,7 +49,7 @@ const Account = () => {
           phone,
           password,
           address,
-          departmentId:selectedDepartment
+          departmentId: selectedDepartment,
         },
         {
           headers: {
@@ -223,17 +223,17 @@ const Account = () => {
         >
           <div className="modal-dialog modal-lg">
             <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLabel">
-                    Create New User
-                  </h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">
+                  Create New User
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
               <div className="modal-body">
                 {/* <!-- Form to input user details --> */}
                 <div className="mb-3">
@@ -318,7 +318,7 @@ const Account = () => {
                   >
                     <option>Select a department</option>
                     {departments.map((department) => (
-                      <option key={department.Id} value={department.Name}>
+                      <option key={department.Id} value={department.Id}>
                         {department.Name}
                       </option>
                     ))}
