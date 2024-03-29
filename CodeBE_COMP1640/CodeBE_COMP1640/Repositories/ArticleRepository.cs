@@ -43,9 +43,22 @@ namespace CodeBE_COMP1640.Repositories
 
         public override Article Update(Article item)
         {
-            _context.Articles.Update(item);
-            _context.SaveChanges();
-            return item;
+            var existingArticle = _context.Articles.FirstOrDefault(x => x.ArticleId == item.ArticleId);
+            if (existingArticle != null)
+            {
+                existingArticle.DepartmentId = item.DepartmentId;
+                existingArticle.UserId = item.UserId;
+                existingArticle.Content = item.Content;
+                existingArticle.SubmissionTime = item.SubmissionTime;
+                existingArticle.IsLateSubmissionAllowed = item.IsLateSubmissionAllowed;
+                existingArticle.IsApproved = item.IsApproved;
+                existingArticle.IsTopic = item.IsTopic;
+
+                // Update other properties if needed
+
+                _context.SaveChanges();
+            }
+            return existingArticle; // Trả về null nếu không tìm thấy bản ghi
         }
 
         //public IEnumerable<Article> GetListByTopicId(int topicId)
