@@ -11,5 +11,6 @@ namespace CodeBE_COMP1640.SearchModels
         public DateTime? SubmissionTimeFrom { get; set; }
         public DateTime? SubmissionTimeTo { get; set; }
         public bool? IsApproved { get; set; }
+        public bool IsTopic { get; set; }
     }
 }

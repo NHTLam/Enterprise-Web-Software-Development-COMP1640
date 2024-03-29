@@ -60,8 +60,8 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             try
             {
                 var articleEntity = request.ToEntity();
-                articleEntity.IsApproved = false;
                 articleEntity.SubmissionTime = DateTime.Now;
+                articleEntity.IsApproved = false;
                 var data = _repositoryFactory.ArticleRepository.Create(articleEntity);
                 await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
 
@@ -110,15 +110,27 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
+
                 var articleEntity = request.ToEntity();
-                var entity = request.ToEntity();
-                entity.ArticleId = id;
+
                 articleEntity.SubmissionTime = DateTime.Now;
-                var data = _repositoryFactory.ArticleRepository.Update(request.ToEntity());
-                return Ok(new
+                articleEntity.ArticleId = id; // Không cần tạo biến entity mới
+
+                // Cập nhật thông tin của articleEntity trong cơ sở dữ liệu
+                var updatedArticle = _repositoryFactory.ArticleRepository.Update(articleEntity);
+
+                // Kiểm tra xem article đã được cập nhật thành công hay không
+                if (updatedArticle != null)
                 {
-                    Data = data,
-                });
+                    return Ok(new
+                    {
+                        Data = updatedArticle,
+                    });
+                }
+                else
+                {
+                    return NotFound("Article not found or could not be updated");
+                }
             }
             catch (Exception ex)
             {

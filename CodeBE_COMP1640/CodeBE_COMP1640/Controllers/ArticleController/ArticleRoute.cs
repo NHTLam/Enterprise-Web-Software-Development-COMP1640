@@ -12,7 +12,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         public const string GetByUser = Module + "/get-by-user/{userId}";
         public const string GetByDepartment = Module + "/get-by-department/{departmentId}";
         public const string List = Module + "/list";
-        public const string Update = Module + "/update/{id}";
+        public const string Update = Module + "/update";
         public const string Delete = Module + "/delete/{id}";
         public const string UploadFile = Module + "/upload-file";
 
