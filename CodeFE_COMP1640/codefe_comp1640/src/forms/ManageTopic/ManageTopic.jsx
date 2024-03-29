@@ -8,7 +8,7 @@ const topicId = 6;
 function ManageTopic() {
   const [topicData, setTopicData] = useState([]);
   useEffect(() => {
-    axios.get(``)
+    axios.get(`${API_BASE}/`)
       .then(data => {
         setTopicData(data.data);
       })
