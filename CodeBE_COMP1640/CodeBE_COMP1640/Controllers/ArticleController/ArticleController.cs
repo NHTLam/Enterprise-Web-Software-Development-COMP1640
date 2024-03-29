@@ -149,7 +149,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
 
-        [Route(ArticleRoute.ListArticle), HttpGet, Authorize]
+        [Route(ArticleRoute.ListArticle), HttpGet]
         public IActionResult GetAllArticles()
         {
             try
