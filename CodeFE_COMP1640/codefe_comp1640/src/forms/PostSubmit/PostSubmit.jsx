@@ -218,6 +218,19 @@ const PostSubmit = (props) => {
             },
           }
         );
+      }else if (res.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)
+      }
+      else if (res.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)
       }
     } catch (error) {
       Toast.toastErorr("Submit Erorr");
