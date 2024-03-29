@@ -93,7 +93,7 @@ const ManagerRole = () => {
         },1000)  
       }
       console.log("Role updated successfully!");
-      // navigate("/");
+      navigate("ad_manage/account");
     } catch (err) {
       console.log("Failed to update role!" + err);
     }

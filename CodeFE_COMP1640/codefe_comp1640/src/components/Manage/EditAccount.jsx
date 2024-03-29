@@ -119,7 +119,7 @@ const EditAccount = () => {
         },1000)  
       }
       console.log("Account updated successfully!");
-      // navigate("/");
+      navigate("/ad_manage/account");
     } catch (err) {
       console.log("Failed to update account!" + err);
     }

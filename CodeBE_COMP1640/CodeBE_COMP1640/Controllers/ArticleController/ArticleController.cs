@@ -174,16 +174,11 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
 
-        [Route(ArticleRoute.ListArticle), HttpGet, Authorize]
+        [Route(ArticleRoute.ListArticle), HttpGet]
         public async Task<IActionResult> GetAllArticles()
         {
             try
             {
-                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
-                {
-                    return Forbid();
-                }
-
                 var allArticles = _repositoryFactory.ArticleRepository.GetAll();
                 return Ok(new
                 {
@@ -376,7 +371,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
 
         [Route(ArticleRoute.GetUploadedFiles), HttpGet, Authorize]
-        public IActionResult GetUploadedFiles(string articleId)
+        public async Task<IActionResult> GetUploadedFiles(string articleId)
         {
             if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
             {
