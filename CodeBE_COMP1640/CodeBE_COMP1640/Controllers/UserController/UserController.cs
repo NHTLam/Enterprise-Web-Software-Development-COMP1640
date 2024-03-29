@@ -1,4 +1,5 @@
-﻿using CodeBE_COMP1640.Models;
+﻿using CodeBE_COMP1640.Controllers.PermissionController;
+using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Services.PermissionS;
 using CodeBE_COMP1640.Services.UserS;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,11 @@ namespace CodeBE_COMP1640.Controllers.UserController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
+
             List<User> Users = await UserService.List();
             List<UserDTO> UserDTOs = Users.Select(x => new UserDTO(x)).ToList();
             return UserDTOs;
@@ -38,6 +44,11 @@ namespace CodeBE_COMP1640.Controllers.UserController
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
 
             User User = ConvertDTOToEntity(UserDTO);
             User = await UserService.Get(User.UserId);
@@ -60,6 +71,11 @@ namespace CodeBE_COMP1640.Controllers.UserController
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
 
             User User = ConvertDTOToEntity(UserDTO);
             bool isRegisterSuccess = await UserService.Create(User);
@@ -95,6 +111,11 @@ namespace CodeBE_COMP1640.Controllers.UserController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
+
             User User = ConvertDTOToEntity(UserDTO);
             User = await UserService.Update(User);
             UserDTO = new UserDTO(User);
@@ -109,6 +130,11 @@ namespace CodeBE_COMP1640.Controllers.UserController
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
 
             User User = ConvertDTOToEntity(UserDTO);
             User = await UserService.Delete(User);
@@ -139,9 +165,14 @@ namespace CodeBE_COMP1640.Controllers.UserController
 
             return User;
         }
-        [HttpPut("{id}/checkbox")]
+        [Route(UserRoute.CheckBox), HttpPut, Authorize]
         public async Task<IActionResult> UpdateCheckbox(int id, [FromBody] bool isChecked)
         {
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            {
+                return Forbid();
+            }
+
             await UserService.UpdateCheckbox(id, isChecked);
             return Ok(new { message = "Checkbox updated successfully" });
         }

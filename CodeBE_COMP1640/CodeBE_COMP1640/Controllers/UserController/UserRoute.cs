@@ -15,17 +15,18 @@ namespace CodeBE_COMP1640.Controllers.UserController
         public const string Update = Module + "/update";
         public const string Delete = Module + "/delete";
         public const string Login = Module + "/login";
+        public const string CheckBox = Module + "/checkbox";
 
         public static Dictionary<string, List<string>> DictionaryPath = new Dictionary<string, List<string>> 
         {
             { ActionEnum.CREATE.Name, new List<string>() 
                 {
-                    Create, Login
+                    Create, Login, CheckBox
                 } 
             },
             { ActionEnum.UPDATE.Name, new List<string>()
                 {
-                    Update, Login
+                    Update, Login, CheckBox
                 }
             },
             { ActionEnum.DELETE.Name, new List<string>()
