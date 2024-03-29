@@ -7,7 +7,20 @@ const token = localStorage.getItem("token");
 
 const EditAccount = () => {
   const [Roles, setRoles] = useState([]);
-  const [department, setDepartment] = useState([]);
+  const departments = [
+    {
+      Id: 1,
+      Name: "Law",
+    },
+    {
+      Id: 2,
+      Name: "Engineering",
+    },
+    {
+      Id: 3,
+      Name: "Science",
+    },
+  ];
   const navigate = useNavigate();
   const { id } = useParams();
   const userId = parseInt(id);
@@ -17,7 +30,7 @@ const EditAccount = () => {
     username: "",
     phone: "",
     address: "",
-    department: "",
+    departmentId: "",
     roleUserMappings: [],
   });
   const API_BASE = process.env.REACT_APP_API_KEY;
@@ -29,31 +42,17 @@ const EditAccount = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        if (res.status === 403){
+        if (res.status === 403) {
           console.log("No Permission!");
           Toast.toastErorr("You do not have permission to perform this action");
-          setTimeout(()=>{
+          setTimeout(() => {
             navigate("/");
-          },1000)  
+          }, 1000);
         }
         setRoles(res.data);
         console.table("List of Roles:", res.data);
       } catch (err) {
         console.log("Failed to list Role! " + err);
-      }
-    };
-
-    const listDepartment = async () => {
-      try {
-        const res = await axios.post(`${API_BASE}/department/list`, null, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setDepartment(res.data);
-        console.table("List of Department:", res.data);
-      } catch (err) {
-        console.log("Failed to list Department! " + err);
       }
     };
 
@@ -69,33 +68,19 @@ const EditAccount = () => {
           },
         }
       );
-      if (response.status === 403){
+      if (response.status === 403) {
         console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(()=>{
+        setTimeout(() => {
           navigate("/");
-        },1000)  
+        }, 1000);
       }
       const data = response.data;
       setAccount(data);
       console.log("Edit success!");
-      // try {
-      //   const response = await axios.post(
-      //     `${API_BASE}/app-user/get`,
-      //     {
-      //       userId,
-      //     }
-      //   );
-      //   const data = response.data;
-      //   setAccount(data);
-      //   console.log("Edit success!");
-      // } catch (err) {
-      //   console.log("Edit failed!" + err);
-      // }
     };
     listRole();
     getAccount();
-    listDepartment();
   }, [userId]);
 
   const handleEditAccount = async (e) => {
@@ -110,12 +95,12 @@ const EditAccount = () => {
           },
         }
       );
-      if (res.status === 403){
+      if (res.status === 403) {
         console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(()=>{
+        setTimeout(() => {
           navigate("/");
-        },1000)  
+        }, 1000);
       }
       console.log("Account updated successfully!");
       navigate("/ad_manage/account");
@@ -126,14 +111,17 @@ const EditAccount = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "roleUserMappings"){
-      setAccount({ ...account, [name]: JSON.parse(value)})
+    if (name === "roleUserMappings") {
+      setAccount({ ...account, [name]: JSON.parse(value) });
+    } else {
+      setAccount({ ...account, [name]: value });
     }
-    else{
-      setAccount({ ...account, [name]: value})
-    }
-    console.log(account)
+    console.log(account);
   };
+
+  console.log("departments:", departments);
+  console.log("account.departmentId:", account.departmentId);
+  console.log(account);
 
   return (
     <div className="container-lg bg-light border border-1">
@@ -200,13 +188,16 @@ const EditAccount = () => {
           <div className="mb-3">
             <label className="form-label">Department</label>
             <select
-              name="department"
-              value={account.department}
+              id="dropdown"
+              name="departmentId"
+              className="form-select"
+              value={account.departmentId}
               onChange={handleChange}
             >
-              {department.map((department) => (
-                <option key={department.id} value={department.id}>
-                  {department.name}
+              <option>Select a department</option>
+              {departments.map((department) => (
+                <option key={department.Id} value={department.Id}>
+                  {department.Name}
                 </option>
               ))}
             </select>

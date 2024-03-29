@@ -15,6 +15,10 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         public DateTime? SubmissionTime { get; set; }
         public bool? IsLateSubmissionAllowed { get; set; }
         public bool IsApproved { get; set; }
+        public bool IsTopic { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public string Title { get; set; }
         public Article ToEntity() => new Article
         {
             DepartmentId = DepartmentId,
@@ -23,9 +27,12 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             SubmissionTime = SubmissionTime,
             IsLateSubmissionAllowed = IsLateSubmissionAllowed,
             IsApproved = IsApproved,
+            IsTopic = IsTopic,
+            StartDate = StartDate,
+            EndDate = EndDate,
+            Title = Title
         };
     }
-
     public class ArticlePut : ArticlePost
     {
     }

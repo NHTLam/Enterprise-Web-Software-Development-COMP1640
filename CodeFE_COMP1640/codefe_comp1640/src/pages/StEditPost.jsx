@@ -43,7 +43,7 @@ function StEditPost(props) {
         }).then(data => {
             setFileData(data.data.data)
         })
-           .catch(err => console.log(err))
+        .catch(err => console.log(err))
     },[])
     console.log("fileData",fileData)
     // console.log(postData);       

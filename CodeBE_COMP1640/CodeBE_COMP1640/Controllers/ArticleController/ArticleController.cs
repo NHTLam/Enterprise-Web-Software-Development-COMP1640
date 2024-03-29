@@ -77,6 +77,10 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 var articleEntity = request.ToEntity();
                 articleEntity.IsApproved = false;
                 articleEntity.SubmissionTime = DateTime.Now;
+                // Thêm các thuộc tính mới vào đối tượng articleEntity
+                articleEntity.StartDate = request.StartDate;
+                articleEntity.EndDate = request.EndDate;
+                articleEntity.Title = request.Title;
                 var data = _repositoryFactory.ArticleRepository.Create(articleEntity);
                 await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
 
@@ -130,15 +134,30 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                     return Forbid();
                 }
 
+                // Chuyển đổi dữ liệu từ request thành đối tượng Article
                 var articleEntity = request.ToEntity();
-                var entity = request.ToEntity();
-                entity.ArticleId = id;
+
+                // Đặt thời gian gửi lại là thời gian hiện tại
                 articleEntity.SubmissionTime = DateTime.Now;
-                var data = _repositoryFactory.ArticleRepository.Update(request.ToEntity());
-                return Ok(new
+
+                // Đặt ID của bài viết là ID được truyền
+                articleEntity.ArticleId = id;
+
+                // Cập nhật thông tin của bài viết trong cơ sở dữ liệu
+                var updatedArticle = _repositoryFactory.ArticleRepository.Update(articleEntity);
+
+                // Kiểm tra xem việc cập nhật đã thành công hay không
+                if (updatedArticle != null)
                 {
-                    Data = data,
-                });
+                    return Ok(new
+                    {
+                        Data = updatedArticle,
+                    });
+                }
+                else
+                {
+                    return NotFound("Article not found or could not be updated");
+                }
             }
             catch (Exception ex)
             {
@@ -175,7 +194,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         }
 
         [Route(ArticleRoute.ListArticle), HttpGet]
-        public async Task<IActionResult> GetAllArticles()
+        public IActionResult GetAllArticles()
         {
             try
             {
@@ -348,6 +367,8 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 var fileList = _articleFiles[articleId];
                 if (fileList != null && fileList.Any())
                 {
+                    var firstFileData = fileList.First();
+
                     var memory = new MemoryStream();
                     using (var zipArchive = new ZipArchive(memory, ZipArchiveMode.Create, true))
                     {
@@ -363,7 +384,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                     }
                     memory.Position = 0;
 
-                    return File(memory, "application/zip", $"{articleId}.zip");
+                    return File(memory, "application/zip", $"{firstFileData.originalFileName}.zip");
                 }
             }
 

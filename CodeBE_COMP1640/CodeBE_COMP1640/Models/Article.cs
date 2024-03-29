@@ -14,11 +14,15 @@ public partial class Article
 
     public DateTime? SubmissionTime { get; set; }
 
+    public DateTime? StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
+
+    public string Title { get; set; }
     public bool? IsLateSubmissionAllowed { get; set; }
 
     public bool IsApproved { get; set; }
 
-    public bool? IsTopic { get; set; }
+    public bool IsTopic { get; set; }
 
     public virtual ICollection<Comment> Comments { get; } = new List<Comment>();
 
@@ -27,4 +31,6 @@ public partial class Article
     public virtual ICollection<Feedback> Feedbacks { get; } = new List<Feedback>();
 
     public virtual User User { get; set; } = null!;
+
+    public int? TopicId { get; set; }
 }
