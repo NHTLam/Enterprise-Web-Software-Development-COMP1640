@@ -30,8 +30,7 @@ namespace CodeBE_COMP1640.Repositories
         {
             List<User> Users = await DataContext.Users.AsNoTracking().ToListAsync();
 
-            var RoleUserMappingQuery = DataContext.RoleUserMappings.AsNoTracking();
-            List<RoleUserMapping> RoleUserMappings = await RoleUserMappingQuery.ToListAsync();
+            List<RoleUserMapping> RoleUserMappings = await DataContext.RoleUserMappings.AsNoTracking().ToListAsync();
 
             foreach (User User in Users)
             {

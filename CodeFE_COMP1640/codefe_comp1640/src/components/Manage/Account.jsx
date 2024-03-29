@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import * as Toast from "../../components/Toast";
 
 const token = localStorage.getItem("token");
 
@@ -9,10 +10,31 @@ const Account = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [className, setClass] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [departmentId, setdepartmentId] = useState(1);
+  const departments = [
+    {
+      Id: 1,
+      Name: "Law",
+    },
+    {
+      Id: 2,
+      Name: "Engineering",
+    },
+    {
+      Id: 3,
+      Name: "Science",
+    },
+  ];
+  const changeDepartment = {
+    1: "Law",
+    2: "Engineering",
+    3: "Science",
+  };
+
+  // console.log(changeDepartment[1]);
+  // console.log(departments[1].Name);
+  const [selectedDepartment, setSelectedDepartment] = useState("");
   const [accounts, setAccount] = useState([]);
   const [Roles, setRoles] = useState([]);
   
@@ -27,9 +49,8 @@ const Account = () => {
           username,
           phone,
           password,
-          class: className,
           address,
-          departmentId,
+          departmentId: selectedDepartment,
         },
         {
           headers: {
@@ -37,10 +58,18 @@ const Account = () => {
           },
         }
       );
+
+      if (response.status === 403) {
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
       console.log("Create account success!");
       const newAccount = [...accounts, response.data];
       setAccount(newAccount);
-      console.log(newAccount)
+      console.log(newAccount);
       navigate("/ad_manage/account");
     } catch (err) {
       console.log("Create account failed!");
@@ -50,14 +79,24 @@ const Account = () => {
   const handleDelete = async (userId) => {
     console.log(userId);
     try {
-      await axios.post(`${API_BASE}/app-user/delete`, {
-        userId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      var res = await axios.post(
+        `${API_BASE}/app-user/delete`,
+        {
+          userId,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.status === 403) {
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
       console.log("Delete success");
       setAccount(accounts.filter((account) => account.userId !== userId));
       // navigate("/");
@@ -74,6 +113,13 @@ const Account = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        if (res.status === 403) {
+          console.log("No Permission!");
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+        }
         setRoles(res.data);
         console.table("List of Roles:", JSON.stringify(res.data));
       } catch (err) {
@@ -88,6 +134,13 @@ const Account = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        if (res.status === 403) {
+          console.log("No Permission!");
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+        }
         setAccount(res.data);
         console.table("List of accounts:", JSON.stringify(res.data));
       } catch (err) {
@@ -135,14 +188,14 @@ const Account = () => {
           CREATE NEW ACCOUNT
         </button>
       </div>
-      <table className="table table-striped mt-2 text-center">
+      <table className="table mt-2 text-center table-info">
         <tr>
-          <th>ID</th>
+          <th scope="col">ID</th>
           <th>Email</th>
-          <th>username</th>
+          <th>Username</th>
           <th>Phone</th>
-          {/* <th>Class</th> */}
           <th>Address</th>
+          <th>Department</th>
           <th>Role</th>
           <th>Allow Email Request</th>
           <th>Action</th>
@@ -225,7 +278,7 @@ const Account = () => {
                 </div>
                 <div className="mb-3">
                   <label for="username" className="form-label">
-                    Name
+                    Username
                   </label>
                   <input
                     name="username"
@@ -237,23 +290,6 @@ const Account = () => {
                     onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
-                {/* <div class="mb-3">
-                  <label for="Role" className="form-label">
-                    Role
-                  </label>
-                  <select
-                    name="roomType"
-                    id="dropdown1"
-                    className="form-select"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                  >
-                    <option value="">Student</option>
-                    <option value="">Guest</option>
-                    <option value="">Marketing Coordinator</option>
-                    <option value="">Marketing Manager</option>
-                  </select>
-                </div> */}
                 <div className="mb-3">
                   <label for="password" className="form-label">
                     Password
@@ -296,20 +332,24 @@ const Account = () => {
                     onChange={(e) => setAddress(e.target.value)}
                   />
                 </div>
-                {/* <div className="mb-3">
-                  <label for="className" className="form-label">
-                    Class
+                <div class="mb-3">
+                  <label for="department" className="form-label">
+                    Department
                   </label>
-                  <input
-                    name="className"
-                    type="text"
-                    className="form-control"
-                    id="className"
-                    placeholder="Enter Class"
-                    value={className}
-                    onChange={(e) => setClass(e.target.value)}
-                  />
-                </div> */}
+                  <select
+                    id="dropdown"
+                    className="form-select"
+                    value={selectedDepartment}
+                    onChange={(e) => setSelectedDepartment(e.target.value)}
+                  >
+                    <option>Select a department</option>
+                    {departments.map((department) => (
+                      <option key={department.Id} value={department.Id}>
+                        {department.Name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <div className="modal-footer">
                 <button
