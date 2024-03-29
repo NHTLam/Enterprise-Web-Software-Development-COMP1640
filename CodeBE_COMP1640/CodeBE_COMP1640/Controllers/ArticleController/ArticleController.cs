@@ -63,7 +63,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 // Tạo entity từ request và đặt IsApproved là false
                 var articleEntity = request.ToEntity();
                 articleEntity.IsApproved = false;
-
+                articleEntity.SubmissionTime = DateTime.Now;
                 var data = _repositoryFactory.ArticleRepository.Create(articleEntity);
                 await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
 
@@ -113,8 +113,11 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
+
+                var articleEntity = request.ToEntity();
                 var entity = request.ToEntity();
                 entity.ArticleId = id;
+                articleEntity.SubmissionTime = DateTime.Now;
                 var data = _repositoryFactory.ArticleRepository.Update(request.ToEntity());
                 return Ok(new
                 {
@@ -331,6 +334,37 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
 
             return NotFound("No file found for the specified ArticleId");
         }
+
+        [Route(ArticleRoute.GetUploadedFiles), HttpGet, Authorize]
+        public IActionResult GetUploadedFiles(string articleId)
+        {
+            if (_articleFiles.ContainsKey(articleId))
+            {
+                var fileList = _articleFiles[articleId];
+                if (fileList != null && fileList.Any())
+                {
+                    // Tạo một danh sách các đường dẫn hoặc thông tin về các file để trả về cho người dùng
+                    var fileInfos = fileList.Select(fileData => new
+                    {
+                        FileName = fileData.originalFileName,
+                        // Tạo đường dẫn tới một endpoint khác để tải xuống file
+                        DownloadUrl = Url.Action("DownloadFile", "Article", new { articleId = articleId, fileName = fileData.originalFileName })
+                    });
+
+                    return Ok(new
+                    {
+                        Data = fileInfos
+                    });
+                }
+            }
+
+            return NotFound("No file found for the specified ArticleId");
+        }
+
+
+
+
+
 
 
         [Route(ArticleRoute.Export), HttpGet, Authorize]

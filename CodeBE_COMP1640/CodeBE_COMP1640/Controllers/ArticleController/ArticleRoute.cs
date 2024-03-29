@@ -15,10 +15,14 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         public const string Update = Module + "/update/{id}";
         public const string Delete = Module + "/delete/{id}";
         public const string UploadFile = Module + "/upload-file";
+
+        public const string GetUploadedFiles = Module + "/GetUpLoadedFiles";
+
         public const string GetFile = Module + "/GetFile";
         public const string Export = Module + "/export";
         public const string ListArticle = Module + "/GetAllArticle";
         public const string Approve = Module + "/Approved";
+
 
 
 
@@ -47,6 +51,11 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             { ActionEnum.EXPORT.Name, new List<string>()
                 {
                     Export,
+                }
+            },
+            { ActionEnum.READ.Name, new List<string>()
+                {
+                    GetUploadedFiles,
                 }
             },
             { ActionEnum.UPLOAD_FILE.Name, new List<string>()
