@@ -60,8 +60,12 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             try
             {
                 var articleEntity = request.ToEntity();
-                articleEntity.SubmissionTime = DateTime.Now;
                 articleEntity.IsApproved = false;
+                articleEntity.SubmissionTime = DateTime.Now;
+                // Thêm các thuộc tính mới vào đối tượng articleEntity
+                articleEntity.StartDate = request.StartDate;
+                articleEntity.EndDate = request.EndDate;
+                articleEntity.Title = request.Title;
                 var data = _repositoryFactory.ArticleRepository.Create(articleEntity);
                 await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
 
@@ -110,16 +114,19 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
-
+                // Chuyển đổi dữ liệu từ request thành đối tượng Article
                 var articleEntity = request.ToEntity();
 
+                // Đặt thời gian gửi lại là thời gian hiện tại
                 articleEntity.SubmissionTime = DateTime.Now;
-                articleEntity.ArticleId = id; // Không cần tạo biến entity mới
 
-                // Cập nhật thông tin của articleEntity trong cơ sở dữ liệu
+                // Đặt ID của bài viết là ID được truyền
+                articleEntity.ArticleId = id;
+
+                // Cập nhật thông tin của bài viết trong cơ sở dữ liệu
                 var updatedArticle = _repositoryFactory.ArticleRepository.Update(articleEntity);
 
-                // Kiểm tra xem article đã được cập nhật thành công hay không
+                // Kiểm tra xem việc cập nhật đã thành công hay không
                 if (updatedArticle != null)
                 {
                     return Ok(new
