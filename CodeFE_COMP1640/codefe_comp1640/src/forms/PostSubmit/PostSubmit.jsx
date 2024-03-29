@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import "./Style.css";
 import imageInput from "../../assets/add_image.png";
 import { Link, useNavigate } from "react-router-dom";
-import * as Toast from "../../components/Toast"
+import * as Toast from "../../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY;
 const userId = localStorage.getItem("user_id");
 const token = localStorage.getItem("token");
@@ -23,6 +23,7 @@ const PostSubmit = (props) => {
   const [disable, setDisable] = useState(true);
   const [comment, setComment] = useState("");
   const [listCmt, setListCmt] = useState([]);
+  const [fileData,setFileData] = useState();
 
   //Feedback
   const [feedback, setFeedback] = useState("");
@@ -31,6 +32,7 @@ const PostSubmit = (props) => {
   const [isSending, setIsSending] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
+  
 
   console.log("Cmt: " + comment);
   console.log("FB: " + feedback);
@@ -180,31 +182,19 @@ const PostSubmit = (props) => {
   const handleClickSubmit = async (event) => {
     event.preventDefault();
 
+    const token = localStorage.getItem("token");
     if (!selectedFile) {
       alert("Please select a file to upload.");
       return;
     }
-
-    console.log(selectedFile);
     const formData = new FormData();
     formData.append("file", selectedFile);
-
     try {
-      const response = await axios.post(
-        `${API_BASE}/article/upload-file`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
       const res = await axios.post(
         `${API_BASE}/article/create`,
         {
           departmentId,
-          userId,
+          userId: userId,
           ...credentials,
         },
         {
@@ -213,32 +203,34 @@ const PostSubmit = (props) => {
           },
         }
       );
-
-      if (response.status === 200) {
-        // Assuming successful upload has status 200
-        console.log("File uploaded successfully!");
-        Toast.toastSuccess("Submit Success");
-        setSelectedFile(null); 
-        setTimeout(()=>{
-          navigate("/history");
-        },3000)    // Clear file selection
-      }
-      else if (response.status === 403){
+      if(res.status === 200){
+        const data = new FormData();
+        data.append("files", selectedFile)
+        console.log("file",selectedFile);
+        data.append("articleId", res.data.data.articleId)
+          await axios.post(
+          `${API_BASE}/article/upload-file?articleId=${res.data.data.articleId}`,
+          data,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }else if (res.status === 403){
         console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
         setTimeout(()=>{
           navigate("/");
-        },1000)  
+        },1000)
       }
       else if (res.status === 403){
         console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
         setTimeout(()=>{
           navigate("/");
-        },1000)  
-      }
-      else {
-        Toast.toastErorr("Some thing went wrong");// Access error details from response
+        },1000)
       }
     } catch (error) {
       Toast.toastErorr("Submit Erorr");

@@ -25,7 +25,7 @@ function Me() {
             email: userData.email,
             password: userData.password,
             class: userData.class,
-            roleUserMapping: [],
+            roleUserMapping: userData.roleUserMapping,
             ...credentials}, {
             headers: {
                 Authorization: `Bearer ${token}`
