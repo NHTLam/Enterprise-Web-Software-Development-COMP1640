@@ -297,6 +297,8 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 var fileList = _articleFiles[articleId];
                 if (fileList != null && fileList.Any())
                 {
+                    var firstFileData = fileList.First();
+
                     var memory = new MemoryStream();
                     using (var zipArchive = new ZipArchive(memory, ZipArchiveMode.Create, true))
                     {
@@ -312,7 +314,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                     }
                     memory.Position = 0;
 
-                    return File(memory, "application/zip", $"{articleId}.zip");
+                    return File(memory, "application/zip", $"{firstFileData.originalFileName}.zip");
                 }
             }
 
