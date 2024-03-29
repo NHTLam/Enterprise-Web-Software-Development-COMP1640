@@ -15,6 +15,7 @@ const Account = () => {
   const [departmentId, setdepartmentId] = useState(1);
   const [accounts, setAccount] = useState([]);
   const [Roles, setRoles] = useState([]);
+  
   const API_BASE = process.env.REACT_APP_API_KEY;
   const handlNewAccount = async (e) => {
     e.preventDefault();
@@ -96,6 +97,29 @@ const Account = () => {
     listRole();
     listAcount();
   }, []);
+  const handleCheckboxChange = async (userId, allowEmailRequest) => {
+    try {
+      await axios.post(
+        `${API_BASE}/user/updateAllowEmailRequest`,
+        { userId, allowEmailRequest },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Update local state after successful update
+      setAccount(prevAccounts =>
+        prevAccounts.map(account =>
+          account.userId === userId
+            ? { ...account, allowEmailRequest }
+            : account
+        )
+      );
+    } catch (error) {
+      console.error("Failed to update allow email request:", error);
+    }
+  };
 
   return (
     <div className="container">
@@ -120,8 +144,10 @@ const Account = () => {
           {/* <th>Class</th> */}
           <th>Address</th>
           <th>Role</th>
+          <th>Allow Email Request</th>
           <th>Action</th>
           {/* <th>Role</th> */}
+          
         </tr>
         {accounts.map((account) => (
           <tr key={account.userId}>
@@ -132,6 +158,15 @@ const Account = () => {
             {/* <td>{account.class}</td> */}
             <td>{account.address}</td>
             <td>{Roles.filter(r => account.roleUserMappings.map(r => r.roleId).includes(r.roleId)).map(r => r.name).join(",")}</td>
+            <td>
+                <input
+                  type="checkbox"
+                  checked={account.allowEmailRequest}
+                  onChange={e =>
+                    handleCheckboxChange(account.userId, e.target.checked)
+                  }
+                />
+              </td>
             <td>
               <Link
                 to={`/edit_account/${account.userId}`}

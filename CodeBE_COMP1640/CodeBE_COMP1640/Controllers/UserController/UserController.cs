@@ -139,11 +139,19 @@ namespace CodeBE_COMP1640.Controllers.UserController
 
             return User;
         }
-        [HttpPut("{id}/checkbox")]
-        public async Task<IActionResult> UpdateCheckbox(int id, [FromBody] bool isChecked)
+         [HttpPost("updateAllowEmailRequest")]
+    public async Task<IActionResult> UpdateAllowEmailRequest(int userId, bool allowEmailRequest)
+    {
+        try
         {
-            await UserService.UpdateCheckbox(id, isChecked);
-            return Ok(new { message = "Checkbox updated successfully" });
+            await UserService.UpdateAllowEmailRequest(userId, allowEmailRequest);
+            return Ok(new { message = "Update successful" });
         }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Update failed", error = ex.Message });
+        }
+    }
+        
     }
 }
