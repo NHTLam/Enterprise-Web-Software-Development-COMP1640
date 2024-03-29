@@ -14,11 +14,13 @@ using System.Text;
 using CodeBE_COMP1640.Services.FeedbackS;
 using CodeBE_COMP1640.Services.DashboardS;
 using CodeBE_COMP1640.Services.EmailS;
+using System.Text.Json.Serialization;
 
 
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
+
 
 builder.Services.AddCors(options =>
 {
@@ -59,6 +61,8 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("AppSettings:Token")))
     };
 });
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddScoped<IUOW, UOW>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -68,7 +72,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
-// builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 var app = builder.Build();
 

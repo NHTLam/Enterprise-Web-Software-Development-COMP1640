@@ -52,39 +52,39 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
 
         [Route(FeedbackRoute.Create), HttpPost, Authorize]
         public async Task<IActionResult> CreateFeedback(FeedbackDTO feedbackDTO)
-        {
+{               
+               
+                
+                // Tạo mới đối tượng Feedback từ dữ liệu trong request body
+                var feedback = new Feedback
+                
+                {
+                    UserId = feedbackDTO.UserId,
+                    ArticleId = feedbackDTO.ArticleId,
+                    FeedbackContent = feedbackDTO.FeedbackContent,
+                    FeedbackTime = feedbackDTO.FeedbackTime,
+                    
+                };
+                // Gọi phương thức tạo mới feedback từ service
+                await _feedbackService.CreateFeedback(feedback);
+                 // Lấy thông tin người dùng từ UserService
+                var user = await _userService.Get(feedbackDTO.UserId);
+                
+                //gửi email
+                 if (user != null)
+                    {   
+                        var receivers = new List<string>();
+                        receivers.Add(user.Email);
+                        var subject = "Test";
+                        var message = "Hello";
+                        await _emailSender.SendEmailAsync(receivers, subject, message);
+                    }
+            
+                return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
+                
+        
 
-
-            // Tạo mới đối tượng Feedback từ dữ liệu trong request body
-            var feedback = new Feedback
-
-            {
-                UserId = feedbackDTO.UserId,
-                ArticleId = feedbackDTO.ArticleId,
-                FeedbackContent = feedbackDTO.FeedbackContent,
-                FeedbackTime = feedbackDTO.FeedbackTime,
-
-            };
-            // Gọi phương thức tạo mới feedback từ service
-            await _feedbackService.CreateFeedback(feedback);
-            // Lấy thông tin người dùng từ UserService
-            var user = await _userService.Get(feedbackDTO.UserId);
-
-            //gửi email
-            if (user != null)
-            {
-                var receiver = user.Email;
-                var subject = "Test";
-                var message = "Hello";
-                await _emailSender.SendEmailAsync(receiver, subject, message);
-            }
-
-
-
-            // await SendFeedbackEmailAsync(feedback);
-            return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
-
-
+          
         }
 
 

@@ -47,14 +47,6 @@ const Header = () => {
                       <Link to="/ad_manage">Admin Home</Link>
                     </Dropdown.Item>
                     <Dropdown.Item>
-                      <Link to="/ad_manage">Manager Home</Link>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                      <Link to="/mk_manage_topic">
-                        Marketing Conidator Home
-                      </Link>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
                       <Link to={"/history"}>
                         <div>Post History</div>
                       </Link>

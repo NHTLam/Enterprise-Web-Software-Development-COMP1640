@@ -1,9 +1,10 @@
-import PostInfor from "../forms/PostInfor/PostInfor"
+import PostInfor from "../../forms/PostInfor/PostInfor"
 import { useState, useEffect, useRef } from "react";
-import imageInput from "../assets/add_image.png";
+import imageInput from "../../assets/add_image.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import React from 'react'
+import * as Toast from "../../components/Toast"
 const API_BASE = process.env.REACT_APP_API_KEY || "";
 
 function MarketingCFeedb(props) {
@@ -46,7 +47,13 @@ function MarketingCFeedb(props) {
                 console.log("delete sucess");
             } else if (response.status === 400) {
                 console.log("some thing went wrong");
-            }
+            }   else if (response.status === 403){
+                console.log("No Permission!");
+                Toast.toastErorr("You do not have permission to perform this action");
+                setTimeout(()=>{
+                  navigate("/");
+                },1000)  
+              }
         } catch (err) {
             console.log("Error " + err);
         }

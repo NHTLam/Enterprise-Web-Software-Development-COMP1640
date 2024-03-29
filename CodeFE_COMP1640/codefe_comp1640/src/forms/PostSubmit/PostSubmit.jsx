@@ -5,6 +5,7 @@ import "./Style.css";
 import imageInput from "../../assets/add_image.png";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import * as Toast from "../../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY;
 const userId = localStorage.getItem("user_id");
 const token = localStorage.getItem("token");
@@ -22,6 +23,84 @@ const PostSubmit = (props) => {
   const [disable, setDisable] = useState(true);
   const [comment, setComment] = useState("");
   const [listCmt, setListCmt] = useState([]);
+
+  //Feedback
+  const [feedback, setFeedback] = useState("");
+  const [articleId, setArticleId] = useState(6);
+  const [feedbackTime, setFeedbackTime] = useState(new Date());
+  const [isSending, setIsSending] = useState(false);
+  const [isChanging, setIsChanging] = useState(false);
+  const [feedbackList, setFeedbackList] = useState([]);
+
+  console.log("Cmt: " + comment);
+  console.log("FB: " + feedback);
+  console.log("Cmt: " + comment);
+  ////
+
+  //functions feedback
+  const handleFeedback = async () => {
+    try {
+      console.log("đâsdsadas");
+      const formattedFeedbackTime = feedbackTime.toISOString();
+      const response = await axios.post(
+        `${API_BASE}/feedback/create`,
+        {
+          userId: userId,
+          articleId,
+          feedbackContent: feedback,
+          feedbackTime: formattedFeedbackTime,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 403) {
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
+
+      console.log("Create feedback success!");
+      console.log("Feedback: ", response.data);
+      const newFeedback = {
+        userId: userId,
+        articleId: articleId,
+        context: feedback,
+        feedbackTime: formattedFeedbackTime,
+      };
+
+      const FeedbackIndex = feedbackList.findIndex(
+        (item) => item.userId === userId && item.articleId === articleId
+      );
+
+      if (FeedbackIndex !== -1) {
+        const updatedFeedbackList = [...feedbackList];
+        updatedFeedbackList[FeedbackIndex] = newFeedback;
+        setFeedbackList(updatedFeedbackList);
+      } else {
+        setFeedbackList([...feedbackList, newFeedback]);
+      }
+      setIsSending(true);
+      setIsChanging(true);
+    } catch (err) {
+      console.error("Error sending feedback:", err);
+    }
+  };
+
+  const handleUpdate = () => {
+    console.log("đâsdasd");
+    setIsSending(false);
+    setIsChanging(false);
+  };
+
+  // useEffect(() => {
+  //   console.log("Feedback list updated:", feedbackList);
+  // }, [feedbackList]);
 
   //functions
   const handleChange = (e) => {
@@ -54,6 +133,14 @@ const PostSubmit = (props) => {
             },
           }
         );
+
+        if (response.status === 403) {
+          console.log("No Permission!");
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+        }
         console.log("Create comment success!");
         console.log("ab: ", response.data);
         const newComment = [...listCmt, response.data];
@@ -74,6 +161,13 @@ const PostSubmit = (props) => {
             Authorization: `Bearer ${token}`,
           },
         });
+        if (res.status === 403) {
+          console.log("No Permission!");
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+        }
         setListCmt(res.data);
         console.table("List of commnet:", JSON.stringify(res.data));
       } catch (err) {
@@ -172,6 +266,29 @@ const PostSubmit = (props) => {
         });
         console.error("Error uploading file:", response.data); // Access error details from response
       }
+      if (response.status === 200) {
+        // Assuming successful upload has status 200
+        console.log("File uploaded successfully!");
+        Toast.toastSuccess("Submit Success");
+        setSelectedFile(null);
+        setTimeout(() => {
+          navigate("/history");
+        }, 3000); // Clear file selection
+      } else if (response.status === 403) {
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else if (res.status === 403) {
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else {
+        Toast.toastErorr("Some thing went wrong"); // Access error details from response
+      }
     } catch (error) {
       toast.error("Some thing went wrong", {
         position: "top-right",
@@ -186,46 +303,6 @@ const PostSubmit = (props) => {
       console.error("Error:", error);
     }
   };
-
-  // const handleClickSubmit = async (e) => {
-  //     e.preventDefault();
-
-  //     const data = new FormData();
-  //     data.append("file", file);
-  //     axios.post(`${API_BASE}/article/upload-file`, data, {
-  //         headers: {
-  //             Authorization: `Bearer ${token}`
-  //         }
-  //     }).then(res => console.log(res.data))
-  //     .catch(err => console.log(err))
-  //     try {
-  //         const response = await axios.post(
-  //             `${API_BASE}/article/create`,
-  //             {
-  //                 departmentId,
-  //                 userId,
-  //                 fileData: data,
-  //                 ...credentials,
-  //             }, {
-  //             headers: {
-  //                 Authorization: `Bearer ${token}`
-  //             }
-  //         });
-  //         const postData = response.data;
-  //         if (response.status === 200) {
-  //             console.log("Submit successful", postData);
-  //         } else if (response.status === 400) {
-  //             console.log("some thing went wrong");
-  //         }
-  //     } catch (err) {
-  //         console.log("Error " + err);
-  //     }
-  // };
-
-  // const handleChange = (e) => {
-  //     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
-  // };
-
   function onFileInput(e) {
     const files = e.target.files;
     if (files.length === 0) return;

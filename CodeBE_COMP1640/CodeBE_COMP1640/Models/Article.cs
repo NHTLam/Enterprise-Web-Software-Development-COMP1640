@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CodeBE_COMP1640.Models;
+﻿namespace CodeBE_COMP1640.Models;
 
 public partial class Article
 {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import * as Toast from "../../components/Toast";
 import axios from "axios";
 
 const token = localStorage.getItem("token");
@@ -29,6 +30,13 @@ const EditAccount = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        if (res.status === 403){
+          console.log("No Permission!");
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(()=>{
+            navigate("/");
+          },1000)  
+        }
         setRoles(res.data);
         console.table("List of Roles:", res.data);
       } catch (err) {
@@ -62,6 +70,13 @@ const EditAccount = () => {
           },
         }
       );
+      if (response.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
+      }
       const data = response.data;
       setAccount(data);
       console.log("Edit success!");
@@ -87,8 +102,8 @@ const EditAccount = () => {
   const handleEditAccount = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        `${API_BASE}/app-user/update/`,
+      var res = await axios.post(
+        `${API_BASE}/app-user/update`,
         account, // Gửi dữ liệu từ state account
         {
           headers: {
@@ -96,6 +111,13 @@ const EditAccount = () => {
           },
         }
       );
+      if (res.status === 403){
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
+      }
       console.log("Account updated successfully!");
       // navigate("/");
     } catch (err) {
@@ -105,8 +127,13 @@ const EditAccount = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAccount({ ...account, [name]: JSON.parse(value) });
-    console.log(account);
+    if (name === "roleUserMappings"){
+      setAccount({ ...account, [name]: JSON.parse(value)})
+    }
+    else{
+      setAccount({ ...account, [name]: value})
+    }
+    console.log(account)
   };
 
   return (

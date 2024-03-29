@@ -20,6 +20,7 @@ public partial class User
     public string? Address { get; set; }
 
     public int DepartmentId { get; set; }
+    public bool Check { get; set; }
 
     public virtual ICollection<Article> Articles { get; } = new List<Article>();
 

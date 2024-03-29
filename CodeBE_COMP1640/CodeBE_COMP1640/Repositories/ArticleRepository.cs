@@ -1,7 +1,6 @@
 ﻿using CodeBE_COMP1640.Bases;
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.SearchModels;
-
 namespace CodeBE_COMP1640.Repositories
 {
     public class ArticleRepository : RepositoryBase<Article, ArticleSearchModel>
@@ -58,5 +57,15 @@ namespace CodeBE_COMP1640.Repositories
         {
             return _context.Articles.Where(x => x.UserId == userId);
         }
+        public IEnumerable<Article> GetListByDepartmentId(int departmentId)
+        {
+            return _context.Articles.Where(x => x.DepartmentId == departmentId);
+        }
+
+        public IEnumerable<Article> GetAll()
+        {
+            return _context.Articles.ToList();
+        }
+
     }
 }
