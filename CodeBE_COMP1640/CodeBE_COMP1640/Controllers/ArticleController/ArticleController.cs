@@ -60,12 +60,13 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             try
             {
                 var articleEntity = request.ToEntity();
-                articleEntity.IsApproved = false;
                 articleEntity.SubmissionTime = DateTime.Now;
-                // Thêm các thuộc tính mới vào đối tượng articleEntity
                 articleEntity.StartDate = request.StartDate;
                 articleEntity.EndDate = request.EndDate;
                 articleEntity.Title = request.Title;
+
+                // Không gán giá trị cho IsApproved trong đối tượng articleEntity
+
                 var data = _repositoryFactory.ArticleRepository.Create(articleEntity);
                 await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
 
@@ -82,6 +83,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 });
             }
         }
+
 
         private async Task SendEmailToUsersWithMatchingDepartmentID(int departmentId)
         {
@@ -227,7 +229,6 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 });
             }
         }
-
         [Route(ArticleRoute.Approve), HttpPut, Authorize]
         public IActionResult ApproveArticle(int articleId)
         {
@@ -255,6 +256,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 });
             }
         }
+
 
         [Route(ArticleRoute.UploadFile), HttpPost, Authorize]
         public async Task<IActionResult> UploadFile(string articleId, List<IFormFile> files)
