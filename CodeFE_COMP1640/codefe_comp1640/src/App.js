@@ -26,8 +26,6 @@ const App = () => {
           path="/"
           element={
             <Layout>
-              <Slide />
-              <NavbarC />
               <Home />
             </Layout>
           }
@@ -72,7 +70,7 @@ const App = () => {
 
         {/* Marketing Conidator ROUTES */}
         <Route
-          path="/mk_manage_topic"
+          path="/mk-manage-topic"
           element={
             <LayoutAdmin>
               <MarketingC />
@@ -81,7 +79,7 @@ const App = () => {
         />
 
         <Route
-          path="mk_manage_topic/contribute/view/:id"
+          path="mk-manage-topic/contribute/view/:id"
           element={
             <Layout>
               <MarketingCFeedb />

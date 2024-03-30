@@ -6,7 +6,7 @@ import "./script.js";
 const HeaderAdmin = () => {
   return (
     <div className="wrapper">
-      <aside id="sidebar">
+      <aside id="sidebar p-0">
         <div className="d-flex">
           <button className="toggle-btn" type="button">
             <i className="lni lni-grid-alt"></i>
@@ -29,7 +29,7 @@ const HeaderAdmin = () => {
             </Link>
           </li>
           <li className="sidebar-item">
-            <Link to="/mk_manage_topic" className="sidebar-link">
+            <Link to="/mk-manage-topic" className="sidebar-link">
               <i className="bi bi-card-text"></i>
               <span>Manager Contribution / Topic</span>
             </Link>

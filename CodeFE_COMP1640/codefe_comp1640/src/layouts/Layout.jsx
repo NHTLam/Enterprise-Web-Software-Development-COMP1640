@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
     return (
         <div className="layout">
             {header}
-            <div className='container-xl' style={{marginTop:"55px"}}>{children}</div>
+            <div className='container-xl p-0' style={{marginTop:"55px"}}>{children}</div>
         </div>
     )
 }

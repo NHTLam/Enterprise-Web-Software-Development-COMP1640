@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom"
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Pagination from '../components/Pagination';
+import Slide from '../components/Slide';
+import NavbarC from '../components/NavbarC';
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 const Home = () => {
@@ -29,8 +31,11 @@ const Home = () => {
     }, [])
     localStorage.setItem("user_id", userId);
     return (
-        <div className="container">
-            <div className="row">
+        <div className="container p-0">
+
+            <Slide />
+            <NavbarC />
+            <div className="row container">
                 <h1 className='mt-5'>Topic</h1>
                 <hr></hr>
                 <div className="col">
@@ -44,7 +49,7 @@ const Home = () => {
 
                     </Link>
                 </div>
-                <div className="col-5">
+                <div className="col-5 p-0">
                     <div className="card h-100">
                         <img src="https://www.analyticsinsight.net/wp-content/uploads/2021/07/Technology-Can-Boost-Your-Business-Productivity.jpg" className="card-img-top" alt="..." />
                         <div className="card-body">
@@ -55,7 +60,10 @@ const Home = () => {
             </div>
             <h1 className='mt-5'>Top contribution</h1>
             <hr></hr>
-            <Pagination itemsPerPage={4} />
+            <div className="d-flex flex-wrap justify-content-center align-content-center mb-5">
+
+                <Pagination itemsPerPage={8} />
+            </div>
         </div>
     )
 }
