@@ -12,8 +12,8 @@ const userId = localStorage.getItem("user_id");
 function ModelAdd() {
     const [credentials, setCredentials] = useState({})
     const [userData, setUserData] = useState([])
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState();
+    const [endDate, setEndDate] = useState();
     const token = localStorage.getItem("token");
 
     useEffect(() => {

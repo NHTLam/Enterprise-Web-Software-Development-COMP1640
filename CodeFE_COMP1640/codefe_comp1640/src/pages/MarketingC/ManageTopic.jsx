@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ModelAdd from "../../forms/ModelAdd/ModelAdd";
 import ModelEdit from "../../forms/ModelEdit/ModelEdit";
+import TopicDetail from "./TopicDetail";
 const API_BASE = process.env.REACT_APP_API_KEY;
 const topicId = 6;
 function ManageTopic() {
@@ -12,6 +13,8 @@ function ManageTopic() {
   const [topicApproved, setTopicApproved] = useState([]);
   const [data, setData] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
+
+  const [TopicInfor, setTopicInfor] = useState([]);
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios.get(`${API_BASE}/article/GetAllArticle`, {
@@ -77,9 +80,9 @@ function ManageTopic() {
                     <button
                       type="button"
                       data-bs-toggle="modal"
-                      data-bs-target="#createAccount"
+                      data-bs-target="#editTopic"
                       className="btn btn-danger-soft btn-sm btn-rounded ms-2"
-                      onClick={()=>setDataEdit(item)}
+                      onClick={()=>setTopicInfor(item)}
                     >
                       {" "}
                       Edit
@@ -107,7 +110,11 @@ function ManageTopic() {
 
               <p class="card-text">End Date: {item.endDate}</p>
               <p class="card-text">Contribution: 30</p>
-              <a href="!#" class="btn btn-primary">
+              <a href="!#" class="btn btn-primary" onClick={()=>setTopicInfor(item)}
+              data-bs-toggle="modal"
+              data-bs-target="#topicDetail"
+              >
+              {" "}
                 View Submition
               </a>
             </div>
@@ -116,6 +123,7 @@ function ManageTopic() {
         })
       }
       <ModelEdit dataEdit={dataEdit}/>
+      <TopicDetail dataTopic={TopicInfor}/>
     </div>
   );
 }
