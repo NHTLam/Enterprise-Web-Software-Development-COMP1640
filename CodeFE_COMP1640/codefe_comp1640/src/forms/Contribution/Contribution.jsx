@@ -1,8 +1,6 @@
 import React from 'react'
 
 function Contribution({ currentItems }) {
-
-    console.log("currentItems", currentItems)
     return (
         <div className="d-flex flex-wrap mt-4 mb-4 ">
             {
