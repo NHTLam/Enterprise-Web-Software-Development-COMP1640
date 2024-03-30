@@ -4,11 +4,10 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Pagination from '../components/Pagination';
 import Slide from '../components/Slide';
-import NavbarC from '../components/NavbarC';
+import thumgnail from "../assets/slide3.jpeg"
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 const Home = () => {
-
     const navigate = useNavigate();
     const [userId, setUserId] = useState();
     useEffect(() => {
@@ -30,38 +29,83 @@ const Home = () => {
         navigate("/");
     }, [])
     localStorage.setItem("user_id", userId);
+    //department data
+    const departments = [
+        {
+            id:1,
+            name: "Information Technology",
+            thumgnail: "https://www.franklin.edu/sites/default/files/styles/btcb_photo/public/fr/back%20to%20college%20blog/main%20images/iStock-1081869346.jpg?itok=aBlpXTJR"
+        },
+        {
+            id:2,
+            name: "Business",
+            thumgnail: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/wp1lcwdav1p1/3AmsNeMmdIUytvhtu8ePPX/92e66e4f3ec1ed931a4d4ecaec27b029/GettyImages-551986071.jpg?w=1500&h=680&q=60&fit=fill&f=faces&fm=jpg&fl=progressive&auto=format%2Ccompress&dpr=1&w=1000"
+        },
+        {
+            id:3,
+            name: "Graphics Design",
+            thumgnail: "https://learn.g2.com/hubfs/iStock-1191609321%20%281%29.jpg"
+        },
+        {
+            id:4,
+            name: "Marketing",
+            thumgnail: "https://blog.webico.vn/wp-content/uploads/2017/01/tu-vung-tieng-anh-trong-marketing-scaled.jpg"
+        }
+    ]
+
+    const mystyle = {
+        maxHeight: "280px",
+        minHeight: "280px",
+      };
     return (
         <div className="container p-0">
-
             <Slide />
-            <NavbarC />
-            <div className="row container">
-                <h1 className='mt-5'>Topic</h1>
+            <div className="row">
+                <h1 className='mt-5'>Department</h1>
                 <hr></hr>
-                <div className="col">
-                    <Link to={"/topic/view"}>
+                {
+                    departments.map((item, index)=>{
+                        return(
+                            <div key={index} className="col-4 p-1">
+                            <Link>
+                                <div className="card w-100">
+                                    <img src={item.thumgnail} className="card-img w-100" style={mystyle} alt="..." />
+                                    <div className="card-img-overlay d-flex justify-content-center">
+                                        <h5 className="card-title fs-3">{item.name}</h5>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                        )
+                    })
+                }
+                
+                {/* <div className="col p-1">
+                    <Link>
                         <div className="card">
-                            <img src="https://www.analyticsinsight.net/wp-content/uploads/2021/07/Technology-Can-Boost-Your-Business-Productivity.jpg" className="card-img-top" alt="..." />
-                            <div className="card-body">
-                                <p className="card-text">dsasadas</p>
+                            <img src={thumgnail} className="card-img" alt="..." />
+                            <div className="card-img-overlay">
+                                <h5 className="card-title"></h5>
                             </div>
                         </div>
-
                     </Link>
-                </div>
-                <div className="col-5 p-0">
-                    <div className="card h-100">
-                        <img src="https://www.analyticsinsight.net/wp-content/uploads/2021/07/Technology-Can-Boost-Your-Business-Productivity.jpg" className="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                    </div>
-                </div>
+                </div> */}
             </div>
-            <h1 className='mt-5'>Top contribution</h1>
-            <hr></hr>
-            <div className="d-flex flex-wrap justify-content-center align-content-center mb-5">
 
+            <hr className='mt-5'></hr>
+            <nav className="navbar navbar-expand-lg navbar-light ">
+                <div className="container">
+                    <div className="collapse navbar-collapse w-50" id="navbarSupportedContent">
+
+                        <h1 className=''>Top contribution</h1>
+                    </div>
+                    <form className="d-flex me-2 ms-5 w-100">
+                        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                        <button className="btn btn-outline-secondary border border-primary" type="submit">Search</button>
+                    </form>
+                </div>
+            </nav>
+            <div className="d-flex flex-wrap justify-content-center align-content-center mb-5">
                 <Pagination itemsPerPage={8} />
             </div>
         </div>

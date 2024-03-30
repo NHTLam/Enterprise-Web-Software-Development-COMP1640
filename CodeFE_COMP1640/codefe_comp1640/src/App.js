@@ -3,8 +3,6 @@ import Layout from "./layouts/Layout";
 import LayoutAdmin from "./layouts/LayoutAdmin";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
-import Slide from "./components/Slide";
-import NavbarC from "./components/NavbarC";
 import Home from "./pages/Home";
 import Login from "./components/Login";
 import StAddPost from "./pages/StAddPost";
