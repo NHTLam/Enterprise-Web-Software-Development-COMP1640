@@ -19,6 +19,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string Title { get; set; }
+        public int? TopicId { get; set; }
 
         public Article ToEntity() => new Article
         {
@@ -31,7 +32,8 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             IsTopic = IsTopic,
             StartDate = StartDate,
             EndDate = EndDate,
-            Title = Title
+            Title = Title,
+            TopicId = TopicId
         };
     }
     public class ArticlePut : ArticlePost

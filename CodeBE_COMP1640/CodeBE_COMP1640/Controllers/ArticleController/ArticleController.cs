@@ -79,6 +79,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 articleEntity.StartDate = request.StartDate;
                 articleEntity.EndDate = request.EndDate;
                 articleEntity.Title = request.Title;
+                articleEntity.TopicId = request.TopicId;
 
                 // Không gán giá trị cho IsApproved trong đối tượng articleEntity
 
