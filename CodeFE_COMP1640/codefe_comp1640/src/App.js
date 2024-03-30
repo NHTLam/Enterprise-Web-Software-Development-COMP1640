@@ -16,6 +16,7 @@ import Feedback from "./components/Manage/Feedback";
 import ManagerRole from "./components/Manage/ManagerRole";
 import PostHistory from "./pages/PostHistory";
 import MarketingCFeedb from "./pages/MarketingC/MarketingCFeedb";
+import DetailContribution from "./components/DetailContribution";
 const App = () => {
   return (
     <Router>
@@ -81,6 +82,15 @@ const App = () => {
           element={
             <Layout>
               <MarketingCFeedb />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/detail-contribution/:id"
+          element={
+            <Layout>
+              <DetailContribution />
             </Layout>
           }
         />
