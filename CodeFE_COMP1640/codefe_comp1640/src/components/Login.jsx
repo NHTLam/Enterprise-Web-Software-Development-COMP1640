@@ -31,7 +31,6 @@ const Login = () => {
 
   const handleClickLogin = async (e) => {
     e.preventDefault();
-    console.log("click")
     try {
       const response = await axios.post(
         `${API_BASE}/app-user/login`,

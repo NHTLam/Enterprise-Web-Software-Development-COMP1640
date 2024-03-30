@@ -3,8 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import * as Toast from "../../components/Toast";
 import axios from "axios";
 
-const token = localStorage.getItem("token");
-
 const EditAccount = () => {
   const [Roles, setRoles] = useState([]);
   const departments = [
@@ -36,6 +34,7 @@ const EditAccount = () => {
   const API_BASE = process.env.REACT_APP_API_KEY;
   useEffect(() => {
     const listRole = async () => {
+      const token = localStorage.getItem("token");
       try {
         const res = await axios.post(`${API_BASE}/role/list-role`, null, {
           headers: {
@@ -57,6 +56,7 @@ const EditAccount = () => {
     };
 
     const getAccount = async () => {
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         `${API_BASE}/app-user/get`,
         {
@@ -84,6 +84,7 @@ const EditAccount = () => {
   }, [userId]);
 
   const handleEditAccount = async (e) => {
+    const token = localStorage.getItem("token");
     e.preventDefault();
     try {
       var res = await axios.post(

@@ -3,9 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import * as Toast from "../../components/Toast";
 
-const token = localStorage.getItem("token");
 const API_BASE = process.env.REACT_APP_API_KEY;
-const userId = localStorage.getItem("user_id");
 
 const Feedback = () => {
   const [feedback, setFeedback] = useState("");
@@ -17,6 +15,8 @@ const Feedback = () => {
   const navigate = useNavigate();
 
   const handleFeedback = async () => {
+    const userId = localStorage.getItem("user_id");
+    const token = localStorage.getItem("token");
     try {
       setIsSending(true);
       setIsChanging(true);
@@ -67,6 +67,8 @@ const Feedback = () => {
   };
 
   const handleUpdate = async () => {
+    const userId = localStorage.getItem("user_id");
+    const token = localStorage.getItem("token");
     try {
       setIsSending(false);
       setIsChanging(false);
@@ -112,7 +114,7 @@ const Feedback = () => {
   useEffect(() => {
     console.log("Feedback list updated:", feedbackList);
   }, [feedbackList]);
-
+  const userId = localStorage.getItem("user_id");
   return (
     <div className="container border border-5">
       <h3>Feedback</h3>
