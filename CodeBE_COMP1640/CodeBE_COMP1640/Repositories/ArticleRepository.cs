@@ -1,6 +1,7 @@
 ﻿using CodeBE_COMP1640.Bases;
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.SearchModels;
+using Microsoft.EntityFrameworkCore.Storage;
 namespace CodeBE_COMP1640.Repositories
 {
     public class ArticleRepository : RepositoryBase<Article, ArticleSearchModel>
@@ -53,6 +54,7 @@ namespace CodeBE_COMP1640.Repositories
                 existingArticle.IsLateSubmissionAllowed = item.IsLateSubmissionAllowed;
                 existingArticle.IsApproved = item.IsApproved;
                 existingArticle.IsTopic = item.IsTopic;
+                existingArticle.TopicId = item.TopicId;
 
                 // Update other properties if needed
 
