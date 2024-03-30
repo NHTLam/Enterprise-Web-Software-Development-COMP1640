@@ -1,5 +1,5 @@
 import React from 'react'
-import ManageTopic from '../../forms/ManageTopic/ManageTopic'
+import ManageTopic from './ManageTopic'
 function MarketingC() {
   return (
     <ManageTopic/>
