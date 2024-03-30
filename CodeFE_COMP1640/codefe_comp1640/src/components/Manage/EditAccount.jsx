@@ -119,10 +119,6 @@ const EditAccount = () => {
     console.log(account);
   };
 
-  console.log("departments:", departments);
-  console.log("account.departmentId:", account.departmentId);
-  console.log(account);
-
   return (
     <div className="container-lg bg-light border border-1">
       <h1>UPDATE ACCOUNT</h1>

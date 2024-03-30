@@ -8,8 +8,6 @@ import * as Toast from "../../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY;
 const userId = localStorage.getItem("user_id");
 const token = localStorage.getItem("token");
-
-
 const PostSubmit = (props) => {
   //decalre value
   const fileInputRef = useRef(null);
@@ -23,7 +21,7 @@ const PostSubmit = (props) => {
   const [disable, setDisable] = useState(true);
   const [comment, setComment] = useState("");
   const [listCmt, setListCmt] = useState([]);
-  const [fileData,setFileData] = useState();
+  const [fileData, setFileData] = useState();
 
   //Feedback
   const [feedback, setFeedback] = useState("");
@@ -32,12 +30,6 @@ const PostSubmit = (props) => {
   const [isSending, setIsSending] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
-  
-
-  console.log("Cmt: " + comment);
-  console.log("FB: " + feedback);
-  console.log("Cmt: " + comment);
-  ////
 
   //functions feedback
   const handleFeedback = async () => {
@@ -59,12 +51,12 @@ const PostSubmit = (props) => {
         }
       );
 
-      if (response.status === 403){
+      if (response.status === 403) {
         console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(()=>{
+        setTimeout(() => {
           navigate("/");
-        },1000)  
+        }, 1000);
       }
 
       console.log("Create feedback success!");
@@ -119,66 +111,6 @@ const PostSubmit = (props) => {
     }
   };
 
-  const handleSubmitComment = async (e) => {
-    if (e.key === "Enter") {
-      try {
-        const response = await axios.post(
-          `${API_BASE}/comment/create`,
-          {
-            articleId: 6,
-            userId: userId,
-            commentContent: comment,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.status === 403){
-          console.log("No Permission!");
-          Toast.toastErorr("You do not have permission to perform this action");
-          setTimeout(()=>{
-            navigate("/");
-          },1000)  
-        }
-        console.log("Create comment success!");
-        console.log("ab: ", response.data);
-        const newComment = [...listCmt, response.data];
-        console.log("newComment: ", newComment);
-        setListCmt(newComment);
-        setComment("");
-      } catch (error) {
-        console.error("Error creating comment:", error); // Handle network or other errors
-      }
-    }
-  };
-
-  useEffect(() => {
-    const listCmt = async () => {
-      try {
-        const res = await axios.post(`${API_BASE}/comment/list`, null, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (res.status === 403){
-          console.log("No Permission!");
-          Toast.toastErorr("You do not have permission to perform this action");
-          setTimeout(()=>{
-            navigate("/");
-          },1000)  
-        }
-        setListCmt(res.data);
-        console.table("List of commnet:", JSON.stringify(res.data));
-      } catch (err) {
-        console.log("Failed to list account! " + err);
-      }
-    };
-    listCmt();
-  }, []);
-
   const handleClickSubmit = async (event) => {
     event.preventDefault();
 
@@ -203,12 +135,12 @@ const PostSubmit = (props) => {
           },
         }
       );
-      if(res.status === 200){
+      if (res.status === 200) {
         const data = new FormData();
-        data.append("files", selectedFile)
-        console.log("file",selectedFile);
-        data.append("articleId", res.data.data.articleId)
-          await axios.post(
+        data.append("files", selectedFile);
+        console.log("file", selectedFile);
+        data.append("articleId", res.data.data.articleId);
+        await axios.post(
           `${API_BASE}/article/upload-file?articleId=${res.data.data.articleId}`,
           data,
           {
@@ -218,19 +150,18 @@ const PostSubmit = (props) => {
             },
           }
         );
-      }else if (res.status === 403){
+      } else if (res.status === 403) {
         console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(()=>{
+        setTimeout(() => {
           navigate("/");
-        },1000)
-      }
-      else if (res.status === 403){
+        }, 1000);
+      } else if (res.status === 403) {
         console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(()=>{
+        setTimeout(() => {
           navigate("/");
-        },1000)
+        }, 1000);
       }
     } catch (error) {
       Toast.toastErorr("Submit Erorr");
@@ -300,28 +231,6 @@ const PostSubmit = (props) => {
                 />
               </div>
             </div>
-          </div>
-
-          {/* Comment */}
-          <div className="form-comment border border-2 mt-3">
-            <div className="input-group">
-              <span className="input-group-text">Comment</span>
-              <textarea
-                className="form-control"
-                aria-label="With textarea"
-                id="content"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                onKeyDown={handleSubmitComment}
-              ></textarea>
-            </div>
-
-            {listCmt.map((cmt) => (
-              <div key={cmt.userId} className="bg-light rounded-4 p-0 mt-2">
-                <h4 className="fw-bold text-black ms-3">{cmt.userId}</h4>
-                <p className="text-black ms-3">{cmt.commentContent}</p>
-              </div>
-            ))}
           </div>
 
           {/* Feedback */}
