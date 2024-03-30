@@ -6,8 +6,7 @@ import imageInput from "../../assets/add_image.png";
 import { Link, useNavigate } from "react-router-dom";
 import * as Toast from "../../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY;
-const userId = localStorage.getItem("user_id");
-const token = localStorage.getItem("token");
+
 const PostSubmit = (props) => {
   //decalre value
   const fileInputRef = useRef(null);
@@ -20,6 +19,8 @@ const PostSubmit = (props) => {
   const [checkBox, setCheckBox] = useState(false);
   const [disable, setDisable] = useState(true);
   const [fileData, setFileData] = useState();
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("user_id");
 
   //functions
   const handleChange = (e) => {

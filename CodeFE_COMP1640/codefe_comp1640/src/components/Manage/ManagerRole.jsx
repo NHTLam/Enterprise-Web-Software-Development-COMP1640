@@ -3,8 +3,6 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import * as Toast from "../../components/Toast";
 
-const token = localStorage.getItem("token");
-
 const ManagerRole = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -18,6 +16,7 @@ const ManagerRole = () => {
   const API_BASE = process.env.REACT_APP_API_KEY;
 
   const handlNewRole = async (e) => {
+    const token = localStorage.getItem("token");
     e.preventDefault();
     try {
       const response = await axios.post(
@@ -49,6 +48,7 @@ const ManagerRole = () => {
   };
 
   const handleDelete = async (userId) => {
+    const token = localStorage.getItem("token");
     console.log(userId);
     try {
       var res = await axios.post(`${API_BASE}/role/delete-role`, {
@@ -75,6 +75,7 @@ const ManagerRole = () => {
   };
 
   const handleEditRole = async (e) => {
+    const token = localStorage.getItem("token");
     try {
       var res = await axios.post(
         `${API_BASE}/role/update-role/`,
@@ -100,6 +101,7 @@ const ManagerRole = () => {
   };
 
   const handlePermisisonByRole = async (Role) => {
+    const token = localStorage.getItem("token");
     setRole(Role)
     try {
       const res = await axios.post(`${API_BASE}/permission/list-permission-by-role`, {RoleId: Role.roleId}, {
@@ -123,6 +125,7 @@ const ManagerRole = () => {
   };
 
   async function handleSubmitPermission(event) {
+    const token = localStorage.getItem("token");
     event.preventDefault();
 
     const checkedPermissions = [];
@@ -171,6 +174,7 @@ const ManagerRole = () => {
 
   useEffect(() => {
     const listRole = async () => {
+      const token = localStorage.getItem("token");
       try {
         const res = await axios.post(`${API_BASE}/role/list-role`, null, {
           headers: {
@@ -192,6 +196,7 @@ const ManagerRole = () => {
     };
 
     const listPermission = async () => {
+      const token = localStorage.getItem("token");
       try {
         const res = await axios.post(`${API_BASE}/permission/list-permission`, null, {
           headers: {

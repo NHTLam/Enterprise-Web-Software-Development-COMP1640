@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import * as Toast from "../components/Toast";
-const token = localStorage.getItem("token");
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 const Manage = () => {
@@ -52,6 +51,7 @@ const Manage = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     const dashBoard = async () => {
       try {
         const res = await axios.post(`${API_BASE}/dashboard/get-data`, null, {
@@ -59,13 +59,6 @@ const Manage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        if (res.status === 403){
-          console.log("No Permission!");
-          Toast.toastErorr("You do not have permission to perform this action");
-          setTimeout(()=>{
-            navigate("/");
-          },1000)  
-        }
         setlistDashBoard({
           pieChartSimplifys: res.data.pieChartSimplifys,
           barChartSimplifys: res.data.barChartSimplifys,
@@ -74,6 +67,10 @@ const Manage = () => {
         console.table("List of dashboard:", JSON.stringify(res.data));
       } catch (err) {
         console.log("Failed to list account! " + err);
+          Toast.toastErorr("You do not have permission to perform this action");
+          setTimeout(()=>{
+            navigate("/");
+          },1000)  
       }
     };
     dashBoard();

@@ -73,7 +73,20 @@ const Header = () => {
   }, [])
 
   const AllowAccessAdminPage = listPath.some(x => pathsFunctionAdmin.includes(x))
-  console.log("listPaths: " + listPath + "\nAllowAccessAdminPage:" + AllowAccessAdminPage)
+  var ValidAccessUrl = listPath.filter(x => pathsFunctionAdmin.includes(x))[0]
+  if (ValidAccessUrl === '/dashboard/get-data'){
+    ValidAccessUrl = "/ad_manage"
+  }
+  else if (ValidAccessUrl === '/app-user/list'){
+    ValidAccessUrl = "/ad_manage/account"
+  }
+  else if (ValidAccessUrl === "/feedback/create"){
+    ValidAccessUrl = "/mk-manage-topic"
+  }
+  else if (ValidAccessUrl === "/role/list-role"){
+    ValidAccessUrl = "/manager_role"
+  }
+  console.log("ValidAccessUrl: " + ValidAccessUrl + "\nlistPaths: " + listPath + "\nAllowAccessAdminPage:" + AllowAccessAdminPage)
 
   return (
     <div className="position-fixed top-0 start-0 end-0 z-3">
@@ -98,7 +111,7 @@ const Header = () => {
                     </Dropdown.Item>
                     {AllowAccessAdminPage ? (
                       <Dropdown.Item>
-                        <Link to="/ad_manage">Admin Home</Link>
+                        <Link to={{ pathname: `${ValidAccessUrl}` }}>Admin Home</Link>
                       </Dropdown.Item>
                     ) : (
                       <></>

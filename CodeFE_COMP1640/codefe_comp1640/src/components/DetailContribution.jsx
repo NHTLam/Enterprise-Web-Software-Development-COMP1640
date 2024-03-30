@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 const API_BASE = process.env.REACT_APP_API_KEY;
-const userId = localStorage.getItem("user_id");
-const token = localStorage.getItem("token");
 
 const DetailContribution = () => {
   const [comment, setComment] = useState("");
@@ -13,6 +11,8 @@ const DetailContribution = () => {
   const navigate = useNavigate();
 
   const handleSubmitComment = async (e) => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("user_id");
     if (e.key === "Enter") {
       try {
         const response = await axios.post(
@@ -45,6 +45,7 @@ const DetailContribution = () => {
 
   useEffect(() => {
     const listCmt = async () => {
+      const token = localStorage.getItem("token");
       try {
         const res = await axios.post(`${API_BASE}/comment/list`, null, {
           headers: {
