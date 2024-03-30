@@ -1,6 +1,6 @@
 import React from 'react'
 
-function PostInfor() {
+function PostInfor({dataTopic}) {
     return (
         <div>
             <table className="table table-striped mt-5">
@@ -13,19 +13,19 @@ function PostInfor() {
                 <tbody>
                     <tr>
                         <th scope="row">Title of Topic</th>
-                        <td>Topic about evolution of AI in the world</td>
+                        <td>{dataTopic.title}</td>
                     </tr>
                     <tr>
                         <th scope="row">Description</th>
-                        <td>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dignissimos suscipit quaerat dolores omnis distinctio sint fuga. Voluptas, reprehenderit! Ullam nisi, maiores sunt voluptate, repellat tenetur corporis obcaecati et similique consequuntur minus error eligendi cumque ex voluptatibus adipisci, facilis sit provident culpa. Sequi veniam tempore sapiente perferendis ut, est totam dolorum voluptatibus ex enim quia commodi quam iste maxime quaerat quasi dolorem saepe. Consequatur itaque dicta commodi nemo voluptatem tempora nulla porro voluptas. Ut iste possimus, cumque voluptatibus nostrum, voluptates ex magni quos odit, eaque voluptatum et aut pariatur a nobis distinctio aliquam eius id corrupti veritatis temporibus ipsam dolor sit.</td>
+                        <td>{dataTopic.content}</td>
                     </tr>
                     <tr>
                         <th scope='row'>Start Date</th>
-                        <td>02/03/2024</td>
+                        <td>{dataTopic.startDate}</td>
                     </tr>
                     <tr>
                         <th scope='row'>End Date</th>
-                        <td>10/03/2024</td>
+                        <td>{dataTopic.endDate}</td>
                     </tr>
                     <tr>
                         <th scope='row'>Requirement</th>

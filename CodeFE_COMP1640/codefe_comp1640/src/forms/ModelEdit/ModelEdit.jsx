@@ -70,7 +70,7 @@ function ModelEdit({dataEdit}) {
             <form>
                 <div
                     className="modal fade"
-                    id="createAccount"
+                    id="editTopic"
                     aria-labelledby="exampleModalLabel"
                     aria-hidden="true"
                 >
