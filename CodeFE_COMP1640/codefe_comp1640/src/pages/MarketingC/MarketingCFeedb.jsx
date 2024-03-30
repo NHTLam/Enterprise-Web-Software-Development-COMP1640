@@ -22,8 +22,10 @@ function MarketingCFeedb(props) {
   const [imageList, setImageList] = useState([]);
   const fileInputRef = useRef(null);
   const [postData, setPostData] = useState();
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("user_id");
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    
     axios
       .get(`${API_BASE}/article/get/${id}`, {
         headers: {
