@@ -81,6 +81,10 @@ namespace CodeBE_COMP1640.Repositories
         {
             return _context.Articles.ToList();
         }
+        public IEnumerable<User> GetUsersByIds(IEnumerable<int> userIds)
+        {
+            return _context.Users.Where(u => userIds.Contains(u.UserId)).ToList();
+        }
 
     }
 }

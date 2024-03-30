@@ -203,6 +203,25 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             try
             {
                 var allArticles = _repositoryFactory.ArticleRepository.GetAll();
+
+                // Lấy danh sách UserId từ tất cả các bài viết
+                var userIds = allArticles.Select(a => a.UserId).Distinct();
+
+                // Lấy thông tin về người dùng dựa trên danh sách UserId đã lấy
+                var users = _repositoryFactory.ArticleRepository.GetUsersByIds(userIds);
+
+                // Tạo một Dictionary để lưu thông tin về người dùng theo UserId
+                var userDictionary = users.ToDictionary(u => u.UserId);
+
+                // Bổ sung thông tin về người dùng vào mỗi bài viết
+                foreach (var article in allArticles)
+                {
+                    if (userDictionary.ContainsKey(article.UserId))
+                    {
+                        article.User = userDictionary[article.UserId];
+                    }
+                }
+
                 return Ok(new
                 {
                     Data = allArticles,
