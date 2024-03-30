@@ -29,12 +29,11 @@ const DetailContribution = () => {
           }
         );
         if (response.status === 403) {
-          console.log("No Permission!");
           setTimeout(() => {
             navigate("/");
           }, 1000);
         }
-        console.log("Create comment success!");
+
         const newComment = [...listCmt, response.data];
         setListCmt(newComment);
         setComment("");
@@ -53,7 +52,6 @@ const DetailContribution = () => {
           },
         });
         if (res.status === 403) {
-          console.log("No Permission!");
           setTimeout(() => {
             navigate("/detail-contribution");
           }, 1000);

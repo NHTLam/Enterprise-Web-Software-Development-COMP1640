@@ -57,13 +57,11 @@ const Account = () => {
       );
 
       if (response.status === 403) {
-        console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
         setTimeout(() => {
           navigate("/");
         }, 1000);
       }
-      console.log("Create account success!");
       setTimeout(() => {
         window.location.reload();
       }, 1000)
@@ -73,7 +71,6 @@ const Account = () => {
   };
 
   const handleDelete = async (userId) => {
-    console.log(userId);
     try {
       var res = await axios.post(
         `${API_BASE}/app-user/delete`,
@@ -93,7 +90,6 @@ const Account = () => {
           navigate("/");
         }, 1000);
       }
-      console.log("Delete success");
       setAccount(accounts.filter((account) => account.userId !== userId));
       // navigate("/");
     } catch (err) {

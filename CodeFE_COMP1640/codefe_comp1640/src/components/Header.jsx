@@ -9,7 +9,7 @@ const API_BASE = process.env.REACT_APP_API_KEY;
 const Header = () => {
   const navigate = useNavigate();
   const [islogin, setIsLogin] = useState(Boolean);
-
+  const [userId, setUserId] = useState();
   const [listPath, setListPath] = useState([]);
 
   const pathsFunctionAdmin = [
@@ -36,27 +36,39 @@ const Header = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("user_id");
+      if (token) {
+        const token = localStorage.getItem("token");
+        if (userId === undefined || userId === "undefined" || userId === null) {
+          const getUserId = async () => {
+            const response = await axios.post(`${API_BASE}/app-user/get-user-id`, null, {
+              headers: {
+                  Authorization: `Bearer ${token}`
+              }
+            });
+            setUserId(response.data);
 
-    if (userId == undefined){
-      console.log("Bad userId: " + userId)
-    }
-    else{
-      console.log("Good userId: " + userId)
-      const getListPath = async () => {
-        const response = await axios.post(`${API_BASE}/permission/list-path`, 
-        {
-          userId: userId
-        }, 
-        {
-          headers: {
-              Authorization: `Bearer ${token}`
+            if (response.data !== undefined && response.data !== "undefined"){
+              console.log("Good userId: " + response.data)
+              const getListPath = async () => {
+                const response2 = await axios.post(`${API_BASE}/permission/list-path`, 
+                {
+                  userId: response.data
+                }, 
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`
+                  }
+                });
+                setListPath(response2.data);
+              }
+              getListPath();
+            }
           }
-        });
-        setListPath(response.data);
+          getUserId();
+        }
+
       }
-      getListPath();
-    }
+      navigate("/");
     navigate("/");
   }, [])
 
