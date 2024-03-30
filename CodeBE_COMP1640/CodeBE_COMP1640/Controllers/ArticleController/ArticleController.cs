@@ -84,6 +84,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 // Không gán giá trị cho IsApproved trong đối tượng articleEntity
 
                 var data = _repositoryFactory.ArticleRepository.Create(articleEntity);
+                articleEntity = _repositoryFactory.ArticleRepository.Get(data.ArticleId);
                 await SendEmailToUsersWithMatchingDepartmentID(request.DepartmentId);
 
                 return Ok(new
