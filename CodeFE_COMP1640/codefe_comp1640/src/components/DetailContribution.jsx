@@ -79,7 +79,7 @@ const DetailContribution = () => {
     })
       .catch(err => console.log(err))
   }, [data])
-  console.log("data", data)
+
 
 
   //   View detail contribution and comment

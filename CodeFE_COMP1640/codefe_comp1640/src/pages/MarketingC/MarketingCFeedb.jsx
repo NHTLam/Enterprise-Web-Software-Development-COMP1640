@@ -27,7 +27,7 @@ function MarketingCFeedb(props) {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("user_id");
   useEffect(() => {
-    
+    console.log("id", id)
     axios
       .get(`${API_BASE}/article/get/${id}`, {
         headers: {
@@ -171,7 +171,7 @@ function MarketingCFeedb(props) {
 
   return (
     <div>
-      <PostInfor />
+      <PostInfor dataTopic={postData} />
       <>
         <div className="mt-5 mb-5 max-width m-auto">
           <form>

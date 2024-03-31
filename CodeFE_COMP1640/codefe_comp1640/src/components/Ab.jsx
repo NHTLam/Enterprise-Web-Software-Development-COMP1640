@@ -12,7 +12,7 @@ const Sidebar = () => {
     const userId = localStorage.getItem("user_id");
     const token = localStorage.getItem("token");
     if (userId !== undefined && userId !== "undefined"){
-      console.log("Good userId: " + userId)
+      
       const getListPath = async () => {
         const response2 = await axios.post(`${API_BASE}/permission/list-path`, 
         {

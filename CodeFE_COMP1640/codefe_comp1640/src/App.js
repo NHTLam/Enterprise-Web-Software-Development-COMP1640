@@ -72,11 +72,11 @@ const App = () => {
           path="/department/:departmentId"
           element={
             <Layout>
-              <Department/>
+              <Department />
             </Layout>
           }
         />
-          <Route
+        <Route
           path="/contribution/detail/:contributionId"
           element={
             <Layout>
@@ -95,23 +95,16 @@ const App = () => {
           }
         />
 
-        <Route
-          path="mk-manage-topic/contribute/view/:id"
+        {/* <Route
+          path="/contribution/view/:id"
           element={
             <Layout>
               <MarketingCFeedb />
             </Layout>
           }
-        />
+        /> */}
 
-        <Route
-          path="/detail-contribution/:id"
-          element={
-            <Layout>
-              <DetailContribution />
-            </Layout>
-          }
-        />
+        <Route path="/contribute/view/:id" element={<MarketingCFeedb />} />
 
         {/* ADMIN ROUTES */}
         <Route
