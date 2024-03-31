@@ -27,7 +27,7 @@ function Pagination({ itemsPerPage, dataContributions }) {
 
     return (
         <>
-                <Contribution currentItems={currentItems} />
+                <Contribution currentItems={currentItems} link={"/contribution/detail"} />
             
             <ReactPaginate
                 breakLabel="..."

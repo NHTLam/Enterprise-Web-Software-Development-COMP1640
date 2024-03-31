@@ -12,6 +12,7 @@ const Home = () => {
     const [userId, setUserId] = useState(null);
     const [userData, setUserData] = useState();
     const [contributions, setContributions] = useState([]);
+    const [data,setData] = useState([]);
     useEffect(() => {
         const token = localStorage.getItem("token");
         axios.get(`${API_BASE}/article/GetAllArticle`, {
@@ -21,10 +22,15 @@ const Home = () => {
             }
         }).then(data => {
             console.log("data", data.data.data)
-            setContributions(data.data.data)
+            setData(data.data.data)
         })
             .catch(err => console.log(err))
     }, [])
+    useEffect(()=>{
+    setContributions(data.filter(data => data.isApproved === true))
+    },[data])
+    console.log("data",data)
+    console.log("Approved", contributions)
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -100,7 +106,7 @@ const Home = () => {
                     departments.map((item, index) => {
                         return (
                             <div key={index} className="col-4 p-1">
-                                <Link to>
+                                <Link to={`/department/${item.id}`}>
                                     <div className="card w-100">
                                         <img src={item.thumgnail} className="card-img w-100" style={mystyle} alt="..." />
                                         <div className="card-img-overlay d-flex justify-content-center">
