@@ -18,6 +18,7 @@ import PostHistory from "./pages/PostHistory";
 import MarketingCFeedb from "./pages/MarketingC/MarketingCFeedb";
 import DetailContribution from "./components/DetailContribution";
 import Department from "./pages/Department";
+import ManageTopic from "./pages/ManagerC/ManageTopic";
 const App = () => {
   return (
     <Router>
@@ -106,6 +107,15 @@ const App = () => {
 
         <Route path="/contribute/view/:id" element={<MarketingCFeedb />} />
 
+        {/* MANAGER ROUTES */}
+        <Route
+          path="/manager_manage"
+          element={
+            <LayoutAdmin>
+              <ManageTopic/>
+            </LayoutAdmin>
+          }
+        />
         {/* ADMIN ROUTES */}
         <Route
           path="/ad_manage"

@@ -41,7 +41,7 @@ function MarketingCFeedb(props) {
         // console.log(data.data)
       })
       .catch((err) => console.log(err));
-  });
+  },);
   // console.log(postData);
   if (!postData) {
     return <></>;

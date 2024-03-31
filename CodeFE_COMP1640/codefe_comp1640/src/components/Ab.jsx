@@ -85,6 +85,16 @@ const Sidebar = () => {
           <></>
         )}
       </li>
+      <li className="sidebar-item">
+        {listPath.includes('/feedback/create') && listPath.includes('/dashboard/get-data') ? ( 
+        <Link to="/manager_manage" className="sidebar-link d-flex">
+          <i className="bi bi-person"></i>
+          <p className="mt-1">Manager Check Topic</p>
+        </Link>
+        ) : (
+          <></>
+        )}
+      </li>
     </ul>
   );
 };
