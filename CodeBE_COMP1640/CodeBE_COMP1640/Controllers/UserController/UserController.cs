@@ -29,7 +29,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(UserRoute.List, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -45,7 +45,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(UserRoute.Get, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -72,7 +72,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(UserRoute.Create, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -111,7 +111,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(UserRoute.Update, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -131,7 +131,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(UserRoute.Delete, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -168,7 +168,7 @@ namespace CodeBE_COMP1640.Controllers.UserController
         [Route(UserRoute.CheckBox), HttpPut, Authorize]
         public async Task<IActionResult> UpdateCheckbox(int id, [FromBody] bool isChecked)
         {
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(UserRoute.CheckBox, PermissionService.GetUserId()))
             {
                 return Forbid();
             }

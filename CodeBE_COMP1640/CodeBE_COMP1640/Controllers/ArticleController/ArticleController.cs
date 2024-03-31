@@ -43,7 +43,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
-                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                if (!await PermissionService.HasPermission(ArticleRoute.Get, PermissionService.GetUserId()))
                 {
                     return Forbid();
                 }
@@ -68,7 +68,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
-                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                if (!await PermissionService.HasPermission(ArticleRoute.Create, PermissionService.GetUserId()))
                 {
                     return Forbid();
                 }
@@ -133,7 +133,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
-                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                if (!await PermissionService.HasPermission(ArticleRoute.Update, PermissionService.GetUserId()))
                 {
                     return Forbid();
                 }
@@ -177,7 +177,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
-                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                if (!await PermissionService.HasPermission(ArticleRoute.Delete, PermissionService.GetUserId()))
                 {
                     return Forbid();
                 }
@@ -241,7 +241,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
-                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                if (!await PermissionService.HasPermission(ArticleRoute.GetByUser, PermissionService.GetUserId()))
                 {
                     return Forbid();
                 }
@@ -266,7 +266,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
-                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                if (!await PermissionService.HasPermission(ArticleRoute.GetByDepartment, PermissionService.GetUserId()))
                 {
                     return Forbid();
                 }
@@ -290,7 +290,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
-                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                if (!await PermissionService.HasPermission(ArticleRoute.Approve, PermissionService.GetUserId()))
                 {
                     return Forbid();
                 }
@@ -327,7 +327,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
 
             try
             {
-                if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+                if (!await PermissionService.HasPermission(ArticleRoute.UploadFile, PermissionService.GetUserId()))
                 {
                     return Forbid();
                 }
@@ -380,7 +380,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         [Route(ArticleRoute.GetFile), HttpGet, Authorize]
         public async Task<IActionResult> GetFile(string articleId)
         {
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(ArticleRoute.GetFile, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -417,7 +417,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         [Route(ArticleRoute.GetUploadedFiles), HttpGet, Authorize]
         public async Task<IActionResult> GetUploadedFiles(string articleId)
         {
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(ArticleRoute.GetUploadedFiles, PermissionService.GetUserId()))
             {
                 return Forbid();
             }

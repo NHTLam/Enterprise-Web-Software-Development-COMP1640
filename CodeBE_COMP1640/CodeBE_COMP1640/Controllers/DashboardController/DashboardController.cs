@@ -29,7 +29,7 @@ namespace CodeBE_COMP1640.Controllers.DashboardController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(DashboardRoute.GetData, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
