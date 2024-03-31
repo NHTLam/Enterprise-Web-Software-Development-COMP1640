@@ -4,6 +4,8 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
 {
     public class ArticleRequest
     {
+        public int ArticleId { get; set; }
+
     }
 
     public class ArticlePost
@@ -15,11 +17,12 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         public DateTime? SubmissionTime { get; set; }
         public bool? IsLateSubmissionAllowed { get; set; }
         public bool IsApproved { get; set; } = false;
-        public bool IsTopic { get; set; }
+        public bool IsTopic { get; set; } = false;
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public string Title { get; set; }
+        public string? Title { get; set; }
         public int? TopicId { get; set; }
+
 
         public Article ToEntity() => new Article
         {
