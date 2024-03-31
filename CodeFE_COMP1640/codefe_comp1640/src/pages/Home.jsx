@@ -27,7 +27,7 @@ const Home = () => {
             .catch(err => console.log(err))
     }, [])
     useEffect(()=>{
-    setContributions(data.filter(data => data.isApproved === true))
+    setContributions(data.filter(data => (data.isApproved === true && data.isTopic === false)))
     },[data])
     console.log("data",data)
     console.log("Approved", contributions)
@@ -77,7 +77,7 @@ const Home = () => {
         },
         {
             id: 2,
-            name: "Business",
+            name: "Business and Economics",
             thumgnail: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/wp1lcwdav1p1/3AmsNeMmdIUytvhtu8ePPX/92e66e4f3ec1ed931a4d4ecaec27b029/GettyImages-551986071.jpg?w=1500&h=680&q=60&fit=fill&f=faces&fm=jpg&fl=progressive&auto=format%2Ccompress&dpr=1&w=1000"
         },
         {

@@ -51,11 +51,10 @@ function TopicDetail({ dataTopic }) {
               </div>
               <div className="modal-body">
                 <PostInfor dataTopic={dataTopic} />
-                {/* <Contribution currentItems={finalData} link={"/mk-manage-topic/contribute/view"} /> */}
                 {
                   finalData.map((item,index)=>{
                     return(
-                      <Link to={`/contribution/feedback/${item.articleId}`}>
+                      <Link to={`/contribute/view/${item.articleId}`}>
                             <div className="mb-3 w-100">
                                 <div class="card w-100">
                                     <div class="row g-0">

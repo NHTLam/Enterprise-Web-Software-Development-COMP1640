@@ -9,7 +9,7 @@ function Contribution({ currentItems, link }) {
             {
                 currentItems.map((item, index) => {
                     return (
-                        <Link to={`${link}/${item.articleId}`}>
+                        <Link className='w-100' to={`${link}/${item.articleId}`}>
                             <div className="mb-3 w-100">
                                 <div class="card w-100">
                                     <div class="row g-0">

@@ -72,12 +72,12 @@ function ManageTopic() {
                   <td className="topic_description">{item.content}</td>
                   {item.isApproved === true ? <td> <p className="top_status btn btn-success">Approved</p></td> : <td> <p className="top_status btn btn-warning">Pending</p></td>}
                   <td className="topic_action">
-                    <button
+                    {/* <button
                       type="button"
                       className="btn btn-success-soft btn-sm btn-rounded"
                     >
                       Public
-                    </button>
+                    </button> */}
                     <button
                       type="button"
                       data-bs-toggle="modal"
@@ -103,7 +103,7 @@ function ManageTopic() {
         topicApproved?.map((item,idex) =>{
           return(
             <div class="card mt-5">
-            <h5 class="card-header">{item.title}</h5>
+            <h5 class="card-header">{item.title} {item.articleId}</h5>
             <div class="card-body">
               <h5 class="card-title">{item.content}</h5>
     

@@ -19,7 +19,7 @@ function Department() {
         setData(data.data.data)
     })
         .catch(err => console.log(err))
-}, [])
+}, [departmentId])
 
   useEffect(()=>{    
   if (Array.isArray(data)) {
