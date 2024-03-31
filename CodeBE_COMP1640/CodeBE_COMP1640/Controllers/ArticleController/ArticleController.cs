@@ -291,10 +291,10 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         {
             try
             {
-                /*if (!await PermissionService.HasPermission(ArticleRoute.Approve, PermissionService.GetUserId()))
+                if (!await PermissionService.HasPermission(ArticleRoute.Approve, PermissionService.GetUserId()))
                 {
                     return Forbid();
-                }*/
+                }
 
                 // Lấy article từ repository
                 var article = _repositoryFactory.ArticleRepository.Get(articleId);
