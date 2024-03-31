@@ -1,5 +1,4 @@
-﻿using CodeBE_COMP1640.Controllers.PermissionController;
-using CodeBE_COMP1640.Factories.Implements;
+﻿using CodeBE_COMP1640.Factories.Implements;
 using CodeBE_COMP1640.Services.EmailS;
 using CodeBE_COMP1640.Services.PermissionS;
 using CodeBE_COMP1640.Services.UserS;
@@ -73,6 +72,9 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                     return Forbid();
                 }
 
+                // Always set IsApproved to false
+                request.IsApproved = false;
+
                 // Tạo entity từ request và đặt IsApproved là false
                 var articleEntity = request.ToEntity();
                 articleEntity.SubmissionTime = DateTime.Now;
@@ -100,7 +102,6 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 });
             }
         }
-
 
         private async Task SendEmailToUsersWithMatchingDepartmentID(int departmentId)
         {
@@ -302,7 +303,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                     return NotFound("Article not found");
                 }
 
-                article.IsApproved = true;
+                article.IsApproved = true; // Đặt trường IsApproved thành true
                 _repositoryFactory.ArticleRepository.Update(article);
 
                 return Ok(new

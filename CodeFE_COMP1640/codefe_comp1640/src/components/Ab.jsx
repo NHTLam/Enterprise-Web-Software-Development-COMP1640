@@ -59,9 +59,13 @@ const Sidebar = () => {
             <p className="mt-1">Marketing Condinator</p>
           </a>
           <ul className="dropdown-menu w-100 " aria-labelledby="dropdownMenuLink">
-            <Link to="/mk-manage-topic" className="sidebar-link d-flex">
-              <li><a className="" href="!#">Manage Topic</a></li>
-            </Link>
+            {listPath.includes('/dashboard/get-data') ? (            
+              <Link to="/mk-manage-topic" className="sidebar-link d-flex">
+                <li><a className="" href="!#">Manage Topic</a></li>
+              </Link>
+            ) : (
+              <></>
+            )}
             <Link to="/mk-manage-topic" className="sidebar-link d-flex">
               <li><a className="" href="!#">View Contribution</a></li>
             </Link>
