@@ -4,26 +4,14 @@ import Contribution from '../forms/Contribution/Contribution';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 const API_BASE = process.env.REACT_APP_API_KEY;
-function Pagination({ itemsPerPage }) {
+function Pagination({ itemsPerPage, dataContributions }) {
     const [itemOffset, setItemOffset] = useState(0);
 
     const [contributions, setContributions] = useState([]);
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        axios.get(`${API_BASE}/article/GetAllArticle`, {
-            headers: {
-                'ngrok-skip-browser-warning': 'true',
-                Authorization: `Bearer ${token}`
-            }
-        }).then(data => {
-            console.log("data", data.data.data)
-            setContributions(data.data.data)
-        })
-            .catch(err => console.log(err))
-    }, [])
 
-    console.log("contribute: ", contributions)
-
+    useEffect(()=>{
+        setContributions(dataContributions)
+    },[dataContributions])
     const endOffset = itemOffset + itemsPerPage;
     console.log(`Loading items from ${itemOffset} to ${endOffset}`);
     const currentItems = contributions.slice(itemOffset, endOffset);
@@ -39,7 +27,7 @@ function Pagination({ itemsPerPage }) {
 
     return (
         <>
-                <Contribution currentItems={currentItems} />
+                <Contribution currentItems={currentItems} link={"/contribution/detail"} />
             
             <ReactPaginate
                 breakLabel="..."

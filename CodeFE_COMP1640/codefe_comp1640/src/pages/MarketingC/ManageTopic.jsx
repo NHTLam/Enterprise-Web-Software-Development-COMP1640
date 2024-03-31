@@ -2,12 +2,11 @@ import React from "react";
 import "./Style.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import ModelAdd from "../../forms/ModelAdd/ModelAdd";
 import ModelEdit from "../../forms/ModelEdit/ModelEdit";
 import TopicDetail from "./TopicDetail";
 const API_BASE = process.env.REACT_APP_API_KEY;
-const topicId = 6;
+
 function ManageTopic() {
   const [topicData, setTopicData] = useState([]);
   const [topicApproved, setTopicApproved] = useState([]);
@@ -69,7 +68,7 @@ function ManageTopic() {
                   <td className="topic_startdate">{item.startDate}</td>
                   <td className="topic_enddate">{item.endDate}</td>
                   <td className="topic_description">{item.content}</td>
-                  {item.isApproved === true ? <td> <p className="top_status btn btn-success">Approved</p></td> : <td> <p className="top_status btn btn-danger">Reject</p></td>}
+                  {item.isApproved === true ? <td> <p className="top_status btn btn-success">Approved</p></td> : <td> <p className="top_status btn btn-warning">Pending</p></td>}
                   <td className="topic_action">
                     <button
                       type="button"
@@ -82,7 +81,7 @@ function ManageTopic() {
                       data-bs-toggle="modal"
                       data-bs-target="#editTopic"
                       className="btn btn-danger-soft btn-sm btn-rounded ms-2"
-                      onClick={()=>setTopicInfor(item)}
+                      onClick={()=>setDataEdit(item)}
                     >
                       {" "}
                       Edit

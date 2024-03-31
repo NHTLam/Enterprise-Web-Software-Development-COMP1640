@@ -1,6 +1,7 @@
 import React from "react";
 
 function PostInfor({ dataTopic }) {
+  console.log(dataTopic);
   return (
     <div>
       <table className="table table-striped mt-5">
