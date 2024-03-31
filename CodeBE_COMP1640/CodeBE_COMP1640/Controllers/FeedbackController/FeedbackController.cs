@@ -38,7 +38,7 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
         [Route(FeedbackRoute.List), HttpGet, Authorize]
         public async Task<ActionResult<List<Feedback>>> GetAllFeedbacks()
         {
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(FeedbackRoute.List, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -50,7 +50,7 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
         [Route(FeedbackRoute.Get), HttpGet, Authorize]
         public async Task<ActionResult<Feedback>> GetFeedbackById(int id)
         {
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(FeedbackRoute.Get, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -76,7 +76,7 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
         [Route(FeedbackRoute.Create), HttpPost, Authorize]
         public async Task<IActionResult> CreateFeedback(FeedbackDTO feedbackDTO)
         {
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(FeedbackRoute.Create, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -114,7 +114,7 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
         [Route(FeedbackRoute.Update), HttpPut, Authorize]
         public async Task<IActionResult> UpdateFeedback(int id, FeedbackDTO feedbackDTO)
         {
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(FeedbackRoute.Update, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -138,7 +138,7 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
         [Route(FeedbackRoute.Delete), HttpDelete, Authorize]
         public async Task<IActionResult> DeleteFeedback(int id)
         {
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(FeedbackRoute.Delete, PermissionService.GetUserId()))
             {
                 return Forbid();
             }

@@ -31,19 +31,16 @@ const ManagerRole = () => {
           },
         }
       );
-      if (response.status === 403){
-        console.log("No Permission!");
-        Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(()=>{
-          navigate("/");
-        },1000)  
-      }
       console.log("Create Role success!");
       const newRole = [...Roles, response.data];
       setRoles(newRole);
       navigate("/manager_role");
     } catch (err) {
       console.log("Create Role failed!");
+      Toast.toastErorr("You do not have permission to perform this action");
+      setTimeout(()=>{
+        navigate("/");
+      },1000) 
     }
   };
 
@@ -59,18 +56,16 @@ const ManagerRole = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (res.status === 403){
-        console.log("No Permission!");
-        Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(()=>{
-          navigate("/");
-        },1000)  
-      }
+
       console.log("Delete success");
       setRoles(Roles.filter((Role) => Role.userId !== userId));
       // navigate("/");
     } catch (err) {
       console.log("Delete Role failed! " + err);
+      Toast.toastErorr("You do not have permission to perform this action");
+      setTimeout(()=>{
+        navigate("/");
+      },1000)  
     }
   };
 
@@ -86,17 +81,15 @@ const ManagerRole = () => {
           },
         }
       );
-      if (res.status === 403){
-        console.log("No Permission!");
-        Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(()=>{
-          navigate("/");
-        },1000)  
-      }
+
       console.log("Role updated successfully!");
       navigate("ad_manage/account");
     } catch (err) {
       console.log("Failed to update role!" + err);
+      Toast.toastErorr("You do not have permission to perform this action");
+      setTimeout(()=>{
+        navigate("/");
+      },1000)  
     }
   };
 
@@ -110,17 +103,14 @@ const ManagerRole = () => {
         },
       });
 
-      if (res.status === 403){
-        console.log("No Permission!");
-        Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(()=>{
-          navigate("/");
-        },1000)  
-      }
       setPermissionsByRole(res.data);
       console.table("List of Permission:", JSON.stringify(res.data));
     } catch (err) {
       console.log("Failed to list Permission! " + err);
+      Toast.toastErorr("You do not have permission to perform this action");
+      setTimeout(()=>{
+        navigate("/");
+      },1000) 
     }
   };
 
@@ -203,17 +193,15 @@ const ManagerRole = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        if (res.status === 403){
-          console.log("No Permission!");
-          Toast.toastErorr("You do not have permission to perform this action");
-          setTimeout(()=>{
-            navigate("/");
-          },1000)  
-        }
+
         setPermissions(res.data);
         console.table("List of Permissions:", JSON.stringify(res.data));
       } catch (err) {
         console.log("Failed to list Role! " + err);
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(()=>{
+          navigate("/");
+        },1000)  
       }
     };
     listRole();

@@ -65,7 +65,7 @@ namespace CodeBE_COMP1640.Controllers.PermissionController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(PermissionRoute.ListPermissionByRole, PermissionService.GetUserId()))
             {
                 return Forbid();
             }

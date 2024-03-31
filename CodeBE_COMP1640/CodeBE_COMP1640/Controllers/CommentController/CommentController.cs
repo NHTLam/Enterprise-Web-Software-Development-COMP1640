@@ -29,7 +29,7 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(CommentRoute.List, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -45,7 +45,7 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(CommentRoute.ListByAtical, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -61,7 +61,7 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(CommentRoute.Get, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -78,7 +78,7 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(CommentRoute.Create, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -97,7 +97,7 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(CommentRoute.Update, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
@@ -117,7 +117,7 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await PermissionService.HasPermission(PermissionRoute.ListPermission, PermissionService.GetUserId()))
+            if (!await PermissionService.HasPermission(CommentRoute.Delete, PermissionService.GetUserId()))
             {
                 return Forbid();
             }
