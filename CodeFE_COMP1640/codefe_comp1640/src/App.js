@@ -17,6 +17,7 @@ import ManagerRole from "./components/Manage/ManagerRole";
 import PostHistory from "./pages/PostHistory";
 import MarketingCFeedb from "./pages/MarketingC/MarketingCFeedb";
 import DetailContribution from "./components/DetailContribution";
+import Department from "./pages/Department";
 const App = () => {
   return (
     <Router>
@@ -43,7 +44,7 @@ const App = () => {
 
         {/* STUDENT ROUTES */}
         <Route
-          path="/topic/view" //need id of topic here
+          path="/topic/view/:topicId" //need id of topic here
           element={
             <Layout>
               <StAddPost />
@@ -63,6 +64,23 @@ const App = () => {
           element={
             <Layout>
               <PostHistory />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/department/:departmentId"
+          element={
+            <Layout>
+              <Department/>
+            </Layout>
+          }
+        />
+          <Route
+          path="/contribution/detail/:contributionId"
+          element={
+            <Layout>
+              <DetailContribution />
             </Layout>
           }
         />

@@ -55,7 +55,7 @@ function ManageTopic() {
                   <td className="topic_startdate">{item.submissionTime}</td>
                   <td className="topic_enddate">{item.submissionTime}</td>
                   <td className="topic_description">{item.content}</td>
-                  {item.isApproved === true ? <td> <p className="top_status btn btn-success">Approved</p></td> : <td> <p className="top_status btn btn-warning">Pendding</p></td>}
+                  {item.isApproved === true ? <td> <p className="top_status btn btn-success">Approved</p></td> : <td> <p className="top_status btn btn-infor">Pendding</p></td>}
                   <td className="topic_action">
                     <button
                       type="button"

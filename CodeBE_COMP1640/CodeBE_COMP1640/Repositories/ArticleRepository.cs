@@ -1,7 +1,6 @@
 ﻿using CodeBE_COMP1640.Bases;
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.SearchModels;
-using Microsoft.EntityFrameworkCore.Storage;
 namespace CodeBE_COMP1640.Repositories
 {
     public class ArticleRepository : RepositoryBase<Article, ArticleSearchModel>
@@ -55,6 +54,7 @@ namespace CodeBE_COMP1640.Repositories
                 existingArticle.IsApproved = item.IsApproved;
                 existingArticle.IsTopic = item.IsTopic;
                 existingArticle.TopicId = item.TopicId;
+                existingArticle.Title = item.Title;
 
                 // Update other properties if needed
 
@@ -80,6 +80,10 @@ namespace CodeBE_COMP1640.Repositories
         public IEnumerable<Article> GetAll()
         {
             return _context.Articles.ToList();
+        }
+        public IEnumerable<User> GetUsersByIds(IEnumerable<int> userIds)
+        {
+            return _context.Users.Where(u => userIds.Contains(u.UserId)).ToList();
         }
 
     }
