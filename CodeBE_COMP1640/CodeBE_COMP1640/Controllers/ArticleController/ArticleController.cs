@@ -74,15 +74,20 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
 
                 // Always set IsApproved to false
                 request.IsApproved = false;
+                request.IsTopic = false;
 
                 // Tạo entity từ request và đặt IsApproved là false
                 var articleEntity = request.ToEntity();
                 articleEntity.SubmissionTime = DateTime.Now;
                 articleEntity.StartDate = request.StartDate;
                 articleEntity.EndDate = request.EndDate;
-                articleEntity.Title = request.Title;
+
                 articleEntity.TopicId = request.TopicId;
 
+                if (!string.IsNullOrEmpty(request.Title))
+                {
+                    articleEntity.Title = request.Title;
+                }
                 // Không gán giá trị cho IsApproved trong đối tượng articleEntity
 
                 var data = _repositoryFactory.ArticleRepository.Create(articleEntity);
@@ -287,7 +292,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
         [Route(ArticleRoute.Approve), HttpPut, Authorize]
-        public async Task<IActionResult> ApproveArticle(int articleId)
+        public async Task<IActionResult> ApproveArticle(ArticleRequest request)
         {
             try
             {
@@ -297,7 +302,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 }
 
                 // Lấy article từ repository
-                var article = _repositoryFactory.ArticleRepository.Get(articleId);
+                var article = _repositoryFactory.ArticleRepository.Get(request.ArticleId);
                 if (article == null)
                 {
                     return NotFound("Article not found");
