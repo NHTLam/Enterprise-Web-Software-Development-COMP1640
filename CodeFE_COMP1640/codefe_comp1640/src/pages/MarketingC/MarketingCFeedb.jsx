@@ -6,6 +6,8 @@ import axios from "axios";
 import React from "react";
 import * as Toast from "../../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY || "";
+const token = localStorage.getItem("token");
+const userId = localStorage.getItem("user_id");
 
 function MarketingCFeedb(props) {
   const { id } = useParams();
@@ -123,18 +125,7 @@ function MarketingCFeedb(props) {
         context: feedback,
         feedbackTime: formattedFeedbackTime,
       };
-
-      const FeedbackIndex = feedbackList.findIndex(
-        (item) => item.userId === userId && item.articleId === articleId
-      );
-
-      if (FeedbackIndex !== -1) {
-        const updatedFeedbackList = [...feedbackList];
-        updatedFeedbackList[FeedbackIndex] = newFeedback;
-        setFeedbackList(updatedFeedbackList);
-      } else {
-        setFeedbackList([...feedbackList, newFeedback]);
-      }
+      setFeedbackList([...feedbackList, newFeedback]);
       setIsSending(true);
       setIsChanging(true);
     } catch (err) {
@@ -142,9 +133,40 @@ function MarketingCFeedb(props) {
     }
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     setIsSending(false);
     setIsChanging(false);
+    try {
+      const formattedFeedbackTime = feedbackTime.toISOString();
+      const updateFeedback = {
+        userId: userId,
+        articleId: articleId,
+        feedbackContent: feedback,
+        feedbackTime: formattedFeedbackTime,
+      };
+      const res = await axios.post(
+        `${API_BASE}/feedback/create`,
+        {
+          updateFeedback,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const FeedbackIndex = feedbackList.findIndex(
+        (item) => item.userId === userId && item.articleId === articleId
+      );
+      if (FeedbackIndex !== -1) {
+        const updatedFeedbackList = [...feedbackList];
+        updatedFeedbackList[FeedbackIndex] = updateFeedback;
+        setFeedbackList(updatedFeedbackList);
+      }
+      console.log("Update feedback success!" + res.data);
+    } catch (err) {
+      console.error("Error sending feedback:", err);
+    }
   };
 
   return (
