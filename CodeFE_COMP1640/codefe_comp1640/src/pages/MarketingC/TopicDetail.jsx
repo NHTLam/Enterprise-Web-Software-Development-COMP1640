@@ -2,6 +2,7 @@
 import PostInfor from "../../forms/PostInfor/PostInfor"
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from "react-router-dom";
 import Contribution from "../../forms/Contribution/Contribution";
 const API_BASE = process.env.REACT_APP_API_KEY;
 
@@ -50,7 +51,31 @@ function TopicDetail({ dataTopic }) {
               </div>
               <div className="modal-body">
                 <PostInfor dataTopic={dataTopic} />
-                <Contribution currentItems={finalData} />
+                {/* <Contribution currentItems={finalData} link={"/mk-manage-topic/contribute/view"} /> */}
+                {
+                  finalData.map((item,index)=>{
+                    return(
+                      <Link to={`/contribution/feedback/${item.articleId}`}>
+                            <div className="mb-3 w-100">
+                                <div class="card w-100">
+                                    <div class="row g-0">
+                                        <div class="col-md-4">
+                                            <img src="https://www.analyticsinsight.net/wp-content/uploads/2021/07/Technology-Can-Boost-Your-Business-Productivity.jpg" class="img-fluid rounded-start" alt="..." />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{item.title}</h5>
+                                                <p class="card-text">{item.content}</p>
+                                                <p class="card-text"><small class="btn btn-light">See moree ...</small></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
+                    )
+                  })
+                }
               </div>
               <div className="modal-footer">
                 <button

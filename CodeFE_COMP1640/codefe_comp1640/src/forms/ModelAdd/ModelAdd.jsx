@@ -44,7 +44,7 @@ function ModelAdd() {
                     isTopic: true,
                     fileData: null,
                     submissionTime: null,
-                    isApproved: true,
+                    isApproved: false,
                     comments: [],
                     department: null,
                     feedbacks: [],
@@ -62,6 +62,9 @@ function ModelAdd() {
             )
             if (res.status === 200) {
                 Toast.toastSuccess("Request Toast Success")
+                setTimeout(()=>{
+                    window.location.reload();
+                },4000)
                 console.log(res)
             }
         } catch {

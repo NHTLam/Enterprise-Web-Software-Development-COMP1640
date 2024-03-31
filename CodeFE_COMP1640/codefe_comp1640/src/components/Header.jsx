@@ -48,7 +48,7 @@ const Header = () => {
             setUserId(response.data);
 
             if (response.data !== undefined && response.data !== "undefined"){
-              console.log("Good userId: " + response.data)
+              
               const getListPath = async () => {
                 const response2 = await axios.post(`${API_BASE}/permission/list-path`, 
                 {
@@ -86,7 +86,7 @@ const Header = () => {
   else if (ValidAccessUrl === "/role/list-role"){
     ValidAccessUrl = "/manager_role"
   }
-  console.log("ValidAccessUrl: " + ValidAccessUrl + "\nlistPaths: " + listPath + "\nAllowAccessAdminPage:" + AllowAccessAdminPage)
+
 
   return (
     <div className="position-fixed top-0 start-0 end-0 z-3">

@@ -13,6 +13,7 @@ function ManageTopic() {
   const [data, setData] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
 
+  
   const [TopicInfor, setTopicInfor] = useState([]);
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -38,6 +39,7 @@ function ManageTopic() {
       setTopicApproved(data.filter(data => data.isApproved === true));
     }
   },[data])
+
   return (
     <div className="container">
       <h1>Manage Topic</h1>
@@ -122,7 +124,7 @@ function ManageTopic() {
         })
       }
       <ModelEdit dataEdit={dataEdit}/>
-      <TopicDetail dataTopic={TopicInfor}/>
+      <TopicDetail dataTopic={TopicInfor} />
     </div>
   );
 }
