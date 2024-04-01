@@ -17,7 +17,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
         public DateTime? SubmissionTime { get; set; }
         public bool? IsLateSubmissionAllowed { get; set; }
         public bool IsApproved { get; set; } = false;
-        public bool IsTopic { get; set; } = false;
+        public bool IsTopic { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string? Title { get; set; }
