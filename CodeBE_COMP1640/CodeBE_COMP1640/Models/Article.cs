@@ -17,7 +17,7 @@ public partial class Article
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
 
-    public string Title { get; set; }
+    public string? Title { get; set; }
     public bool? IsLateSubmissionAllowed { get; set; }
 
     public bool IsApproved { get; set; }
