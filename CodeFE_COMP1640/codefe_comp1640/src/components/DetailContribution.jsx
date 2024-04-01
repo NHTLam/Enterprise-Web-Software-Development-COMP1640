@@ -5,7 +5,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 const DetailContribution = () => {
-
   const { contributionId } = useParams();
   const [comment, setComment] = useState("");
   const [listCmt, setListCmt] = useState([]);
@@ -14,14 +13,14 @@ const DetailContribution = () => {
   const navigate = useNavigate();
   const handleSubmitComment = async (e) => {
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("user_id");
+    const user = localStorage.getItem("user_id");
     if (e.key === "Enter") {
       try {
         const response = await axios.post(
           `${API_BASE}/comment/create`,
           {
             articleId: articleId,
-            userId: userId,
+            userId: user,
             commentContent: comment,
           },
           {
@@ -49,11 +48,15 @@ const DetailContribution = () => {
     const listCmt = async () => {
       const token = localStorage.getItem("token");
       try {
-        const res = await axios.post(`${API_BASE}/comment/list`, null, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await axios.post(
+          `${API_BASE}/comment/list/${contributionId}`,
+          null,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (res.status === 403) {
           setTimeout(() => {
             navigate("/detail-contribution");
@@ -66,62 +69,62 @@ const DetailContribution = () => {
       }
     };
     listCmt();
-  }, []);
+  }, [listCmt]);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
-    axios.get(`${API_BASE}/article/get/${contributionId}`, {
-      headers: {
-        'ngrok-skip-browser-warning': 'true',
-        Authorization: `Bearer ${token}`
-      }
-    }).then(data => {
-      setData(data.data.data)
-    })
-      .catch(err => console.log(err))
-  }, [data])
-
-
+    axios
+      .get(`${API_BASE}/article/get/${contributionId}`, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((data) => {
+        setData(data.data.data);
+      })
+      .catch((err) => console.log(err));
+  }, [data]);
 
   //   View detail contribution and comment
   return (
     <div className="container">
       {
-        
-            <div>
-              <table className="table table-striped mt-5">
-                <thead>
-                  <tr>
-                    <th scope="col" className="col-3"></th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">Title</th>
-                    <td>{data.title}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Description</th>
-                    <td>
-                      <h1>{data.content}</h1>
-                      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                      Dignissimos suscipit quaerat dolores omnis distinctio sint fuga.
-                      Voluptas, reprehenderit! Ullam nisi, maiores sunt voluptate,
-                      repellat tenetur corporis obcaecati et similique consequuntur
-                      minus error eligendi cumque ex voluptatibus adipisci, facilis
-                      sit provident culpa. Sequi veniam tempore sapiente perferendis
-                      ut, est totam dolorum voluptatibus ex enim quia commodi quam
-                      iste maxime quaerat quasi dolorem saepe. Consequatur itaque
-                      dicta commodi nemo voluptatem tempora nulla porro voluptas. Ut
-                      iste possimus, cumque voluptatibus nostrum, voluptates ex magni
-                      quos odit, eaque voluptatum et aut pariatur a nobis distinctio
-                      aliquam eius id corrupti veritatis temporibus ipsam dolor sit.
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-        
+        <div>
+          <table className="table table-striped mt-5">
+            <thead>
+              <tr>
+                <th scope="col" className="col-3"></th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Title</th>
+                <td>{data.title}</td>
+              </tr>
+              <tr>
+                <th scope="row">Description</th>
+                <td>
+                  <h1>{data.content}</h1>
+                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                  Dignissimos suscipit quaerat dolores omnis distinctio sint
+                  fuga. Voluptas, reprehenderit! Ullam nisi, maiores sunt
+                  voluptate, repellat tenetur corporis obcaecati et similique
+                  consequuntur minus error eligendi cumque ex voluptatibus
+                  adipisci, facilis sit provident culpa. Sequi veniam tempore
+                  sapiente perferendis ut, est totam dolorum voluptatibus ex
+                  enim quia commodi quam iste maxime quaerat quasi dolorem
+                  saepe. Consequatur itaque dicta commodi nemo voluptatem
+                  tempora nulla porro voluptas. Ut iste possimus, cumque
+                  voluptatibus nostrum, voluptates ex magni quos odit, eaque
+                  voluptatum et aut pariatur a nobis distinctio aliquam eius id
+                  corrupti veritatis temporibus ipsam dolor sit.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       }
 
       <hr />

@@ -60,6 +60,9 @@ const App = () => {
             </Layout>
           }
         />
+
+        <Route path="/contribute/view/:id" element={<MarketingCFeedb />} />
+
         <Route
           path="/history"
           element={

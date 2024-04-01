@@ -9,14 +9,25 @@ const API_BASE = process.env.REACT_APP_API_KEY || "";
 const token = localStorage.getItem("token");
 const userId = localStorage.getItem("user_id");
 
+// {
+//   "feedbackId": 89,
+//   "userId": 2,
+//   "articleId": 328,
+//   "feedbackContent": "1321312",
+//   "feedbackTime": "2024-03-31T14:57:08.997",
+//   "article": null,
+//   "user": null
+// },
+
 function MarketingCFeedb(props) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState("");
-  const [articleId, setArticleId] = useState(6);
+  const [feedbackId, setFeedbackId] = useState(null);
+  const [articleId, setArticleId] = useState(id);
   const [feedbackTime, setFeedbackTime] = useState(new Date());
   const [isSending, setIsSending] = useState(false);
-  const [isChanging, setIsChanging] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
   const onFileChange = (files) => {
     console.log(files);
@@ -24,10 +35,10 @@ function MarketingCFeedb(props) {
   const [imageList, setImageList] = useState([]);
   const fileInputRef = useRef(null);
   const [postData, setPostData] = useState();
-  const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("user_id");
+  // const token = localStorage.getItem("token");
+  // const userId = localStorage.getItem("user_id");
   useEffect(() => {
-    console.log("id", id)
+    console.log("id", id);
     axios
       .get(`${API_BASE}/article/get/${id}`, {
         headers: {
@@ -92,6 +103,7 @@ function MarketingCFeedb(props) {
 
   //Feedback
   const handleFeedback = async () => {
+    setIsSending(true);
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
       const response = await axios.post(
@@ -108,7 +120,6 @@ function MarketingCFeedb(props) {
           },
         }
       );
-
       if (response.status === 403) {
         console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
@@ -116,26 +127,27 @@ function MarketingCFeedb(props) {
           navigate("/");
         }, 1000);
       }
-
       console.log("Create feedback success!");
       console.log("Feedback: ", response.data);
+      const fbId = response.data.feedbackId;
+      setFeedbackId(fbId);
       const newFeedback = {
         userId: userId,
         articleId: articleId,
-        context: feedback,
+        feedbackContent: feedback,
         feedbackTime: formattedFeedbackTime,
       };
       setFeedbackList([...feedbackList, newFeedback]);
-      setIsSending(true);
-      setIsChanging(true);
     } catch (err) {
       console.error("Error sending feedback:", err);
+    } finally {
+      setIsSending(false);
     }
   };
 
   const handleUpdate = async () => {
     setIsSending(false);
-    setIsChanging(false);
+    setIsUpdating(true);
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
       const updateFeedback = {
@@ -144,28 +156,29 @@ function MarketingCFeedb(props) {
         feedbackContent: feedback,
         feedbackTime: formattedFeedbackTime,
       };
-      const res = await axios.post(
-        `${API_BASE}/feedback/create`,
-        {
-          updateFeedback,
-        },
+      const res = await axios.put(
+        `${API_BASE}/feedback/update/${feedbackId}`,
+        updateFeedback,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      const FeedbackIndex = feedbackList.findIndex(
-        (item) => item.userId === userId && item.articleId === articleId
-      );
-      if (FeedbackIndex !== -1) {
-        const updatedFeedbackList = [...feedbackList];
-        updatedFeedbackList[FeedbackIndex] = updateFeedback;
-        setFeedbackList(updatedFeedbackList);
-      }
-      console.log("Update feedback success!" + res.data);
+      const updatedFeedbackList = feedbackList.map((item) => {
+        if (item.feedbackId === feedbackId) {
+          return {
+            ...item,
+            ...updateFeedback,
+          };
+        }
+        return item;
+      });
+      setFeedbackList(updatedFeedbackList);
+      console.log("Update feedback: " + res.data);
+      setIsUpdating(false);
     } catch (err) {
-      console.error("Error sending feedback:", err);
+      console.error("Error updating feedback:", err);
     }
   };
 
@@ -261,7 +274,7 @@ function MarketingCFeedb(props) {
                     rows="5"
                     value={feedback}
                     onChange={(e) => setFeedback(e.target.value)}
-                    disabled={isSending ? true : false}
+                    disabled={isSending || isUpdating}
                   ></textarea>
                 </td>
               </tr>
@@ -271,29 +284,20 @@ function MarketingCFeedb(props) {
             <button
               className="btn btn-group btn-outline-primary mr-2"
               type="submit"
-              onClick={isChanging ? handleUpdate : handleFeedback}
+              onClick={() => handleFeedback()}
             >
-              {isChanging ? "update" : "save"}
+              Save feedback
+            </button>
+            <button
+              className="btn btn-group btn-outline-danger mr-2 ms-2"
+              type="submit"
+              onClick={handleUpdate}
+            >
+              {/* sửa lại save chắc chắn disabled, khi ấn edit sẽ popup rồi sửa ấn update rồi */}
+              Update feedback
             </button>
           </div>
         </div>
-        <hr />
-        <table className="table table-striped mt-2 text-center">
-          <tr>
-            <th>userID</th>
-            <th>ArticleID</th>
-            <th>Date</th>
-            <th>Feedback</th>
-          </tr>
-          {feedbackList.map((feedbackk) => (
-            <tr key={feedbackk.userId}>
-              <td>{feedbackk.userId}</td>
-              <td>{feedbackk.articleId}</td>
-              <td>{feedbackk.feedbackTime}</td>
-              <td>{feedbackk.context}</td>
-            </tr>
-          ))}
-        </table>
       </div>
     </div>
   );
