@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 const API_BASE = process.env.REACT_APP_API_KEY;
+const token = localStorage.getItem("token");
+const user = localStorage.getItem("user_id");
 
 const DetailContribution = () => {
   const { contributionId } = useParams();
@@ -11,9 +13,8 @@ const DetailContribution = () => {
   const [articleId, setArticleId] = useState(contributionId);
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+  console.log("user: ", user);
   const handleSubmitComment = async (e) => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user_id");
     if (e.key === "Enter") {
       try {
         const response = await axios.post(
@@ -49,8 +50,8 @@ const DetailContribution = () => {
       const token = localStorage.getItem("token");
       try {
         const res = await axios.post(
-          `${API_BASE}/comment/list/${contributionId}`,
-          null,
+          `${API_BASE}/comment/list-by-artical-id`,
+          { articleId },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -107,19 +108,6 @@ const DetailContribution = () => {
                 <th scope="row">Description</th>
                 <td>
                   <h1>{data.content}</h1>
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Dignissimos suscipit quaerat dolores omnis distinctio sint
-                  fuga. Voluptas, reprehenderit! Ullam nisi, maiores sunt
-                  voluptate, repellat tenetur corporis obcaecati et similique
-                  consequuntur minus error eligendi cumque ex voluptatibus
-                  adipisci, facilis sit provident culpa. Sequi veniam tempore
-                  sapiente perferendis ut, est totam dolorum voluptatibus ex
-                  enim quia commodi quam iste maxime quaerat quasi dolorem
-                  saepe. Consequatur itaque dicta commodi nemo voluptatem
-                  tempora nulla porro voluptas. Ut iste possimus, cumque
-                  voluptatibus nostrum, voluptates ex magni quos odit, eaque
-                  voluptatum et aut pariatur a nobis distinctio aliquam eius id
-                  corrupti veritatis temporibus ipsam dolor sit.
                 </td>
               </tr>
             </tbody>
@@ -142,7 +130,9 @@ const DetailContribution = () => {
         </div>
         {listCmt.map((cmt) => (
           <div key={cmt.userId} className="bg-light rounded-4 p-0 mt-2">
-            <h4 className="fw-bold text-black ms-3">{cmt.userId}</h4>
+            <h4 className="fw-bold text-black ms-3">
+              {cmt.userForComment.userName}
+            </h4>
             <p className="text-black ms-3">{cmt.commentContent}</p>
           </div>
         ))}

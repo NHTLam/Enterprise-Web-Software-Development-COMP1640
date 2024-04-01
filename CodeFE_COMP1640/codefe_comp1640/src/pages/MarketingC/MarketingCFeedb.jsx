@@ -27,7 +27,6 @@ function MarketingCFeedb(props) {
   const [articleId, setArticleId] = useState(id);
   const [feedbackTime, setFeedbackTime] = useState(new Date());
   const [isSending, setIsSending] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
   const onFileChange = (files) => {
     console.log(files);
@@ -35,8 +34,6 @@ function MarketingCFeedb(props) {
   const [imageList, setImageList] = useState([]);
   const fileInputRef = useRef(null);
   const [postData, setPostData] = useState();
-  // const token = localStorage.getItem("token");
-  // const userId = localStorage.getItem("user_id");
   useEffect(() => {
     console.log("id", id);
     axios
@@ -49,11 +46,9 @@ function MarketingCFeedb(props) {
       })
       .then((data) => {
         setPostData(data.data.data);
-        // console.log(data.data)
       })
       .catch((err) => console.log(err));
-  },);
-  // console.log(postData);
+  });
   if (!postData) {
     return <></>;
   }
@@ -140,14 +135,11 @@ function MarketingCFeedb(props) {
       setFeedbackList([...feedbackList, newFeedback]);
     } catch (err) {
       console.error("Error sending feedback:", err);
-    } finally {
-      setIsSending(false);
     }
   };
 
-  const handleUpdate = async () => {
-    setIsSending(false);
-    setIsUpdating(true);
+  const handleUpdate = async (e) => {
+    e.preventDefault();
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
       const updateFeedback = {
@@ -176,7 +168,7 @@ function MarketingCFeedb(props) {
       });
       setFeedbackList(updatedFeedbackList);
       console.log("Update feedback: " + res.data);
-      setIsUpdating(false);
+
     } catch (err) {
       console.error("Error updating feedback:", err);
     }
@@ -274,7 +266,7 @@ function MarketingCFeedb(props) {
                     rows="5"
                     value={feedback}
                     onChange={(e) => setFeedback(e.target.value)}
-                    disabled={isSending || isUpdating}
+                    disabled={isSending ? true : false}
                   ></textarea>
                 </td>
               </tr>
@@ -290,14 +282,68 @@ function MarketingCFeedb(props) {
             </button>
             <button
               className="btn btn-group btn-outline-danger mr-2 ms-2"
-              type="submit"
-              onClick={handleUpdate}
+              data-bs-toggle="modal"
+              data-bs-target="#updateFeedback"
+              onClick={() => setFeedbackId(feedbackList.feedbackId)}
             >
-              {/* sửa lại save chắc chắn disabled, khi ấn edit sẽ popup rồi sửa ấn update rồi */}
-              Update feedback
+              Edit feedback
             </button>
           </div>
         </div>
+        {/* Modal */}
+        <div
+          class="modal fade"
+          id="updateFeedback"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Modal title
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <label htmlFor="feedback" className="form-label">
+                  Feedback
+                </label>
+                <input
+                  name="feedback"
+                  type="text"
+                  className="form-control"
+                  id="feedback"
+                  value={feedbackList.feedbackContent}
+                  onChange={(e) => setFeedback(e.target.value)}
+                />
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  class="btn btn-primary"
+                  type="submit"
+                  onClick={() => handleUpdate()}
+                >
+                  Update feedback
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Modal */}
       </div>
     </div>
   );
