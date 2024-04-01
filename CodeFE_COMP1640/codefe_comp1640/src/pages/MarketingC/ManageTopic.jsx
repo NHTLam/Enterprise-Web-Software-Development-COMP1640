@@ -12,9 +12,10 @@ function ManageTopic() {
   const [topicApproved, setTopicApproved] = useState([]);
   const [data, setData] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
-
+  const [DataFromChild, setDataFromChild] = useState([]);
   
   const [TopicInfor, setTopicInfor] = useState([]);
+  console.log("data from child: " , DataFromChild)
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios.get(`${API_BASE}/article/GetAllArticle`, {
@@ -36,10 +37,12 @@ function ManageTopic() {
 
   useEffect(() => {
     if (Array.isArray(data)) {
-      setTopicApproved(data.filter(data => data.isApproved === true));
+      setTopicApproved(data.filter(data => data.isApproved === true && data.isTopic === true));
     }
   },[data])
-
+  const handleDataFromChild = (data) => {
+    setDataFromChild(data);
+  };
   return (
     <div className="container">
       <h1>Manage Topic</h1>
@@ -124,7 +127,7 @@ function ManageTopic() {
         })
       }
       <ModelEdit dataEdit={dataEdit}/>
-      <TopicDetail dataTopic={TopicInfor} />
+      <TopicDetail dataTopic={TopicInfor} sendDataToParent={handleDataFromChild}  />
     </div>
   );
 }

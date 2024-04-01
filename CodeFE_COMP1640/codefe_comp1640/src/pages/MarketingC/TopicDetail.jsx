@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import Contribution from "../../forms/Contribution/Contribution";
 const API_BASE = process.env.REACT_APP_API_KEY;
 
-function TopicDetail({ dataTopic }) {
+function TopicDetail({ dataTopic, sendDataToParent }) {
   const [data, setData] = useState([]);
   const [finalData, setfinalData] = useState([]);
   useEffect(() => {
@@ -27,6 +27,10 @@ function TopicDetail({ dataTopic }) {
     setfinalData(data.filter(data => data.topicId === dataTopic.articleId))
   }
   }, [dataTopic])
+  console.log("final Data", finalData)
+  const sendDataToParentOnChange = () => {
+    sendDataToParentOnChange(finalData);
+  };
   return (
     <div>
       <form>
@@ -55,7 +59,7 @@ function TopicDetail({ dataTopic }) {
                   finalData.map((item,index)=>{
                     return(
                       <Link to={`/contribute/view/${item.articleId}`}>
-                            <div className="mb-3 w-100">
+                            <div className="mb-3 w-100" onChange={sendDataToParentOnChange}>
                                 <div class="card w-100">
                                     <div class="row g-0">
                                         <div class="col-md-4">
