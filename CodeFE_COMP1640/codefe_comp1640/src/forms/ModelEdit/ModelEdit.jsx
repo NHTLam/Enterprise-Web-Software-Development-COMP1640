@@ -72,7 +72,7 @@ function ModelEdit({dataEdit}) {
                     className="modal fade"
                     id="editTopic"
                     aria-labelledby="exampleModalLabel"
-                    aria-hidden=""
+                    aria-hidden="true"
                 >
                     <div className="modal-dialog modal-lg">
                         <div className="modal-content">

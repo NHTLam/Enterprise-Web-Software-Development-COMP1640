@@ -9,7 +9,6 @@ const API_BASE = process.env.REACT_APP_API_KEY;
 
 function StAddPost() {
     const {topicId} = useParams();
-    console.log("topicid",topicId)
     const [data, setData] = useState([]);
     useEffect(() => {
         const token = localStorage.getItem("token");
