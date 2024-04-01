@@ -141,7 +141,9 @@ namespace CodeBE_COMP1640.Repositories
                     NewPermissonRoleMapping.PermissionId = PermissonRoleMapping.PermissionId;
                     PermissonRoleMappings.Add(NewPermissonRoleMapping);
                 }
-                await DataContext.BulkMergeAsync(PermissonRoleMappings);
+                await DataContext.PermissonRoleMappings.AddRangeAsync(PermissonRoleMappings);
+                await DataContext.SaveChangesAsync();
+                //await DataContext.BulkMergeAsync(PermissonRoleMappings);
             }
         }
     }

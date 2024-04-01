@@ -26,13 +26,37 @@ namespace CodeBE_COMP1640.Repositories
 
         public async Task<List<Comment>> List()
         {
-            List<Comment> Comments = await DataContext.Comments.AsNoTracking().ToListAsync();
+            List<Comment> Comments = await DataContext.Comments.AsNoTracking().Select(x => new Comment()
+            {
+                CommentId = x.CommentId,
+                ArticleId = x.ArticleId,
+                UserId = x.UserId,
+                CommentContent = x.CommentContent,
+                CommentTime = x.CommentTime,
+                User = x.User == null ? null : new User()
+                {
+                    UserId = x.User.UserId,
+                    Username = x.User.Username,
+                },
+            }).ToListAsync();
             return Comments;
         }
 
         public async Task<List<Comment>> List(long ArticalId)
         {
-            List<Comment> Comments = (await List()).Where(x => x.ArticleId == ArticalId).ToList();
+            List<Comment> Comments = (await List()).Where(x => x.ArticleId == ArticalId).Select(x => new Comment()
+            {
+                CommentId = x.CommentId,
+                ArticleId = x.ArticleId,
+                UserId = x.UserId,
+                CommentContent = x.CommentContent,
+                CommentTime = x.CommentTime,
+                User = x.User == null ? null : new User()
+                {
+                    UserId = x.User.UserId,
+                    Username = x.User.Username,
+                },
+            }).ToList();
             return Comments;
         }
 
