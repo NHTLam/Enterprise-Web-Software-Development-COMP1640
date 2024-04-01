@@ -88,7 +88,13 @@ const PostSubmit = (props) => {
         setTimeout(() => {
           navigate("/");
         }, 1000);
+      }else if(res.status === 400){
+        Toast.toastErorr("Submit failed");
       }
+      Toast.toastSuccess("submit success")
+      setTimeout(()=>{
+        navigate(`/contribute/view/edit/${res.data.data.articleId}`);
+      },3000)
     } catch (error) {
       Toast.toastErorr("Submit Erorr");
       console.error("Error:", error);

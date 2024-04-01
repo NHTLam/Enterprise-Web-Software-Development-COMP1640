@@ -11,7 +11,8 @@ const Header = () => {
   const [islogin, setIsLogin] = useState(Boolean);
   const [userId, setUserId] = useState();
   const [listPath, setListPath] = useState([]);
-
+  const [userData, setUserData] = useState();
+  
   const pathsFunctionAdmin = [
     '/dashboard/get-data',
     '/app-user/list',
@@ -72,6 +73,22 @@ const Header = () => {
     navigate("/");
   }, [])
 
+  useEffect(() => {
+    const id = localStorage.getItem("user_id");
+        if (userId !== "undefined" && userId !== null && userId !== undefined) {
+            const token = localStorage.getItem("token");
+            const getAccount = async () => {
+                const response = await axios.post(`${API_BASE}/app-user/get`, { userId: userId }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setUserData(response.data);
+            }
+            getAccount();
+        }
+}, [userId]);
+console.log("user data goted: ", userData);
   const AllowAccessAdminPage = listPath.some(x => pathsFunctionAdmin.includes(x))
   var ValidAccessUrl = listPath.filter(x => pathsFunctionAdmin.includes(x))[0]
   if (ValidAccessUrl === '/dashboard/get-data'){
@@ -100,9 +117,11 @@ const Header = () => {
               <div className=" " to="/login">
                 <Dropdown>
                   <Dropdown.Toggle
-                    className="btn btn-light border border-primary me-2"
+                    className="btn btn-light border border-primary me-2 "
                     id="dropdown-basic"
-                  ></Dropdown.Toggle>
+                  >
+                    {userData?<p>{userData.username}</p>: <p>Loading...</p> }
+                  </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item>
                       <Link to="/me">

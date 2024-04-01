@@ -30,20 +30,24 @@ function ManageTopic() {
   console.log("topicData", topicData)
 
   const handleApproveTopic = (item) => {
-    const token = localStorage.getItem("token");
-    axios.put(`${API_BASE}/article/Approved`,{
-      articleId: item.articleId,
-    } ,{
-      headers: {
-        'ngrok-skip-browser-warning': 'true',
-        Authorization: `Bearer ${token}`
+    try{
+      const token = localStorage.getItem("token");
+      const res = axios.put(`${API_BASE}/article/Approved`,{
+        articleId: item.articleId,
+      } ,{
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if(res.status === 200){
+        Toast.toastSuccess(`Approved ${item.title} Successfully`)
+        window.location.reload()
       }
-    }).then(data => {
-      console.log("approved", data)
-      Toast.toastSuccess(`Approved ${item.title} Successfully`)
-    })
-      .catch(err => console.log(err))
-      Toast.toastErorr(err => console.log(err))
+    }
+    catch(err){
+      Toast.toastErorr("Approve Failed")
+    }
    }
 
   return (
@@ -94,7 +98,7 @@ function ManageTopic() {
                       onClick={()=>setDataEdit(item)}
                     >
                       {" "}
-                      Edit
+                      View
                     </button>
                   </td>
 
