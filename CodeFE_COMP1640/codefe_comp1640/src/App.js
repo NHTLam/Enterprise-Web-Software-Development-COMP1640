@@ -82,11 +82,7 @@ const App = () => {
         />
         <Route
           path="/contribution/detail/:contributionId"
-          element={
-            <Layout>
-              <DetailContribution />
-            </Layout>
-          }
+          element={<DetailContribution />}
         />
 
         {/* Marketing Conidator ROUTES */}
@@ -115,7 +111,7 @@ const App = () => {
           path="/manager_manage"
           element={
             <LayoutAdmin>
-              <ManageTopic/>
+              <ManageTopic />
             </LayoutAdmin>
           }
         />
