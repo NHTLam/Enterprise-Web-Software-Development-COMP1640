@@ -17,6 +17,8 @@ public partial class CommentDTO
 
     public DateTime? CommentTime { get; set; }
 
+    public UserForCommentDTO UserForComment { get; set; }
+
     public CommentDTO() { }
 
     public CommentDTO(Comment Comment)
@@ -26,5 +28,15 @@ public partial class CommentDTO
         UserId = Comment.UserId;
         CommentContent = Comment.CommentContent;
         CommentTime = Comment.CommentTime;
+        UserForComment = Comment.User == null ? null : new UserForCommentDTO(Comment.User);
+    }
+}
+
+public class UserForCommentDTO
+{
+    public string? UserName { get; set; }
+    public UserForCommentDTO() { }
+    public UserForCommentDTO(User user) {
+        this.UserName = user.Username;
     }
 }
