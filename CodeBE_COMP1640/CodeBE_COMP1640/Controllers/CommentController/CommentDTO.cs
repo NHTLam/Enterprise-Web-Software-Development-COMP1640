@@ -17,7 +17,7 @@ public partial class CommentDTO
 
     public DateTime? CommentTime { get; set; }
 
-    public UserForCommentDTO UserForComment { get; set; }
+    public UserForCommentDTO? UserForComment { get; set; }
 
     public CommentDTO() { }
 
