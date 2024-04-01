@@ -6,7 +6,6 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 const API_BASE = process.env.REACT_APP_API_KEY;
-const userId = localStorage.getItem("user_id");
 
 
 function ModelAdd() {
@@ -17,24 +16,22 @@ function ModelAdd() {
     const token = localStorage.getItem("token");
 
     useEffect(() => {
-       const res =  axios.post(`${API_BASE}/app-user/get`,
+        const userId = localStorage.getItem("user_id");
+        axios.post(`${API_BASE}/app-user/get`,
             { userId: userId },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
             }
-        )
-        if(res.status === 200){
-        setUserData(res.data); 
-        setTimeout(() => {
-            window.location.reload();
-        }, 4000);
-    }
+        ).then(data => setUserData(data.data)).catch(err => console.log(err))
     }, [])
-
+    console.log("test data: ", userData)
+   
+    console.log("departmentId: ", userData.departmentId)
     // console.log(userData)
     const handleNewTopic = async () => {
+        const userId = localStorage.getItem("user_id");
         try {
             const res = await axios.post(
                 `${API_BASE}/article/create`,
@@ -62,9 +59,9 @@ function ModelAdd() {
             )
             if (res.status === 200) {
                 Toast.toastSuccess("Request Toast Success")
-                setTimeout(()=>{
+                setTimeout(() => {
                     window.location.reload();
-                },4000)
+                }, 4000)
                 console.log(res)
             }
         } catch {
