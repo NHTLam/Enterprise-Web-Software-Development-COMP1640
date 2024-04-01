@@ -3,11 +3,12 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import "./Style.css";
 import imageInput from "../../assets/add_image.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import * as Toast from "../../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 const PostSubmit = (props) => {
+  const {topicId} = useParams()
   //decalre value
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -20,12 +21,27 @@ const PostSubmit = (props) => {
   const [disable, setDisable] = useState(true);
   const [fileData, setFileData] = useState();
   const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("user_id");
 
   //functions
   const handleChange = (e) => {
     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios.get(`${API_BASE}/article/get/${topicId}`, {
+        headers: {
+            'ngrok-skip-browser-warning': 'true',
+            Authorization: `Bearer ${token}`
+            
+        },staleTime: 0
+    })
+        .then(data => {
+            setDepartmentId(data.data.data.departmentId)
+            // console.log(data.data)
+        })
+        .catch(err => console.log(err))
+},[])
 
   const handleCheckBox = () => {
     if (checkBox) {
@@ -40,6 +56,7 @@ const PostSubmit = (props) => {
   const handleClickSubmit = async (event) => {
     event.preventDefault();
 
+    const userId = localStorage.getItem("user_id");
     const token = localStorage.getItem("token");
     if (!selectedFile) {
       alert("Please select a file to upload.");
@@ -52,6 +69,7 @@ const PostSubmit = (props) => {
         `${API_BASE}/article/create`,
         {
           departmentId,
+          topicId: +topicId,
           userId: userId,
           ...credentials,
         },
