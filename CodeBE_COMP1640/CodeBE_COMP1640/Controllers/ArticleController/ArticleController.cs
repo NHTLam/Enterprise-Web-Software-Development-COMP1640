@@ -74,7 +74,6 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
 
                 // Always set IsApproved to false
                 request.IsApproved = false;
-                request.IsTopic = false;
 
                 // Tạo entity từ request và đặt IsApproved là false
                 var articleEntity = request.ToEntity();
