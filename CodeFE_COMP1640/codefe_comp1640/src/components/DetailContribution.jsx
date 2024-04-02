@@ -30,17 +30,15 @@ const DetailContribution = () => {
             },
           }
         );
-        if (response.status === 403) {
-          setTimeout(() => {
-            navigate("/");
-          }, 1000);
-        }
-
-        const newComment = [...listCmt, response.data];
-        setListCmt(newComment);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1);
         setComment("");
       } catch (error) {
         console.error("Error creating comment:", error); // Handle network or other errors
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
       }
     }
   };
@@ -82,11 +80,12 @@ const DetailContribution = () => {
         },
       })
       .then((data) => {
-        setData(data.data.data);
+        // setData(data.data.data);
       })
       .catch((err) => console.log(err));
   }, [data]);
 
+  console.log("Listcmt", listCmt);
   //   View detail contribution and comment
   return (
     <div className="container">
@@ -102,13 +101,11 @@ const DetailContribution = () => {
             <tbody>
               <tr>
                 <th scope="row">Title</th>
-                <td>{data.title}</td>
+                {/* <td>{data.title}</td> */}
               </tr>
               <tr>
                 <th scope="row">Description</th>
-                <td>
-                  <h1>{data.content}</h1>
-                </td>
+                <td>{/* <h1>{data.content}</h1> */}</td>
               </tr>
             </tbody>
           </table>
@@ -131,9 +128,9 @@ const DetailContribution = () => {
         {listCmt.map((cmt) => (
           <div key={cmt.userId} className="bg-light rounded-4 p-0 mt-2">
             <h4 className="fw-bold text-black ms-3">
-              {cmt.userForComment.userName}
+              Username: {cmt.userForComment.userName}
             </h4>
-            <p className="text-black ms-3">{cmt.commentContent}</p>
+            <p className="text-black ms-3">Comment: {cmt.commentContent}</p>
           </div>
         ))}
       </div>

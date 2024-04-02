@@ -23,78 +23,79 @@ function MarketingCFeedb(props) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState("");
-  const [feedbackId, setFeedbackId] = useState(null);
+  const [updateFeedback, setUpdateFeedback] = useState("");
+  const [feedbackId, setFeedbackId] = useState({});
   const [articleId, setArticleId] = useState(id);
   const [feedbackTime, setFeedbackTime] = useState(new Date());
   const [isSending, setIsSending] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
-  const onFileChange = (files) => {
-    console.log(files);
-  };
-  const [imageList, setImageList] = useState([]);
-  const fileInputRef = useRef(null);
-  const [postData, setPostData] = useState();
-  useEffect(() => {
-    console.log("id", id);
-    axios
-      .get(`${API_BASE}/article/get/${id}`, {
-        headers: {
-          "ngrok-skip-browser-warning": "true",
-          Authorization: `Bearer ${token}`,
-        },
-        staleTime: 0,
-      })
-      .then((data) => {
-        setPostData(data.data.data);
-      })
-      .catch((err) => console.log(err));
-  });
-  if (!postData) {
-    return <></>;
-  }
+  // const onFileChange = (files) => {
+  //   console.log(files);
+  // };
+  // const [imageList, setImageList] = useState([]);
+  // const fileInputRef = useRef(null);
+  // const [postData, setPostData] = useState();
+  // useEffect(() => {
+  //   console.log("id", id);
+  //   axios
+  //     .get(`${API_BASE}/article/get/${id}`, {
+  //       headers: {
+  //         "ngrok-skip-browser-warning": "true",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       staleTime: 0,
+  //     })
+  //     .then((data) => {
+  //       setPostData(data.data.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // });
+  // if (!postData) {
+  //   return <></>;
+  // }
 
-  const handleClickDelete = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.delete(`${API_BASE}/article/delete`);
-      if (response.status === 200) {
-        navigate("/st_submit_post");
-        console.log("delete sucess");
-      } else if (response.status === 400) {
-        console.log("some thing went wrong");
-      } else if (response.status === 403) {
-        console.log("No Permission!");
-        Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-      }
-    } catch (err) {
-      console.log("Error " + err);
-    }
-  };
-  function onFileInput(e) {
-    const files = e.target.files;
-    if (files.length === 0) return;
-    for (let i = 0; i < files.length; i++) {
-      // if (files[i].type.split('/')[0] !== 'images') continue;
-      if (!imageList.some((e) => e.name === files[i].name)) {
-        setImageList((preImages) => [
-          ...preImages,
-          {
-            name: files[i].name,
-            url: URL.createObjectURL(files[i]),
-          },
-        ]);
-      }
-    }
-  }
-  const fileRemove = (file) => {
-    const updatedList = [...imageList];
-    updatedList.splice(imageList.indexOf(file), 1);
-    setImageList(updatedList);
-    props.onFileChange(updatedList);
-  };
+  // const handleClickDelete = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.delete(`${API_BASE}/article/delete`);
+  //     if (response.status === 200) {
+  //       navigate("/st_submit_post");
+  //       console.log("delete sucess");
+  //     } else if (response.status === 400) {
+  //       console.log("some thing went wrong");
+  //     } else if (response.status === 403) {
+  //       console.log("No Permission!");
+  //       Toast.toastErorr("You do not have permission to perform this action");
+  //       setTimeout(() => {
+  //         navigate("/");
+  //       }, 1000);
+  //     }
+  //   } catch (err) {
+  //     console.log("Error " + err);
+  //   }
+  // };
+  // function onFileInput(e) {
+  //   const files = e.target.files;
+  //   if (files.length === 0) return;
+  //   for (let i = 0; i < files.length; i++) {
+  //     // if (files[i].type.split('/')[0] !== 'images') continue;
+  //     if (!imageList.some((e) => e.name === files[i].name)) {
+  //       setImageList((preImages) => [
+  //         ...preImages,
+  //         {
+  //           name: files[i].name,
+  //           url: URL.createObjectURL(files[i]),
+  //         },
+  //       ]);
+  //     }
+  //   }
+  // }
+  // const fileRemove = (file) => {
+  //   const updatedList = [...imageList];
+  //   updatedList.splice(imageList.indexOf(file), 1);
+  //   setImageList(updatedList);
+  //   props.onFileChange(updatedList);
+  // };
 
   //Feedback
   const handleFeedback = async () => {
@@ -124,22 +125,29 @@ function MarketingCFeedb(props) {
       }
       console.log("Create feedback success!");
       console.log("Feedback: ", response.data);
+      setFeedbackId(response.data);
       const fbId = response.data.feedbackId;
-      setFeedbackId(fbId);
+      console.log("Feedback ID: ", fbId);
+      console.log("Id", feedbackId);
+
       const newFeedback = {
         userId: userId,
         articleId: articleId,
         feedbackContent: feedback,
         feedbackTime: formattedFeedbackTime,
+        feedbackId: fbId,
       };
-      setFeedbackList([...feedbackList, newFeedback]);
+      setFeedbackList(feedbackList.push(newFeedback));
+      console.log(feedbackId);
+      console.log(response.data);
+
+      console.log("Feedback list: ", feedbackList);
     } catch (err) {
       console.error("Error sending feedback:", err);
     }
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
+  const handleUpdate = async () => {
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
       const updateFeedback = {
@@ -147,7 +155,9 @@ function MarketingCFeedb(props) {
         articleId: articleId,
         feedbackContent: feedback,
         feedbackTime: formattedFeedbackTime,
+        feedbackId: feedbackId,
       };
+      console.log(feedbackId);
       const res = await axios.put(
         `${API_BASE}/feedback/update/${feedbackId}`,
         updateFeedback,
@@ -168,7 +178,6 @@ function MarketingCFeedb(props) {
       });
       setFeedbackList(updatedFeedbackList);
       console.log("Update feedback: " + res.data);
-
     } catch (err) {
       console.error("Error updating feedback:", err);
     }
@@ -176,7 +185,7 @@ function MarketingCFeedb(props) {
 
   return (
     <div>
-      <PostInfor dataTopic={postData} />
+      {/* <PostInfor dataTopic={postData} /> */}
       <>
         <div className="mt-5 mb-5 max-width m-auto">
           <form>
@@ -190,7 +199,7 @@ function MarketingCFeedb(props) {
                 />
               </div>
             </div>
-            <div className="drop_card form-control">
+            {/* <div className="drop_card form-control">
               <div className="image_area">
                 {imageList.map((item, index) => (
                   <div className="image-preview__item">
@@ -224,7 +233,7 @@ function MarketingCFeedb(props) {
                 aria-label="With textarea"
                 value={postData.content}
               ></textarea>
-            </div>
+            </div> */}
             <button type="submit" className="btn btn-secondary float-end mt-3">
               Download Contribution
             </button>
@@ -292,26 +301,23 @@ function MarketingCFeedb(props) {
         </div>
         {/* Modal */}
         <div
-          class="modal fade"
+          className="modal fade"
           id="updateFeedback"
           tabindex="-1"
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
         >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
-                  Modal title
-                </h5>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
                 <button
                   type="button"
-                  class="btn-close"
+                  className="btn-close"
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 ></button>
               </div>
-              <div class="modal-body">
+              <div className="modal-body">
                 <label htmlFor="feedback" className="form-label">
                   Feedback
                 </label>
@@ -320,20 +326,20 @@ function MarketingCFeedb(props) {
                   type="text"
                   className="form-control"
                   id="feedback"
-                  value={feedbackList.feedbackContent}
-                  onChange={(e) => setFeedback(e.target.value)}
+                  placeholder={feedback}
+                  onChange={(e) => setUpdateFeedback(e.target.value)}
                 />
               </div>
               <div class="modal-footer">
                 <button
                   type="button"
-                  class="btn btn-secondary"
+                  className="btn btn-secondary"
                   data-bs-dismiss="modal"
                 >
                   Close
                 </button>
                 <button
-                  class="btn btn-primary"
+                  className="btn btn-primary"
                   type="submit"
                   onClick={() => handleUpdate()}
                 >
