@@ -11,8 +11,7 @@ const Sidebar = () => {
   useEffect(() => {
     const userId = localStorage.getItem("user_id");
     const token = localStorage.getItem("token");
-    if (userId !== undefined && userId !== "undefined"){
-      
+    if (userId !== undefined && userId !== "undefined"){     
       const getListPath = async () => {
         const response2 = await axios.post(`${API_BASE}/permission/list-path`, 
         {
@@ -79,7 +78,7 @@ const Sidebar = () => {
         {listPath.includes('/role/list-role') ? ( 
           <Link to="/manager_role" className="sidebar-link d-flex">
             <i className="bi bi-person-lines-fill"></i>
-            <p className="mt-1">Manager Role</p>
+            <p className="mt-1">Manage Role</p>
           </Link>
         ) : (
           <></>
@@ -89,7 +88,17 @@ const Sidebar = () => {
         {listPath.includes('/feedback/create') && listPath.includes('/dashboard/get-data') ? ( 
         <Link to="/manager_manage" className="sidebar-link d-flex">
           <i className="bi bi-person"></i>
-          <p className="mt-1">Manager Check Topic</p>
+          <p className="mt-1">Manage Check Topic</p>
+        </Link>
+        ) : (
+          <></>
+        )}
+      </li>
+      <li className="sidebar-item">
+        {listPath.includes('/log/list') ? ( 
+        <Link to="/check_log" className="sidebar-link d-flex">
+          <i className="bi bi-person"></i>
+          <p className="mt-1">Manage Log</p>
         </Link>
         ) : (
           <></>

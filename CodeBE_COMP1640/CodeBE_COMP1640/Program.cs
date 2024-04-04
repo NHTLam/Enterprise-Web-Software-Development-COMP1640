@@ -15,8 +15,7 @@ using CodeBE_COMP1640.Services.FeedbackS;
 using CodeBE_COMP1640.Services.DashboardS;
 using CodeBE_COMP1640.Services.EmailS;
 using System.Text.Json.Serialization;
-
-
+using CodeBE_COMP1640.Services.LogS;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -71,6 +70,7 @@ builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 

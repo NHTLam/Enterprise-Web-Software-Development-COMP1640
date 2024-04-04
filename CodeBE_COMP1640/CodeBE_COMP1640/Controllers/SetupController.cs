@@ -55,7 +55,8 @@ namespace CodeBE_COMP1640.Controllers
                 permissonRoleMapping.PermissionId = permission.PermissionId;
                 PermissonRoleMappings.Add(permissonRoleMapping);
             }
-            await DataContext.BulkMergeAsync(PermissonRoleMappings);
+            await DataContext.AddRangeAsync(PermissonRoleMappings);
+            await DataContext.SaveChangesAsync();
 
             var User = await UOW.UserRepository.Get(2);
             if (User.RoleUserMappings == null || User.RoleUserMappings.Count == 0)
