@@ -19,6 +19,7 @@ import MarketingCFeedb from "./pages/MarketingC/MarketingCFeedb";
 import DetailContribution from "./components/DetailContribution";
 import Department from "./pages/Department";
 import ManageTopic from "./pages/ManagerC/ManageTopic";
+import CreateTopic from "./pages/MarketingC/CreateTopic";
 const App = () => {
   return (
     <Router>
@@ -91,6 +92,14 @@ const App = () => {
           element={
             <LayoutAdmin>
               <MarketingC />
+            </LayoutAdmin>
+          }
+        />
+        <Route
+          path="/mk-manage-topic/create"
+          element={
+            <LayoutAdmin>
+              <CreateTopic />
             </LayoutAdmin>
           }
         />

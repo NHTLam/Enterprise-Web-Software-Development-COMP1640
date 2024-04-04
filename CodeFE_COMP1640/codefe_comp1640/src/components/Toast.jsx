@@ -4,7 +4,7 @@ export const toastSuccess = (message) => {
   return(
   toast.success(message, {
     position: "top-right",
-    autoClose: 3000,
+    autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: false,
@@ -18,7 +18,7 @@ export const toastErorr = (message) => {
   return(
   toast.error(message, {
     position: "top-right",
-    autoClose: 4000,
+    autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: false,
