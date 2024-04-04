@@ -101,8 +101,8 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
             {
                 var receivers = new List<string>();
                 receivers.Add(user.Email);
-                var subject = "Test";
-                var message = "Hello";
+                var subject = "Your article have a new feedback!!!!";
+                var message = "Hello! I have a new feedback for you! let's check it in our website!";
                 await _emailSender.SendEmailAsync(receivers, subject, message);
             }
 

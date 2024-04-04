@@ -33,6 +33,9 @@ function StEditPost(props) {
             })
             .catch(err => console.log(err))
     },[])
+
+    console.log("article Data:",postData)
+    
     useEffect(()=>{
         const token = localStorage.getItem("token");
         axios.get(`${API_BASE}/article/GetUpLoadedFiles?articleId=${id}`, {
@@ -96,7 +99,7 @@ function StEditPost(props) {
     }
     return (
         <div>
-            <PostInfor />
+            <PostInfor dataTopic={postData} />
             <>
                 <div className='mt-5 mb-5 max-width m-auto'>
                     <div className="file_preview">

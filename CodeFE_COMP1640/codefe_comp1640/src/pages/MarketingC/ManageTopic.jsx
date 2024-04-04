@@ -13,7 +13,7 @@ function ManageTopic() {
   const [data, setData] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
   const [DataFromChild, setDataFromChild] = useState([]);
-  
+  const [dataContribution, setDataContribution] = useState([]);
   const [TopicInfor, setTopicInfor] = useState([]);
   console.log("data from child: " , DataFromChild)
   useEffect(() => {
@@ -40,14 +40,17 @@ function ManageTopic() {
       setTopicApproved(data.filter(data => data.isApproved === true && data.isTopic === true));
     }
   },[data])
+
+  useEffect(() => {
+      setDataContribution(data.filter(data => data.topicId === topicApproved && data.isTopic === true));
+  },[data])
+  
   const handleDataFromChild = (data) => {
     setDataFromChild(data);
   };
   return (
     <div className="container">
       <h1>Manage Topic</h1>
-
-      <ModelAdd/>
       <table className="table align-middle mb-0 bg-white table-bordered mt-5">
         <thead className="bg-light text-align-center">
           <tr>

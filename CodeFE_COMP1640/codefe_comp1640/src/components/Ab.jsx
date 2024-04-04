@@ -65,8 +65,8 @@ const Sidebar = () => {
             ) : (
               <></>
             )}
-            <Link to="/mk-manage-topic" className="sidebar-link d-flex">
-              <li><a className="" href="!#">View Contribution</a></li>
+            <Link to="/mk-manage-topic/create" className="sidebar-link d-flex">
+              <li><a className="" href="!#">Request New Topic</a></li>
             </Link>
           </ul>
         </div>

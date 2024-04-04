@@ -38,7 +38,7 @@ function ModelEdit({dataEdit}) {
                     isTopic: true,
                     fileData: null,
                     submissionTime: null,
-                    isApproved: true,
+                    isApproved: false,
                     comments: [],
                     department: null,
                     feedbacks: [],
@@ -72,7 +72,7 @@ function ModelEdit({dataEdit}) {
                     className="modal fade"
                     id="editTopic"
                     aria-labelledby="exampleModalLabel"
-                    aria-hidden=""
+                    aria-hidden="true"
                 >
                     <div className="modal-dialog modal-lg">
                         <div className="modal-content">

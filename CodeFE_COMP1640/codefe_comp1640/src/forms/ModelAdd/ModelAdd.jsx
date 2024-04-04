@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import * as Toast from "../../components/Toast";
 import axios from 'axios';
 import DatePicker from "react-datepicker";
+import { useNavigate } from 'react-router-dom';
 
 import "react-datepicker/dist/react-datepicker.css";
 const API_BASE = process.env.REACT_APP_API_KEY;
@@ -14,7 +15,7 @@ function ModelAdd() {
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
     const token = localStorage.getItem("token");
-
+    const navigate = useNavigate();
     useEffect(() => {
         const userId = localStorage.getItem("user_id");
         axios.post(`${API_BASE}/app-user/get`,
@@ -26,9 +27,7 @@ function ModelAdd() {
             }
         ).then(data => setUserData(data.data)).catch(err => console.log(err))
     }, [])
-    console.log("test data: ", userData)
-   
-    console.log("departmentId: ", userData.departmentId)
+
     // console.log(userData)
     const handleNewTopic = async () => {
         const userId = localStorage.getItem("user_id");
@@ -58,10 +57,10 @@ function ModelAdd() {
                 }
             )
             if (res.status === 200) {
-                Toast.toastSuccess("Request Toast Success")
+                Toast.toastSuccess("Request Topic Success")
                 setTimeout(() => {
-                    window.location.reload();
-                }, 4000)
+                    navigate("/mk-manage-topic")
+                }, 3000)
                 console.log(res)
             }
         } catch {
@@ -71,17 +70,28 @@ function ModelAdd() {
     const handleChange = (e) => {
         setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
     };
+    useEffect(()=>{
+    if(startDate <= Date.now()) {
+        Toast.toastErorr("start date can not in the pass")
+        setStartDate("")
+    }
+    if(endDate <= startDate){
+        Toast.toastErorr("end date can not before start date")
+        setEndDate("")
+    }
+    },[startDate,endDate])
+
     return (
         <div>
             <form>
 
-                <h5 className="modal-title" id="exampleModalLabel">
+                <h5 className="modal-title fs-2 fw-bolder text-black mb-4" id="exampleModalLabel">
                     Reques New Topic
                 </h5>
 
-                <div className="body">
+                <div className="">
                     {/* <!-- Form to input user details --> */}
-                    <div className="mb-3">
+                    <div className="w-50 mb-3">
                         <label for="title" className="form-label">
                             Title of Topic
                         </label>
@@ -95,7 +105,7 @@ function ModelAdd() {
                         />
                     </div>
 
-                    <div className="mb-3">
+                    <div className="w-50 mb-3">
                         <label for="content" className="form-label">
                             Description
                         </label>
