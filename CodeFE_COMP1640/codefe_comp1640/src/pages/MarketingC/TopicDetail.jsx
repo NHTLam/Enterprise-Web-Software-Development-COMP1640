@@ -35,7 +35,7 @@ function TopicDetail({ dataTopic, sendDataToParent }) {
     <div>
       <form>
         <div
-          className="modal fade"
+          className="modal fade "
           id="topicDetail"
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"

@@ -38,7 +38,7 @@ function ModelEdit({dataEdit}) {
                     isTopic: true,
                     fileData: null,
                     submissionTime: null,
-                    isApproved: true,
+                    isApproved: false,
                     comments: [],
                     department: null,
                     feedbacks: [],

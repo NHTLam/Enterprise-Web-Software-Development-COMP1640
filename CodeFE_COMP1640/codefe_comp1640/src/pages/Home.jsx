@@ -76,7 +76,7 @@ const Home = () => {
             thumgnail: "https://integrolaw.com.sg/wp-content/uploads/2023/06/Family-Law-scaled.jpeg"
         },
         {
-            id: 4,
+            id: 5,
             name: "Sciences",
             thumgnail: "https://blog.webico.vn/wp-content/uploads/2017/01/tu-vung-tieng-anh-trong-marketing-scaled.jpg"
         }

@@ -12,7 +12,7 @@ const Header = () => {
   const [userId, setUserId] = useState();
   const [listPath, setListPath] = useState([]);
   const [userData, setUserData] = useState();
-  
+
   const pathsFunctionAdmin = [
     '/dashboard/get-data',
     '/app-user/list',
@@ -37,77 +37,77 @@ const Header = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-      if (token) {
-        const token = localStorage.getItem("token");
-        if (userId === undefined || userId === "undefined" || userId === null) {
-          const getUserId = async () => {
-            const response = await axios.post(`${API_BASE}/app-user/get-user-id`, null, {
-              headers: {
-                  Authorization: `Bearer ${token}`
-              }
-            });
-            setUserId(response.data);
+    if (token) {
+      const token = localStorage.getItem("token");
+      if (userId === undefined || userId === "undefined" || userId === null) {
+        const getUserId = async () => {
+          const response = await axios.post(`${API_BASE}/app-user/get-user-id`, null, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          setUserId(response.data);
 
-            if (response.data !== undefined && response.data !== "undefined"){
-              
-              const getListPath = async () => {
-                const response2 = await axios.post(`${API_BASE}/permission/list-path`, 
+          if (response.data !== undefined && response.data !== "undefined") {
+
+            const getListPath = async () => {
+              const response2 = await axios.post(`${API_BASE}/permission/list-path`,
                 {
                   userId: response.data
-                }, 
+                },
                 {
                   headers: {
                     Authorization: `Bearer ${token}`
                   }
                 });
-                setListPath(response2.data);
-              }
-              getListPath();
+              setListPath(response2.data);
             }
+            getListPath();
           }
-          getUserId();
         }
-
+        getUserId();
       }
-      navigate("/");
+
+    }
+    navigate("/");
     navigate("/");
   }, [])
 
   useEffect(() => {
     const id = localStorage.getItem("user_id");
-        if (userId !== "undefined" && userId !== null && userId !== undefined) {
-            const token = localStorage.getItem("token");
-            const getAccount = async () => {
-                const response = await axios.post(`${API_BASE}/app-user/get`, { userId: userId }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                setUserData(response.data);
-            }
-            getAccount();
-        }
-}, [userId]);
-console.log("user data goted: ", userData);
+    if (userId !== "undefined" && userId !== null && userId !== undefined) {
+      const token = localStorage.getItem("token");
+      const getAccount = async () => {
+        const response = await axios.post(`${API_BASE}/app-user/get`, { userId: userId }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setUserData(response.data);
+      }
+      getAccount();
+    }
+  }, [userId]);
+  console.log("user data goted: ", userData);
   const AllowAccessAdminPage = listPath.some(x => pathsFunctionAdmin.includes(x))
   var ValidAccessUrl = listPath.filter(x => pathsFunctionAdmin.includes(x))[0]
-  if (ValidAccessUrl === '/dashboard/get-data'){
+  if (ValidAccessUrl === '/dashboard/get-data') {
     ValidAccessUrl = "/ad_manage"
   }
-  else if (ValidAccessUrl === '/app-user/list'){
+  else if (ValidAccessUrl === '/app-user/list') {
     ValidAccessUrl = "/ad_manage/account"
   }
-  else if (ValidAccessUrl === "/feedback/create"){
+  else if (ValidAccessUrl === "/feedback/create") {
     ValidAccessUrl = "/mk-manage-topic"
   }
-  else if (ValidAccessUrl === "/role/list-role"){
+  else if (ValidAccessUrl === "/role/list-role") {
     ValidAccessUrl = "/manager_role"
   }
 
 
   return (
     <div className="position-fixed top-0 start-0 end-0 z-3">
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light-subtle">
         <div className="container-xl">
           <Link to="/" className="navbar-brand">
             Gr-News
@@ -117,10 +117,11 @@ console.log("user data goted: ", userData);
               <div className=" " to="/login">
                 <Dropdown>
                   <Dropdown.Toggle
-                    className="btn btn-light border border-primary me-2 "
+                    // style={{width: "100px"}}
+                    className="d-flex btn btn-primary justify-content-center align-items-center w-auto"
                     id="dropdown-basic"
                   >
-                    {userData?<p>{userData.username}</p>: <p>Loading...</p> }
+                  {userData ? <div>{userData.username}</div> : <div>Loading...</div>}
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item>
