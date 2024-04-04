@@ -17,7 +17,8 @@ const Header = () => {
     '/dashboard/get-data',
     '/app-user/list',
     '/feedback/create',
-    '/role/list-role'
+    '/role/list-role',
+    '/log/list'
   ]
 
   setTimeout(() => {
@@ -102,6 +103,9 @@ const Header = () => {
   }
   else if (ValidAccessUrl === "/role/list-role") {
     ValidAccessUrl = "/manager_role"
+  }
+  else if (ValidAccessUrl === "/log/list"){
+    ValidAccessUrl = "/check_log"
   }
 
 

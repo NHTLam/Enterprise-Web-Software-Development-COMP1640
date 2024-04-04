@@ -116,7 +116,8 @@ namespace CodeBE_COMP1640.Repositories
                     NewPermissonUserMapping.RoleId = PermissonUserMapping.RoleId;
                     RoleUserMappings.Add(NewPermissonUserMapping);
                 }
-                await DataContext.BulkMergeAsync(RoleUserMappings);
+                await DataContext.AddRangeAsync(RoleUserMappings);
+                await DataContext.SaveChangesAsync();
             }
         }
         public async Task<List<User>> GetUsersByDepartmentId(int departmentId,List<int> userIds)

@@ -48,11 +48,34 @@ namespace CodeBE_COMP1640.Repositories
             var PermissonRoleMappings = await DataContext.PermissonRoleMappings.AsNoTracking().ToListAsync();
             await DataContext.PermissonRoleMappings.Where(x => !Permissions.Select(p => p.PermissionId).Contains(x.PermissionId)).DeleteFromQueryAsync();
             await DataContext.Permissions.Where(x => !Permissions.Select(p => p.PermissionId).Contains(x.PermissionId)).DeleteFromQueryAsync();
-            await DataContext.Permissions.BulkMergeAsync(Permissions);
+            Permissions = Permissions.DistinctBy(x => x.PermissionId).ToList();
+            foreach (var permission in Permissions)
+            {
+                if (permission.PermissionId == 0)
+                {
+                    DataContext.Permissions.Add(permission);
+                }
+                else
+                {
+                    DataContext.Permissions.Update(permission);
+                }
+            }
 
             var PermissonIds = (await ListPermission()).Select(x => x.PermissionId).ToList();
             PermissonRoleMappings = PermissonRoleMappings.Where(x => PermissonIds.Contains(x.PermissionId)).ToList();
-            await DataContext.PermissonRoleMappings.BulkMergeAsync(PermissonRoleMappings);
+            PermissonRoleMappings = PermissonRoleMappings.DistinctBy(x => x.Id).ToList();
+            foreach (var PermissonRoleMapping in PermissonRoleMappings)
+            {
+                if (PermissonRoleMapping.Id == 0)
+                {
+                    DataContext.PermissonRoleMappings.Add(PermissonRoleMapping);
+                }
+                else
+                {
+                    DataContext.PermissonRoleMappings.Update(PermissonRoleMapping);
+                }
+            }
+            await DataContext.SaveChangesAsync();
         }
 
         public async Task<List<Role>> ListRole()

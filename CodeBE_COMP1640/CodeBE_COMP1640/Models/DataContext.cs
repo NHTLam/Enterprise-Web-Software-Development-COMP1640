@@ -17,11 +17,15 @@ public partial class DataContext : DbContext
 
     public virtual DbSet<Article> Articles { get; set; }
 
+    public virtual DbSet<BadWord> BadWords { get; set; }
+
     public virtual DbSet<Comment> Comments { get; set; }
 
     public virtual DbSet<Department> Departments { get; set; }
 
     public virtual DbSet<Feedback> Feedbacks { get; set; }
+
+    public virtual DbSet<Log> Logs { get; set; }
 
     public virtual DbSet<Permission> Permissions { get; set; }
 
@@ -44,18 +48,18 @@ public partial class DataContext : DbContext
 
             entity.Property(e => e.ArticleId).HasColumnName("ArticleID");
             entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
+            entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.StartDate).HasColumnType("datetime");
             entity.Property(e => e.SubmissionTime).HasColumnType("datetime");
+            entity.Property(e => e.Title).HasMaxLength(500);
             entity.Property(e => e.UserId).HasColumnName("UserID");
+        });
 
-            entity.HasOne(d => d.Department).WithMany(p => p.Articles)
-                .HasForeignKey(d => d.DepartmentId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Articles__Depart__45F365D3");
+        modelBuilder.Entity<BadWord>(entity =>
+        {
+            entity.ToTable("BadWord");
 
-            entity.HasOne(d => d.User).WithMany(p => p.Articles)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Articles__UserID__46E78A0C");
+            entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Comment>(entity =>
@@ -104,6 +108,19 @@ public partial class DataContext : DbContext
                 .HasForeignKey(d => d.ArticleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Feedback_Articles");
+
+        });
+
+        modelBuilder.Entity<Log>(entity =>
+        {
+            entity.ToTable("Log");
+
+            entity.Property(e => e.Method)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.Status)
+                .HasMaxLength(10)
+                .IsFixedLength();
         });
 
         modelBuilder.Entity<Permission>(entity =>

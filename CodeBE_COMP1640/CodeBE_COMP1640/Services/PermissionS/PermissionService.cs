@@ -15,6 +15,8 @@ using CodeBE_COMP1640.Controllers.FeedbackController;
 using CodeBE_COMP1640.Controllers.DashboardController;
 using CodeBE_COMP1640.Controllers.CommentController;
 using CodeBE_COMP1640.Controllers.ArticleController;
+using CodeBE_COMP1640.Services.LogS;
+using CodeBE_COMP1640.Controllers.LogController;
 
 namespace CodeBE_COMP1640.Services.PermissionS
 {
@@ -37,16 +39,19 @@ namespace CodeBE_COMP1640.Services.PermissionS
     {
         private IUOW UOW;
         private readonly IConfiguration Configuration;
+        private readonly ILogService LogService;
         private IHttpContextAccessor HttpContextAccessor;
 
         public PermissionService(
             IUOW UOW,
             IConfiguration Configuration,
+            ILogService LogService,
             IHttpContextAccessor HttpContextAccessor
         )
         {
             this.UOW = UOW;
             this.Configuration = Configuration;
+            this.LogService = LogService;
             this.HttpContextAccessor = HttpContextAccessor;
         }
 
@@ -62,6 +67,7 @@ namespace CodeBE_COMP1640.Services.PermissionS
                 DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, DashboardRoute.DictionaryPath);
                 DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, CommentRoute.DictionaryPath);
                 DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, ArticleRoute.DictionaryPath);
+                DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, LogRoute.DictionaryPath);
                 List<Permission> Permissions = new List<Permission>();
                 foreach (var DictionaryPath in DictionaryPaths)
                 {
@@ -176,27 +182,33 @@ namespace CodeBE_COMP1640.Services.PermissionS
 
         public async Task<bool> CreateRole(Role Role)
         {
+            string payload = Role?.ToString() ?? "";
             try
             {
                 await UOW.PermissionRepository.CreateRole(Role);
                 Role = await UOW.PermissionRepository.GetRole(Role.RoleId);
+                await LogService.Log(Role.ToString(), payload, "200", PermissionRoute.CreateRole, "POST");
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await LogService.Log(ex.ToString(), payload, "500", PermissionRoute.CreateRole, "POST");
                 throw new Exception();
             }
         }
 
         public async Task<Role> DeleteRole(Role Role)
         {
+            string payload = Role?.ToString() ?? "";
             try
             {
                 await UOW.PermissionRepository.DeleteRole(Role);
+                await LogService.Log(Role.ToString() ?? "", payload, "200", PermissionRoute.DeleteRole, "POST");
                 return Role;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await LogService.Log(ex.ToString() ?? "", payload, "500", PermissionRoute.DeleteRole, "POST");
                 throw new Exception();
             }
         }
@@ -224,17 +236,19 @@ namespace CodeBE_COMP1640.Services.PermissionS
 
         public async Task<Role> UpdateRole(Role Role)
         {
+            string payload = Role?.ToString() ?? "";
             try
             {
                 //var oldData = await UOW.PermissionRepository.GetRole(Role.RoleId);
 
                 await UOW.PermissionRepository.UpdateRole(Role);
-
+                await LogService.Log(Role.ToString() ?? "", payload, "200", PermissionRoute.UpdateRole, "POST");
                 Role = await UOW.PermissionRepository.GetRole(Role.RoleId);
                 return Role;
             }
             catch (Exception ex)
             {
+                await LogService.Log(ex.ToString() ?? "", payload, "500", PermissionRoute.UpdateRole, "POST");
                 throw new Exception();
             }
         }
