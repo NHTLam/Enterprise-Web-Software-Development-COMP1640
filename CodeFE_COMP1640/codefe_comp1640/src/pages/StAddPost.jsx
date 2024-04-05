@@ -22,7 +22,6 @@ function StAddPost() {
         })
             .catch(err => console.log(err))
     }, [data])
-    console.log("data",data)
     const onFileChange = (files) =>{
         console.log(files)
     }

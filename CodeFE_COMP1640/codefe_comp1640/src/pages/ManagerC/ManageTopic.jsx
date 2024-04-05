@@ -3,7 +3,6 @@ import "./Style.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import ModelEdit from "../../forms/ModelEdit/ModelEdit";
-
 import * as Toast from "../../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY;
 function ManageTopic() {
@@ -18,7 +17,6 @@ function ManageTopic() {
         Authorization: `Bearer ${token}`
       }
     }).then(data => {
-      console.log("data", data.data.data)
       setData(data.data.data)
     })
       .catch(err => console.log(err))
@@ -27,27 +25,24 @@ function ManageTopic() {
   useEffect(() => {
     setTopicData(data.filter(data => data.isTopic === true))
   }, [data])
-  console.log("topicData", topicData)
 
   const handleApproveTopic = (item) => {
-    try{
       const token = localStorage.getItem("token");
-      const res = axios.put(`${API_BASE}/article/Approved`,{
+      axios.put(`${API_BASE}/article/Approved`,{
         articleId: item.articleId,
       } ,{
         headers: {
           'ngrok-skip-browser-warning': 'true',
           Authorization: `Bearer ${token}`
         }
+      }).then(data => {
+        Toast.toastSuccess("apprvoed successfully")
+        setTimeout(()=>{
+          window.location.reload()
+        },3000)
+      }).catch(err =>{
+        Toast.toastErorr("Approve Failed")
       })
-      if(res.status === 200){
-        Toast.toastSuccess(`Approved ${item.title} Successfully`)
-        window.location.reload()
-      }
-    }
-    catch(err){
-      Toast.toastErorr("Approve Failed")
-    }
    }
 
   return (
@@ -76,8 +71,8 @@ function ManageTopic() {
                   <td className="topic_tile">
                     <div className="d-flex align-items-center">{item.title}</div>
                   </td>
-                  <td className="topic_startdate">{item.submissionTime}</td>
-                  <td className="topic_enddate">{item.submissionTime}</td>
+                  <td className="topic_startdate">{item.startDate}</td>
+                  <td className="topic_enddate">{item.endDate}</td>
                   <td className="topic_description">{item.userId}</td>
                   <td className="topic_description">{item.departmentId}</td>
                   {item.isApproved === true ? <td> <p className="top_status btn btn-success">Approved</p></td> : <td> <p className="top_status btn btn-warning">Pendding</p></td>}

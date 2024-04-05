@@ -25,9 +25,6 @@ function Department() {
   if (Array.isArray(data)) {
     setIsTopic(data.filter(data => data.isTopic === true && data.isApproved === true));
   }
-
-  console.log("topic data goted",data)
-console.log("topic of department",isTopic)
   },[data])
   return (
     <div>

@@ -13,7 +13,6 @@ const DetailContribution = () => {
   const [articleId, setArticleId] = useState(contributionId);
   const [data, setData] = useState([]);
   const navigate = useNavigate();
-  console.log("user: ", user);
   const handleSubmitComment = async (e) => {
     if (e.key === "Enter") {
       try {
@@ -80,7 +79,7 @@ const DetailContribution = () => {
         },
       })
       .then((data) => {
-        // setData(data.data.data);
+        setData(data.data.data);
       })
       .catch((err) => console.log(err));
   }, [data]);
@@ -101,11 +100,11 @@ const DetailContribution = () => {
             <tbody>
               <tr>
                 <th scope="row">Title</th>
-                {/* <td>{data.title}</td> */}
+                <td>{data.title}</td>
               </tr>
               <tr>
                 <th scope="row">Description</th>
-                <td>{/* <h1>{data.content}</h1> */}</td>
+                <td><h1>{data.content}</h1></td>
               </tr>
             </tbody>
           </table>

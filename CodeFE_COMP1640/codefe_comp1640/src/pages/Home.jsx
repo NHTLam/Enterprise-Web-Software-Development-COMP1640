@@ -21,7 +21,6 @@ const Home = () => {
                 Authorization: `Bearer ${token}`
             }
         }).then(data => {
-            console.log("data", data.data.data)
             setData(data.data.data)
         })
             .catch(err => console.log(err))
@@ -29,9 +28,6 @@ const Home = () => {
     useEffect(()=>{
     setContributions(data.filter(data => (data.isApproved === true && data.isTopic === false)))
     },[data])
-
-    console.log("data",data)
-    console.log("Approved", contributions)
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {

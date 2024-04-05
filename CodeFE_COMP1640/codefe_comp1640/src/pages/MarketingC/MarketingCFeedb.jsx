@@ -6,9 +6,9 @@ import axios from "axios";
 import React from "react";
 import * as Toast from "../../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY || "";
-const token = localStorage.getItem("token");
 const userId = localStorage.getItem("user_id");
 
+const token = localStorage.getItem("token");
 // {
 //   "feedbackId": 89,
 //   "userId": 2,
@@ -29,76 +29,98 @@ function MarketingCFeedb(props) {
   const [feedbackTime, setFeedbackTime] = useState(new Date());
   const [isSending, setIsSending] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
-  // const onFileChange = (files) => {
-  //   console.log(files);
-  // };
-  // const [imageList, setImageList] = useState([]);
-  // const fileInputRef = useRef(null);
-  // const [postData, setPostData] = useState();
-  // useEffect(() => {
-  //   console.log("id", id);
-  //   axios
-  //     .get(`${API_BASE}/article/get/${id}`, {
-  //       headers: {
-  //         "ngrok-skip-browser-warning": "true",
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       staleTime: 0,
-  //     })
-  //     .then((data) => {
-  //       setPostData(data.data.data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // });
-  // if (!postData) {
-  //   return <></>;
-  // }
+  const onFileChange = (files) => {
+    console.log(files);
+  };
+  const [file, setFile] = useState();
 
-  // const handleClickDelete = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.delete(`${API_BASE}/article/delete`);
-  //     if (response.status === 200) {
-  //       navigate("/st_submit_post");
-  //       console.log("delete sucess");
-  //     } else if (response.status === 400) {
-  //       console.log("some thing went wrong");
-  //     } else if (response.status === 403) {
-  //       console.log("No Permission!");
-  //       Toast.toastErorr("You do not have permission to perform this action");
-  //       setTimeout(() => {
-  //         navigate("/");
-  //       }, 1000);
-  //     }
-  //   } catch (err) {
-  //     console.log("Error " + err);
-  //   }
-  // };
-  // function onFileInput(e) {
-  //   const files = e.target.files;
-  //   if (files.length === 0) return;
-  //   for (let i = 0; i < files.length; i++) {
-  //     // if (files[i].type.split('/')[0] !== 'images') continue;
-  //     if (!imageList.some((e) => e.name === files[i].name)) {
-  //       setImageList((preImages) => [
-  //         ...preImages,
-  //         {
-  //           name: files[i].name,
-  //           url: URL.createObjectURL(files[i]),
-  //         },
-  //       ]);
-  //     }
-  //   }
-  // }
-  // const fileRemove = (file) => {
-  //   const updatedList = [...imageList];
-  //   updatedList.splice(imageList.indexOf(file), 1);
-  //   setImageList(updatedList);
-  //   props.onFileChange(updatedList);
-  // };
+  const [imageList, setImageList] = useState([]);
+  const fileInputRef = useRef(null);
+  const [postData, setPostData] = useState();
+  useEffect(() => {
+
+    const token = localStorage.getItem("token");
+    axios
+      .get(`${API_BASE}/article/get/${id}`, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${token}`,
+        },
+        staleTime: 0,
+      })
+      .then((data) => {
+        setPostData(data.data.data);
+      })
+      .catch((err) => console.log(err));
+  }, [id]);
+
+  useEffect(() => {
+
+    const token = localStorage.getItem("token");
+    axios.get(`${API_BASE}/article/GetUpLoadedFiles`, { articleId: id }, {
+      headers: {
+        "ngrok-skip-browser-warning": true,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
+    })
+      .then((data) => {
+        setFile(data.data.data);
+      })
+      .catch((err) => console.log(err));
+  }, [id]);
+  console.log("File: ", file)
+  if (!postData) {
+    return <></>;
+  }
+
+  const handleClickDelete = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.delete(`${API_BASE}/article/delete`);
+      if (response.status === 200) {
+        navigate("/st_submit_post");
+        console.log("delete sucess");
+      } else if (response.status === 400) {
+        console.log("some thing went wrong");
+      } else if (response.status === 403) {
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
+    } catch (err) {
+      console.log("Error " + err);
+    }
+  };
+  function onFileInput(e) {
+    const files = e.target.files;
+    if (files.length === 0) return;
+    for (let i = 0; i < files.length; i++) {
+      // if (files[i].type.split('/')[0] !== 'images') continue;
+      if (!imageList.some((e) => e.name === files[i].name)) {
+        setImageList((preImages) => [
+          ...preImages,
+          {
+            name: files[i].name,
+            url: URL.createObjectURL(files[i]),
+          },
+        ]);
+      }
+    }
+  }
+  const fileRemove = (file) => {
+    const updatedList = [...imageList];
+    updatedList.splice(imageList.indexOf(file), 1);
+    setImageList(updatedList);
+    props.onFileChange(updatedList);
+  };
 
   //Feedback
   const handleFeedback = async () => {
+
+    const token = localStorage.getItem("token");
     setIsSending(true);
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
@@ -148,6 +170,8 @@ function MarketingCFeedb(props) {
   };
 
   const handleUpdate = async () => {
+
+    const token = localStorage.getItem("token");
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
       const updateFeedback = {
@@ -189,17 +213,7 @@ function MarketingCFeedb(props) {
       <>
         <div className="mt-5 mb-5 max-width m-auto">
           <form>
-            <div className="bg-light">
-              <div className="mb-3 mt-5">
-                <input
-                  className="form-control"
-                  type="file"
-                  id="formFileMultiple"
-                  multiple
-                />
-              </div>
-            </div>
-            {/* <div className="drop_card form-control">
+            <div className="drop_card form-control">
               <div className="image_area">
                 {imageList.map((item, index) => (
                   <div className="image-preview__item">
@@ -233,7 +247,7 @@ function MarketingCFeedb(props) {
                 aria-label="With textarea"
                 value={postData.content}
               ></textarea>
-            </div> */}
+            </div>
             <button type="submit" className="btn btn-secondary float-end mt-3">
               Download Contribution
             </button>
