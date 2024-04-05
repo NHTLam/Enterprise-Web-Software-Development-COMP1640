@@ -63,7 +63,14 @@ const App = () => {
           }
         />
 
-        <Route path="/contribute/view/:id" element={<MarketingCFeedb />} />
+        <Route
+          path="/contribute/view/:id"
+          element={
+            <LayoutAdmin>
+              <MarketingCFeedb />
+            </LayoutAdmin>
+          }
+        />
 
         <Route
           path="/history"

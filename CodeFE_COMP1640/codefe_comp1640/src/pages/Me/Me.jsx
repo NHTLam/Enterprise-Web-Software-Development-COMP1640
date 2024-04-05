@@ -32,7 +32,6 @@ function Me() {
             }
         })
         if(res.status === 200){
-            console.log("success", res)
             Toast.toastSuccess("User updated successfully");
         }
         // }else{
