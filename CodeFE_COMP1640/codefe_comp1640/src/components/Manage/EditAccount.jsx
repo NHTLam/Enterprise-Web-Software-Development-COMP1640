@@ -7,17 +7,25 @@ const EditAccount = () => {
   const [Roles, setRoles] = useState([]);
   const departments = [
     {
-      Id: 1,
-      Name: "Law",
+        Id: 1,
+        Name: "Business and Economics",
     },
     {
-      Id: 2,
-      Name: "Engineering",
+        Id: 2,
+        Name: "Enginering",
     },
     {
-      Id: 3,
-      Name: "Science",
+        Id: 3,
+        Name: "Art and Humanities",
     },
+    {
+        Id: 4,
+        Name: "Law",
+    },
+    {
+        Id: 5,
+        Name: "Sciences",
+    }
   ];
   const navigate = useNavigate();
   const { id } = useParams();

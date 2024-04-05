@@ -1,3 +1,7 @@
+using CodeBE_COMP1640.Controllers.DashboardController;
+using CodeBE_COMP1640.Models;
+using CodeBE_COMP1640.Repositories;
+using CodeBE_COMP1640.Services.LogS;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -12,17 +16,15 @@ namespace CodeBE_COMP1640.Services.EmailS
     {
         Task SendEmailAsync(List<string> recipients, string subject, string body);
     }
- 
+
     public class EmailSender : IEmailSender
     {
-    
-       
-       
         public async Task SendEmailAsync(List<string> recipients, string subject, string body)
-        {       var _fromEmail = "nguyentuhai582@gmail.com";
-                var _password = "abjz rgcc qtcw couj";
-            
-           
+        {
+            var _fromEmail = "nguyentuhai582@gmail.com";
+            var _password = "abjz rgcc qtcw couj";
+
+
             using (var client = new SmtpClient("smtp.gmail.com", 587))
             {
                 client.EnableSsl = true;
@@ -42,6 +44,6 @@ namespace CodeBE_COMP1640.Services.EmailS
             }
         }
     }
-    
-    }
+
+}
 

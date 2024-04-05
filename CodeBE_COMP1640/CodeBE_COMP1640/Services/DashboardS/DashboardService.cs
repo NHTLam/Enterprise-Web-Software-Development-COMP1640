@@ -14,6 +14,8 @@ using System.Linq;
 using CodeBE_COMP1640.Enums;
 using NuGet.Protocol.Plugins;
 using Newtonsoft.Json.Linq;
+using CodeBE_COMP1640.Controllers.CommentController;
+using CodeBE_COMP1640.Services.LogS;
 
 namespace CodeBE_COMP1640.Services.DashboardS
 {
@@ -24,30 +26,43 @@ namespace CodeBE_COMP1640.Services.DashboardS
     public class DashboardService : IDashboardService
     {
         private IUOW UOW;
+        private ILogService LogService;
 
         public DashboardService(
-            IUOW UOW
+            IUOW UOW,
+            ILogService LogService
         )
         {
             this.UOW = UOW;
+            this.LogService = LogService;
         }
 
         public async Task<Dashboard> GetData()
         {
-            List<Article> Articles = await UOW.DashboardRepository.ListArticles();
+            try
+            {
+                List<Article> Articles = await UOW.DashboardRepository.ListArticles();
 
-            Dashboard Dashboard = new Dashboard();
+                Dashboard Dashboard = new Dashboard();
 
-            Dashboard.PieCharts = GetDataForPieChart(Articles);
-            Dashboard.PieChartSimplifys = SimplifyPieChartData(Dashboard.PieCharts);
+                Dashboard.PieCharts = GetDataForPieChart(Articles);
+                Dashboard.PieChartSimplifys = SimplifyPieChartData(Dashboard.PieCharts);
 
-            Dashboard.BarCharts = GetDataForBarChart(Articles);
-            Dashboard.BarChartSimplifys = SimplifyBarChartData(Dashboard.BarCharts);
+                Dashboard.BarCharts = GetDataForBarChart(Articles);
+                Dashboard.BarChartSimplifys = SimplifyBarChartData(Dashboard.BarCharts);
 
-            Dashboard.LineCharts = GetDataForLineChart(Articles);
-            Dashboard.LineChartSimplifys = SimplifyLineChartData(Dashboard.LineCharts);
+                Dashboard.LineCharts = GetDataForLineChart(Articles);
+                Dashboard.LineChartSimplifys = SimplifyLineChartData(Dashboard.LineCharts);
 
-            return Dashboard;
+                await LogService.Log(Dashboard.ToString() ?? "", "", "200", DashboardRoute.GetData, "POST");
+                return Dashboard;
+            }
+            catch ( Exception ex )
+            {
+                await LogService.Log(ex.ToString(), "", "500", DashboardRoute.GetData, "POST");
+                throw new Exception();
+            }
+
         }
 
         private List<LineChart> GetDataForLineChart(List<Article> Articles)

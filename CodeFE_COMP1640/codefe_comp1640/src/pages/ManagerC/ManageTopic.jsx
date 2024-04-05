@@ -9,7 +9,10 @@ function ManageTopic() {
   const [topicData, setTopicData] = useState([]);
   const [data, setData] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
+  const [listPath, setListPath] = useState([]);
+
   useEffect(() => {
+    const userId = localStorage.getItem("user_id");
     const token = localStorage.getItem("token");
     axios.get(`${API_BASE}/article/GetAllArticle`, {
       headers: {
@@ -20,6 +23,22 @@ function ManageTopic() {
       setData(data.data.data)
     })
       .catch(err => console.log(err))
+
+    if (userId !== undefined && userId !== "undefined"){     
+      const getListPath = async () => {
+        const response2 = await axios.post(`${API_BASE}/permission/list-path`, 
+        {
+          userId: userId
+        }, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setListPath(response2.data);
+      }
+      getListPath();
+    }
   }, [])
 
   useEffect(() => {
@@ -77,6 +96,7 @@ function ManageTopic() {
                   <td className="topic_description">{item.departmentId}</td>
                   {item.isApproved === true ? <td> <p className="top_status btn btn-success">Approved</p></td> : <td> <p className="top_status btn btn-warning">Pendding</p></td>}
                   <td className="topic_action">
+                    {listPath.includes('/feedback/create') && listPath.includes('/dashboard/get-data') ? ( 
                     <button
                       type="button"
                       className="btn btn-success btn-sm btn-rounded"
@@ -84,7 +104,10 @@ function ManageTopic() {
                     >
                       Approve
                     </button>
-
+                    ) : (
+                      <></>
+                    )}
+                  
                     <button
                       type="button"
                       data-bs-toggle="modal"

@@ -19,6 +19,7 @@ import MarketingCFeedb from "./pages/MarketingC/MarketingCFeedb";
 import DetailContribution from "./components/DetailContribution";
 import Department from "./pages/Department";
 import ManageTopic from "./pages/ManagerC/ManageTopic";
+import CheckLog from "./pages/Log/CheckLog";
 import CreateTopic from "./pages/MarketingC/CreateTopic";
 const App = () => {
   return (
@@ -118,7 +119,7 @@ const App = () => {
               <MarketingCFeedb />
             </Layout>
           }
-        /> */}
+        />  */}
 
         <Route path="/contribute/view/:id" element={<MarketingCFeedb />} />
 
@@ -172,6 +173,15 @@ const App = () => {
           element={
             <LayoutAdmin>
               <ManagerRole />
+            </LayoutAdmin>
+          }
+        />
+
+        <Route
+          path="/check_log"
+          element={
+            <LayoutAdmin>
+              <CheckLog />
             </LayoutAdmin>
           }
         />

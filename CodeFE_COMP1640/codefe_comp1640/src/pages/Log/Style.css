@@ -1,0 +1,11 @@
+.table{
+    padding: 10px;
+
+}
+
+.mylongtext {
+    max-width: 100px;
+    max-height: 100px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

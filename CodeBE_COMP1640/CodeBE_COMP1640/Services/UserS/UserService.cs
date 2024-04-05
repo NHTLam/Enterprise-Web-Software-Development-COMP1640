@@ -6,6 +6,9 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Repositories;
+using CodeBE_COMP1640.Controllers.PermissionController;
+using CodeBE_COMP1640.Services.LogS;
+using CodeBE_COMP1640.Controllers.UserController;
 
 namespace CodeBE_COMP1640.Services.UserS
 {
@@ -25,17 +28,21 @@ namespace CodeBE_COMP1640.Services.UserS
     {
         private IUOW UOW;
         private readonly IConfiguration Configuration;
+        private readonly ILogService LogService;
 
         public UserService(
             IUOW UOW,
-            IConfiguration Configuration
+            IConfiguration Configuration,
+            ILogService LogService
         )
         {
             this.UOW = UOW;
             this.Configuration = Configuration;
+            this.LogService = LogService;
         }
         public async Task<bool> Create(User User)
         {
+            string payload = User?.ToString() ?? "";
             try
             {
                 var Users = await UOW.UserRepository.List();
@@ -47,10 +54,12 @@ namespace CodeBE_COMP1640.Services.UserS
                 User.Password = BCrypt.Net.BCrypt.HashPassword(User.Password);
                 await UOW.UserRepository.Create(User);
                 User = await UOW.UserRepository.Get(User.UserId);
+                await LogService.Log(User.ToString() ?? "", payload, "200", UserRoute.Create, "POST");
                 return true;
             }
             catch (Exception ex)
             {
+                await LogService.Log(ex.ToString() ?? "", payload, "500", UserRoute.Create, "POST");
                 throw new Exception();
             }
         }
@@ -82,13 +91,16 @@ namespace CodeBE_COMP1640.Services.UserS
 
         public async Task<User> Delete(User User)
         {
+            string payload = User?.ToString() ?? "";
             try
             {
                 await UOW.UserRepository.Delete(User);
+                await LogService.Log(User.ToString() ?? "", payload, "200", UserRoute.Delete, "POST");
                 return User;
             }
             catch (Exception ex)
             {
+                await LogService.Log(ex.ToString() ?? "", payload, "500", UserRoute.Delete, "POST");
                 throw new Exception();
             }
         }
@@ -113,9 +125,10 @@ namespace CodeBE_COMP1640.Services.UserS
                 throw new Exception();
             }
         }
-       
+
         public async Task<User> Update(User User)
         {
+            string payload = User.ToString() ?? "";
             try
             {
                 var oldData = await UOW.UserRepository.Get(User.UserId);
@@ -123,10 +136,12 @@ namespace CodeBE_COMP1640.Services.UserS
                 await UOW.UserRepository.Update(User);
 
                 User = await UOW.UserRepository.Get(User.UserId);
+                await LogService.Log(User.ToString() ?? "", payload, "200", UserRoute.Update, "POST");
                 return User;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await LogService.Log(ex.ToString() ?? "", payload, "500", UserRoute.Update, "POST");
                 throw new Exception();
             }
         }
@@ -150,28 +165,28 @@ namespace CodeBE_COMP1640.Services.UserS
             }
             return string.Empty;
         }
-         public async Task<List<User>> GetUsersByDepartmentId(int departmentId)
+        public async Task<List<User>> GetUsersByDepartmentId(int departmentId)
+        {
+            try
             {
-                try
-                {
-                    List<int> userIds = new List<int> { 2, 6, 7 };
-                    List<User> users = await UOW.UserRepository.GetUsersByDepartmentId(departmentId, userIds);
-                    users = users.Where(u => u.Check).ToList();
-                    return users;
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Error occurred while fetching users by department ID", ex);
-                }
+                List<int> userIds = new List<int> { 2, 6, 7 };
+                List<User> users = await UOW.UserRepository.GetUsersByDepartmentId(departmentId, userIds);
+                users = users.Where(u => u.Check).ToList();
+                return users;
             }
-             public async Task<bool> UpdateCheckbox(int id, bool isChecked)
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while fetching users by department ID", ex);
+            }
+        }
+        public async Task<bool> UpdateCheckbox(int id, bool isChecked)
         {
             return await UOW.UserRepository.UpdateCheckbox(id, isChecked);
         }
 
-        
-      
 
-     
+
+
+
     }
 }

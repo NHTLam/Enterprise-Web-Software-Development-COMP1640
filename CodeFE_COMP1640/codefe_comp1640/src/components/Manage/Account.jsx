@@ -12,22 +12,32 @@ const Account = () => {
   const [address, setAddress] = useState("");
   const departments = [
     {
-      Id: 1,
-      Name: "Law",
+        Id: 1,
+        Name: "Business and Economics",
     },
     {
-      Id: 2,
-      Name: "Engineering",
+        Id: 2,
+        Name: "Enginering",
     },
     {
-      Id: 3,
-      Name: "Science",
+        Id: 3,
+        Name: "Art and Humanities",
     },
+    {
+        Id: 4,
+        Name: "Law",
+    },
+    {
+        Id: 5,
+        Name: "Sciences",
+    }
   ];
   const changeDepartment = {
-    1: "Law",
-    2: "Engineering",
-    3: "Science",
+    1: "Business and Economics",
+    2: "Enginering",
+    3: "Art and Humanities",
+    4: "Law",
+    5: "Sciences",
   };
 
   const [selectedDepartment, setSelectedDepartment] = useState("");
