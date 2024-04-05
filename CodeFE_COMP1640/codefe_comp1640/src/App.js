@@ -39,9 +39,9 @@ const App = () => {
         <Route
           path="/me"
           element={
-            <Layout>
+            // <Layout>
               <Me />
-            </Layout>
+            // </Layout>
           }
         />
 
@@ -63,14 +63,6 @@ const App = () => {
           }
         />
 
-        <Route
-          path="/contribute/view/:id"
-          element={
-            <LayoutAdmin>
-              <MarketingCFeedb />
-            </LayoutAdmin>
-          }
-        />
 
         <Route
           path="/history"
@@ -112,18 +104,16 @@ const App = () => {
           }
         />
 
-        {/* <Route
-          path="/contribution/view/:id"
-          element={
-            <Layout>
-              <MarketingCFeedb />
-            </Layout>
-          }
-        />  */}
-
-        <Route path="/contribute/view/:id" element={<MarketingCFeedb />} />
-
         {/* MANAGER ROUTES */}
+
+        <Route
+          path="/contribute/view/:id"
+          element={
+            <LayoutAdmin>
+              <MarketingCFeedb />
+            </LayoutAdmin>
+          }
+        />
         <Route
           path="/manager_manage"
           element={

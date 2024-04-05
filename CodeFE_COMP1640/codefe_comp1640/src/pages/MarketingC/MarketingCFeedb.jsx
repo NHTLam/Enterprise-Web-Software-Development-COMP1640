@@ -62,30 +62,28 @@ function MarketingCFeedb(props) {
   const [imageList, setImageList] = useState([]);
   const fileInputRef = useRef(null);
   const [postData, setPostData] = useState();
+
   useEffect(() => {
     const getFeedback = async () => {
+      debugger;
       const token = localStorage.getItem("token");
-      try {
-        const res = await axios.post(`${API_BASE}/feedback/getbyarticleID`, {
+      const res = await axios.get(
+        `${API_BASE}/feedback/getbyarticleID?articleId=${articleId}`,
+        {
           headers: {
+            "ngrok-skip-browser-warning": "true",
             Authorization: `Bearer ${token}`,
           },
-        });
-        setViewFeedback(res.data);
-        console.table("Feedback:", JSON.stringify(res.data));
-      } catch (err) {
-        console.log("Failed to list account! " + err);
-        Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-      }
+        }
+      );
+      debugger;
+      setViewFeedback(res.data);
+      console.table("Feedback:", JSON.stringify(res.data));
     };
     getFeedback();
-  }, []);
-  
-  useEffect(() => {
+  }, [articleId]);
 
+  useEffect(() => {
     const token = localStorage.getItem("token");
     axios
       .get(`${API_BASE}/article/get/${id}`, {
@@ -102,9 +100,9 @@ function MarketingCFeedb(props) {
   }, [id]);
 
   useEffect(() => {
-
     const token = localStorage.getItem("token");
-    axios.get(`${API_BASE}/article/GetUpLoadedFiles`, { articleId: id }, {
+    console.log("id: ", id)
+    axios.post(`${API_BASE}/article/GetUpLoadedFiles?articleId=${id}`, null, {
       headers: {
         "ngrok-skip-browser-warning": true,
         'Content-Type': 'application/json',
@@ -116,7 +114,7 @@ function MarketingCFeedb(props) {
       })
       .catch((err) => console.log(err));
   }, [id]);
-  console.log("File: ", file)
+  console.log("File: ", file);
   if (!postData) {
     return <></>;
   }
@@ -269,11 +267,58 @@ function MarketingCFeedb(props) {
   //   };
   //   getFeedback();
   // }, [articleId]);
-
+  const handlePublicContribution = async (e) => {
+    e.preventDefault()
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.put(`${API_BASE}/article/Approved`, {
+        articleId: +id,
+      }, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if (res.status === 200) {
+        Toast.toastSuccess("apprvoed successfully")
+        setTimeout(() => {
+          navigate("/mk-manage-topic");
+        }, 1000)
+      }
+    } catch (err) {
+      Toast.toastErorr("Some thing went wrong, Approve false")
+      console.log(err)
+    }
+  }
+  const handleDownloadFile = (e) =>{
+    e.preventDefault()
+    const token = localStorage.getItem("token");
+    debugger;
+    try {
+      const res = axios.post(`${API_BASE}/article/GetFile?articleId=${id}`,null, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if (res.status === 200) {
+        console.log("res: ",res)
+        Toast.toastSuccess("Download successfully")
+      }
+    } catch (err) {
+      Toast.toastErorr("Some thing went wrong, Approve false")
+      console.log(err)
+    }
+  }
   return (
     <div>
       {/* <PostInfor dataTopic={postData} /> */}
       <>
+        <div>{file?.map((file) => {
+          return (
+            <a href="!#">{file?.fileName} </a>
+          )
+        })}</div>
         <div className="mt-5 mb-5 max-width m-auto">
           <form>
             <div className="drop_card form-control">
@@ -308,13 +353,13 @@ function MarketingCFeedb(props) {
               <textarea
                 className="form-control"
                 aria-label="With textarea"
-                value={postData.content}
+                placeholder={postData.content}
               ></textarea>
             </div>
-            <button type="submit" className="btn btn-secondary float-end mt-3">
+            <button className="btn btn-secondary float-end mt-3" onClick={handleDownloadFile}>
               Download Contribution
             </button>
-            <button type="submit" className="btn btn-success float-end mt-3">
+            <button className="btn btn-success float-end mt-3" onClick={handlePublicContribution}>
               Public
             </button>
           </form>
@@ -377,7 +422,7 @@ function MarketingCFeedb(props) {
           </div>
         </div>
 
-        {/* <div className="container">
+        <div className="container">
           <table className="table table-striped mt-5">
             <thead>
               <tr>
@@ -394,13 +439,14 @@ function MarketingCFeedb(props) {
                   <td>{feedback.userId}</td>
                   <td>{feedback.articleId}</td>
                   <td>{feedback.feedbackId}</td>
-                  <td>{feedback.feedback}</td>
+                  <td>{feedback.feedbackContent}</td>
+                  {/* //FIx ngay */}
                   <td>{feedback.feedbackTime.toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div> */}
+        </div>
         {/* Modal */}
         <div
           className="modal fade"
