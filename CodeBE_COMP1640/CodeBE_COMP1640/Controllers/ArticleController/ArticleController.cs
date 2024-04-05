@@ -419,7 +419,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             return NotFound("No file found for the specified ArticleId");
         }
 
-        [Route(ArticleRoute.GetUploadedFiles), HttpGet, Authorize]
+        [Route(ArticleRoute.GetUploadedFiles), HttpPost, Authorize]
         public async Task<IActionResult> GetUploadedFiles(string articleId)
         {
             if (!await PermissionService.HasPermission(ArticleRoute.GetUploadedFiles, PermissionService.GetUserId()))
