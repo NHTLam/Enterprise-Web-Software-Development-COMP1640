@@ -2,8 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 
 function Contribution({ currentItems, link }) {
-
-    console.log("link: ", link);
     return (
         <div className="d-flex flex-wrap mt-4 mb-4 w-100">
             {

@@ -41,7 +41,7 @@ const PostSubmit = (props) => {
             // console.log(data.data)
         })
         .catch(err => console.log(err))
-},[])
+},[topicId])
 
   const handleCheckBox = () => {
     if (checkBox) {
@@ -70,7 +70,7 @@ const PostSubmit = (props) => {
         {
           departmentId,
           topicId: +topicId,
-          userId: userId,
+          userId: +userId,
           ...credentials,
         },
         {
@@ -82,7 +82,7 @@ const PostSubmit = (props) => {
       if (res.status === 200) {
         const data = new FormData();
         data.append("files", selectedFile);
-        console.log("file", selectedFile);
+        data.append("files", imageList)
         data.append("articleId", res.data.data.articleId);
         await axios.post(
           `${API_BASE}/article/upload-file?articleId=${res.data.data.articleId}`,
@@ -111,7 +111,7 @@ const PostSubmit = (props) => {
       }
       Toast.toastSuccess("submit success")
       setTimeout(()=>{
-        navigate(`/contribute/view/edit/${res.data.data.articleId}`);
+        // navigate(`/contribute/view/edit/${res.data.data.articleId}`);
       },3000)
     } catch (error) {
       Toast.toastErorr("Submit Erorr");
@@ -152,6 +152,7 @@ const PostSubmit = (props) => {
                 className="form-control"
                 type="file"
                 id="file"
+                multiple
                 onChange={(e) => setSelectedFile(e.target.files[0])}
               />
             </div>
@@ -210,6 +211,7 @@ const PostSubmit = (props) => {
                   type="button"
                   data-bs-toggle="modal"
                   data-bs-target="#termModal"
+                  href="!#"
                 >
                   Terms of service
                 </a>

@@ -41,12 +41,12 @@ const Feedback = () => {
           },
         }
       );
-      if (saveFeedback.status === 403){
+      if (saveFeedback.status === 403) {
         console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(()=>{
+        setTimeout(() => {
           navigate("/");
-        },1000)  
+        }, 1000);
       }
       console.log("Create feedback success");
       console.log("asdasd: " + saveFeedback.data);
@@ -90,12 +90,12 @@ const Feedback = () => {
           },
         }
       );
-      if (saveFeedback.status === 403){
+      if (saveFeedback.status === 403) {
         console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(()=>{
+        setTimeout(() => {
           navigate("/");
-        },1000)  
+        }, 1000);
       }
       console.log("Feedback updated successfully:", saveFeedback.data);
       const FeedbackIndex = feedbackList.findIndex(
@@ -112,8 +112,26 @@ const Feedback = () => {
   };
 
   useEffect(() => {
-    console.log("Feedback list updated:", feedbackList);
-  }, [feedbackList]);
+    const listFb = () => {
+      const token = localStorage.getItem("token");
+      axios
+        .get(`${API_BASE}/feedback/list`, {
+          headers: {
+            "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log("Ab ", res.data);
+          setFeedbackList(res.data);
+        })
+        .catch((err) => {
+          console.log("Error: ", err);
+        });
+    };
+    listFb();
+  }, []);
+
   const userId = localStorage.getItem("user_id");
   return (
     <div className="container border border-5">
@@ -169,6 +187,7 @@ const Feedback = () => {
       <table className="table table-striped mt-2 text-center">
         <tr>
           <th>userID</th>
+          <th>FID</th>
           <th>ArticleID</th>
           <th>Date</th>
           <th>Feedback</th>
@@ -176,9 +195,10 @@ const Feedback = () => {
         {feedbackList.map((feedbackk) => (
           <tr key={feedbackk.userId}>
             <td>{feedbackk.userId}</td>
+            <td>{feedbackk.feedbackId}</td>
             <td>{feedbackk.articleId}</td>
             <td>{feedbackk.feedbackTime}</td>
-            <td>{feedbackk.context}</td>
+            <td>{feedbackk.feedbackContent}</td>
           </tr>
         ))}
       </table>

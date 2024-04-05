@@ -6,9 +6,9 @@ import axios from "axios";
 import React from "react";
 import * as Toast from "../../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY || "";
-const token = localStorage.getItem("token");
 const userId = localStorage.getItem("user_id");
 
+const token = localStorage.getItem("token");
 // {
 //   "feedbackId": 89,
 //   "userId": 2,
@@ -24,11 +24,16 @@ function MarketingCFeedb(props) {
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState("");
   const [updateFeedback, setUpdateFeedback] = useState("");
-  const [feedbackId, setFeedbackId] = useState({});
+  const [feedbackId, setFeedbackId] = useState(0);
   const [articleId, setArticleId] = useState(id);
   const [feedbackTime, setFeedbackTime] = useState(new Date());
   const [isSending, setIsSending] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
+  const onFileChange = (files) => {
+    console.log(files);
+  };
+  const [file, setFile] = useState();
+  const [viewFeedback, setViewFeedback] = useState([]);
   // const onFileChange = (files) => {
   //   console.log(files);
   // };
@@ -54,51 +59,115 @@ function MarketingCFeedb(props) {
   //   return <></>;
   // }
 
-  // const handleClickDelete = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.delete(`${API_BASE}/article/delete`);
-  //     if (response.status === 200) {
-  //       navigate("/st_submit_post");
-  //       console.log("delete sucess");
-  //     } else if (response.status === 400) {
-  //       console.log("some thing went wrong");
-  //     } else if (response.status === 403) {
-  //       console.log("No Permission!");
-  //       Toast.toastErorr("You do not have permission to perform this action");
-  //       setTimeout(() => {
-  //         navigate("/");
-  //       }, 1000);
-  //     }
-  //   } catch (err) {
-  //     console.log("Error " + err);
-  //   }
-  // };
-  // function onFileInput(e) {
-  //   const files = e.target.files;
-  //   if (files.length === 0) return;
-  //   for (let i = 0; i < files.length; i++) {
-  //     // if (files[i].type.split('/')[0] !== 'images') continue;
-  //     if (!imageList.some((e) => e.name === files[i].name)) {
-  //       setImageList((preImages) => [
-  //         ...preImages,
-  //         {
-  //           name: files[i].name,
-  //           url: URL.createObjectURL(files[i]),
-  //         },
-  //       ]);
-  //     }
-  //   }
-  // }
-  // const fileRemove = (file) => {
-  //   const updatedList = [...imageList];
-  //   updatedList.splice(imageList.indexOf(file), 1);
-  //   setImageList(updatedList);
-  //   props.onFileChange(updatedList);
-  // };
+  const [imageList, setImageList] = useState([]);
+  const fileInputRef = useRef(null);
+  const [postData, setPostData] = useState();
+  useEffect(() => {
+    const getFeedback = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await axios.post(`${API_BASE}/feedback/getbyarticleID`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setViewFeedback(res.data);
+        console.table("Feedback:", JSON.stringify(res.data));
+      } catch (err) {
+        console.log("Failed to list account! " + err);
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
+    };
+    getFeedback();
+  }, []);
+  
+  useEffect(() => {
+
+    const token = localStorage.getItem("token");
+    axios
+      .get(`${API_BASE}/article/get/${id}`, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${token}`,
+        },
+        staleTime: 0,
+      })
+      .then((data) => {
+        setPostData(data.data.data);
+      })
+      .catch((err) => console.log(err));
+  }, [id]);
+
+  useEffect(() => {
+
+    const token = localStorage.getItem("token");
+    axios.get(`${API_BASE}/article/GetUpLoadedFiles`, { articleId: id }, {
+      headers: {
+        "ngrok-skip-browser-warning": true,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
+    })
+      .then((data) => {
+        setFile(data.data.data);
+      })
+      .catch((err) => console.log(err));
+  }, [id]);
+  console.log("File: ", file)
+  if (!postData) {
+    return <></>;
+  }
+
+  const handleClickDelete = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.delete(`${API_BASE}/article/delete`);
+      if (response.status === 200) {
+        navigate("/st_submit_post");
+        console.log("delete sucess");
+      } else if (response.status === 400) {
+        console.log("some thing went wrong");
+      } else if (response.status === 403) {
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
+    } catch (err) {
+      console.log("Error " + err);
+    }
+  };
+  function onFileInput(e) {
+    const files = e.target.files;
+    if (files.length === 0) return;
+    for (let i = 0; i < files.length; i++) {
+      // if (files[i].type.split('/')[0] !== 'images') continue;
+      if (!imageList.some((e) => e.name === files[i].name)) {
+        setImageList((preImages) => [
+          ...preImages,
+          {
+            name: files[i].name,
+            url: URL.createObjectURL(files[i]),
+          },
+        ]);
+      }
+    }
+  }
+  const fileRemove = (file) => {
+    const updatedList = [...imageList];
+    updatedList.splice(imageList.indexOf(file), 1);
+    setImageList(updatedList);
+    props.onFileChange(updatedList);
+  };
 
   //Feedback
-  const handleFeedback = async () => {
+  async function handleFeedback() {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("user_id");
     setIsSending(true);
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
@@ -125,63 +194,81 @@ function MarketingCFeedb(props) {
       }
       console.log("Create feedback success!");
       console.log("Feedback: ", response.data);
-      setFeedbackId(response.data);
-      const fbId = response.data.feedbackId;
-      console.log("Feedback ID: ", fbId);
-      console.log("Id", feedbackId);
-
       const newFeedback = {
         userId: userId,
         articleId: articleId,
         feedbackContent: feedback,
         feedbackTime: formattedFeedbackTime,
-        feedbackId: fbId,
+        feedbackId: response.data.feedbackId,
       };
-      setFeedbackList(feedbackList.push(newFeedback));
-      console.log(feedbackId);
-      console.log(response.data);
-
+      setFeedbackList([...feedbackList, newFeedback]);
+      setFeedbackId(newFeedback.feedbackId);
       console.log("Feedback list: ", feedbackList);
     } catch (err) {
       console.error("Error sending feedback:", err);
     }
-  };
+  }
 
-  const handleUpdate = async () => {
+  const handleUpdateFeedback = async () => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("user_id");
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
-      const updateFeedback = {
+      const update = {
         userId: userId,
         articleId: articleId,
-        feedbackContent: feedback,
+        feedbackContent: updateFeedback,
         feedbackTime: formattedFeedbackTime,
         feedbackId: feedbackId,
       };
       console.log(feedbackId);
       const res = await axios.put(
         `${API_BASE}/feedback/update/${feedbackId}`,
-        updateFeedback,
+        update,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      console.log("Update feedback: " + res.data);
       const updatedFeedbackList = feedbackList.map((item) => {
         if (item.feedbackId === feedbackId) {
-          return {
-            ...item,
-            ...updateFeedback,
-          };
+          return update;
+        } else {
+          return item;
         }
-        return item;
       });
       setFeedbackList(updatedFeedbackList);
-      console.log("Update feedback: " + res.data);
+      setFeedback(updateFeedback);
+      console.log("Updated feedback list: ", updatedFeedbackList);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1000);
     } catch (err) {
-      console.error("Error updating feedback:", err);
+      console.log("Error updating feedback:", err);
     }
   };
+
+  // useEffect(() => {
+  //   const getFeedback = async () => {
+  //     const token = localStorage.getItem("token");
+  //     await axios
+  //       .get(`${API_BASE}/feedback/getbyarticleID`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       })
+  //       .then((res) => {
+  //         setFeedbackList(res.data);
+  //         console.table("Feedback:", JSON.stringify(res.data));
+  //       })
+  //       .catch((err) => {
+  //         console.log("Failed to list account! " + err);
+  //       });
+  //   };
+  //   getFeedback();
+  // }, [articleId]);
 
   return (
     <div>
@@ -189,17 +276,7 @@ function MarketingCFeedb(props) {
       <>
         <div className="mt-5 mb-5 max-width m-auto">
           <form>
-            <div className="bg-light">
-              <div className="mb-3 mt-5">
-                <input
-                  className="form-control"
-                  type="file"
-                  id="formFileMultiple"
-                  multiple
-                />
-              </div>
-            </div>
-            {/* <div className="drop_card form-control">
+            <div className="drop_card form-control">
               <div className="image_area">
                 {imageList.map((item, index) => (
                   <div className="image-preview__item">
@@ -233,7 +310,7 @@ function MarketingCFeedb(props) {
                 aria-label="With textarea"
                 value={postData.content}
               ></textarea>
-            </div> */}
+            </div>
             <button type="submit" className="btn btn-secondary float-end mt-3">
               Download Contribution
             </button>
@@ -285,7 +362,7 @@ function MarketingCFeedb(props) {
             <button
               className="btn btn-group btn-outline-primary mr-2"
               type="submit"
-              onClick={() => handleFeedback()}
+              onClick={handleFeedback}
             >
               Save feedback
             </button>
@@ -293,12 +370,37 @@ function MarketingCFeedb(props) {
               className="btn btn-group btn-outline-danger mr-2 ms-2"
               data-bs-toggle="modal"
               data-bs-target="#updateFeedback"
-              onClick={() => setFeedbackId(feedbackList.feedbackId)}
+              onClick={() => setFeedbackId(feedbackId)}
             >
               Edit feedback
             </button>
           </div>
         </div>
+
+        {/* <div className="container">
+          <table className="table table-striped mt-5">
+            <thead>
+              <tr>
+                <th>UserID</th>
+                <th>ArticleID</th>
+                <th>FeedbackID</th>
+                <th>Context</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {viewFeedback.map((feedback) => (
+                <tr key={feedback.articleId}>
+                  <td>{feedback.userId}</td>
+                  <td>{feedback.articleId}</td>
+                  <td>{feedback.feedbackId}</td>
+                  <td>{feedback.feedback}</td>
+                  <td>{feedback.feedbackTime.toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div> */}
         {/* Modal */}
         <div
           className="modal fade"
@@ -327,6 +429,7 @@ function MarketingCFeedb(props) {
                   className="form-control"
                   id="feedback"
                   placeholder={feedback}
+                  value={updateFeedback}
                   onChange={(e) => setUpdateFeedback(e.target.value)}
                 />
               </div>
@@ -341,7 +444,7 @@ function MarketingCFeedb(props) {
                 <button
                   className="btn btn-primary"
                   type="submit"
-                  onClick={() => handleUpdate()}
+                  onClick={handleUpdateFeedback}
                 >
                   Update feedback
                 </button>
