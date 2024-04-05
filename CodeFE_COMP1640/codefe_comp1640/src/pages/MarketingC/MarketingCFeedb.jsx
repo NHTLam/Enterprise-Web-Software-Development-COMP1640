@@ -62,30 +62,28 @@ function MarketingCFeedb(props) {
   const [imageList, setImageList] = useState([]);
   const fileInputRef = useRef(null);
   const [postData, setPostData] = useState();
+
   useEffect(() => {
     const getFeedback = async () => {
+      debugger;
       const token = localStorage.getItem("token");
-      try {
-        const res = await axios.post(`${API_BASE}/feedback/getbyarticleID`, {
+      const res = await axios.get(
+        `${API_BASE}/feedback/getbyarticleID?articleId=${articleId}`,
+        {
           headers: {
+            "ngrok-skip-browser-warning": "true",
             Authorization: `Bearer ${token}`,
           },
-        });
-        setViewFeedback(res.data);
-        console.table("Feedback:", JSON.stringify(res.data));
-      } catch (err) {
-        console.log("Failed to list account! " + err);
-        Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-      }
+        }
+      );
+      debugger;
+      setViewFeedback(res.data);
+      console.table("Feedback:", JSON.stringify(res.data));
     };
     getFeedback();
-  }, []);
-  
-  useEffect(() => {
+  }, [articleId]);
 
+  useEffect(() => {
     const token = localStorage.getItem("token");
     axios
       .get(`${API_BASE}/article/get/${id}`, {
@@ -102,21 +100,25 @@ function MarketingCFeedb(props) {
   }, [id]);
 
   useEffect(() => {
-
     const token = localStorage.getItem("token");
-    axios.get(`${API_BASE}/article/GetUpLoadedFiles`, { articleId: id }, {
-      headers: {
-        "ngrok-skip-browser-warning": true,
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      }
-    })
+    axios
+      .get(
+        `${API_BASE}/article/GetUpLoadedFiles`,
+        { articleId: id },
+        {
+          headers: {
+            "ngrok-skip-browser-warning": true,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((data) => {
         setFile(data.data.data);
       })
       .catch((err) => console.log(err));
   }, [id]);
-  console.log("File: ", file)
+  console.log("File: ", file);
   if (!postData) {
     return <></>;
   }
@@ -250,26 +252,6 @@ function MarketingCFeedb(props) {
     }
   };
 
-  // useEffect(() => {
-  //   const getFeedback = async () => {
-  //     const token = localStorage.getItem("token");
-  //     await axios
-  //       .get(`${API_BASE}/feedback/getbyarticleID`, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       })
-  //       .then((res) => {
-  //         setFeedbackList(res.data);
-  //         console.table("Feedback:", JSON.stringify(res.data));
-  //       })
-  //       .catch((err) => {
-  //         console.log("Failed to list account! " + err);
-  //       });
-  //   };
-  //   getFeedback();
-  // }, [articleId]);
-
   return (
     <div>
       {/* <PostInfor dataTopic={postData} /> */}
@@ -377,7 +359,7 @@ function MarketingCFeedb(props) {
           </div>
         </div>
 
-        {/* <div className="container">
+        <div className="container">
           <table className="table table-striped mt-5">
             <thead>
               <tr>
@@ -394,13 +376,14 @@ function MarketingCFeedb(props) {
                   <td>{feedback.userId}</td>
                   <td>{feedback.articleId}</td>
                   <td>{feedback.feedbackId}</td>
-                  <td>{feedback.feedback}</td>
+                  <td>{feedback.feedbackContent}</td>
+                  {/* //FIx ngay */}
                   <td>{feedback.feedbackTime.toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div> */}
+        </div>
         {/* Modal */}
         <div
           className="modal fade"

@@ -112,17 +112,6 @@ const App = () => {
           }
         />
 
-        {/* <Route
-          path="/contribution/view/:id"
-          element={
-            <Layout>
-              <MarketingCFeedb />
-            </Layout>
-          }
-        />  */}
-
-        <Route path="/contribute/view/:id" element={<MarketingCFeedb />} />
-
         {/* MANAGER ROUTES */}
         <Route
           path="/manager_manage"
