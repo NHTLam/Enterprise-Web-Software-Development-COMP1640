@@ -11,7 +11,8 @@ const userId = localStorage.getItem("user_id");
 
 function ModelEdit({dataEdit}) {
     console.log(dataEdit);
-    const [credentials, setCredentials] = useState({})
+    const [content, setContent] = useState()
+    const [title, setTitle] = useState()
     const [userData, setUserData] = useState([])
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
@@ -44,9 +45,10 @@ function ModelEdit({dataEdit}) {
                     feedbacks: [],
                     user: null,
                     topicId: null,
-                    startDate: startDate,
-                    endDate: endDate,
-                    ...credentials,
+                    startDate: startDate ? startDate : dataEdit.startDate,
+                    endDate: endDate? endDate : dataEdit.endDate,
+                    content: content? content : dataEdit.content,
+                    title: title? title : dataEdit.title,
                 },
                 {
                     headers: {
@@ -62,9 +64,6 @@ function ModelEdit({dataEdit}) {
             Toast.toastErorr("Something went wrong");
         }
     }
-    const handleChange = (e) => {
-        setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
-    };
     return (
         <div>
             <form>
@@ -99,7 +98,7 @@ function ModelEdit({dataEdit}) {
                                         className="form-control"
                                         id="title"
                                         placeholder={dataEdit.title}
-                                        onChange={handleChange}
+                                        onChange={(e) => setTitle(e.target.value)}
                                     />
                                 </div>
 
@@ -113,7 +112,7 @@ function ModelEdit({dataEdit}) {
                                         className="form-control"
                                         id="content"
                                         placeholder={dataEdit.content}
-                                        onChange={handleChange}
+                                        onChange={(e) => setContent(e.target.value)}
                                     />
                                 </div>
                                 {/* <div className="mb-3">

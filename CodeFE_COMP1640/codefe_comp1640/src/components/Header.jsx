@@ -89,7 +89,6 @@ const Header = () => {
       getAccount();
     }
   }, [userId]);
-  console.log("user data goted: ", userData);
   const AllowAccessAdminPage = listPath.some(x => pathsFunctionAdmin.includes(x))
   var ValidAccessUrl = listPath.filter(x => pathsFunctionAdmin.includes(x))[0]
   if (ValidAccessUrl === '/dashboard/get-data') {

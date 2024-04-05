@@ -10,10 +10,12 @@ const API_BASE = process.env.REACT_APP_API_KEY;
 
 
 function ModelAdd() {
-    const [credentials, setCredentials] = useState({})
+    const [credentials, setCredentials] = useState({
+
+    })
     const [userData, setUserData] = useState([])
-    const [startDate, setStartDate] = useState();
-    const [endDate, setEndDate] = useState();
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
     const token = localStorage.getItem("token");
     const navigate = useNavigate();
     useEffect(() => {
@@ -27,6 +29,29 @@ function ModelAdd() {
             }
         ).then(data => setUserData(data.data)).catch(err => console.log(err))
     }, [])
+    const handleStartDate = (e) =>{
+        const dateSelected = new Date(e)
+        const currentDtae = new Date();
+        if(dateSelected < currentDtae){
+            Toast.toastErorr("Start Date cannot be less than current date")
+            setStartDate("");
+        }else{
+
+            setStartDate(dateSelected)
+        }
+    }
+
+    const handleEndDate = (e) =>{
+        const dateSelected = new Date(e);
+        const currentDtae = new Date();
+        if(dateSelected < currentDtae){
+            setEndDate("");
+            Toast.toastErorr("End Date cannot be less than current date")
+        }else{
+
+            setEndDate(dateSelected)
+        }
+    }
 
     // console.log(userData)
     const handleNewTopic = async () => {
@@ -61,7 +86,6 @@ function ModelAdd() {
                 setTimeout(() => {
                     navigate("/mk-manage-topic")
                 }, 3000)
-                console.log(res)
             }
         } catch {
             Toast.toastErorr("Something went wrong");
@@ -70,16 +94,8 @@ function ModelAdd() {
     const handleChange = (e) => {
         setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
     };
-    useEffect(()=>{
-    if(startDate <= Date.now()) {
-        Toast.toastErorr("start date can not in the pass")
-        setStartDate("")
-    }
-    if(endDate <= startDate){
-        Toast.toastErorr("end date can not before start date")
-        setEndDate("")
-    }
-    },[startDate,endDate])
+
+
 
     return (
         <div>
@@ -135,13 +151,13 @@ function ModelAdd() {
                         <label for="start date" className="form-label">
                             Choose Start Date
                         </label>
-                        <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+                        <DatePicker selected={startDate} onChange={handleStartDate} />
                     </div>
                     <div className="mb-3">
                         <label for="start date" className="form-label">
                             Choose End Date
                         </label>
-                        <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} />
+                        <DatePicker selected={endDate} onChange={handleEndDate} />
                     </div>
                 </div>
                 <div className="footer">

@@ -13,7 +13,6 @@ const DetailContribution = () => {
   const [articleId, setArticleId] = useState(contributionId);
   const [data, setData] = useState([]);
   const navigate = useNavigate();
-  console.log("user: ", user);
   const handleSubmitComment = async (e) => {
     if (e.key === "Enter") {
       try {
