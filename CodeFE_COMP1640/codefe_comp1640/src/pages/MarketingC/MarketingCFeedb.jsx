@@ -166,6 +166,8 @@ function MarketingCFeedb(props) {
 
   //Feedback
   async function handleFeedback() {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("user_id");
     setIsSending(true);
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
@@ -207,9 +209,6 @@ function MarketingCFeedb(props) {
     }
   }
 
-  console.log("Feedback ID: ", feedbackId);
-  console.log("Feedback list: ", feedbackList);
-
   const handleUpdateFeedback = async () => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("user_id");
@@ -232,6 +231,7 @@ function MarketingCFeedb(props) {
           },
         }
       );
+      console.log("Update feedback: " + res.data);
       const updatedFeedbackList = feedbackList.map((item) => {
         if (item.feedbackId === feedbackId) {
           return update;
@@ -241,16 +241,34 @@ function MarketingCFeedb(props) {
       });
       setFeedbackList(updatedFeedbackList);
       setFeedback(updateFeedback);
-      console.log("Update feedback: " + res.data);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      console.log("Updated feedback list: ", updatedFeedbackList);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1000);
     } catch (err) {
       console.log("Error updating feedback:", err);
     }
   };
 
-
+  // useEffect(() => {
+  //   const getFeedback = async () => {
+  //     const token = localStorage.getItem("token");
+  //     await axios
+  //       .get(`${API_BASE}/feedback/getbyarticleID`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       })
+  //       .then((res) => {
+  //         setFeedbackList(res.data);
+  //         console.table("Feedback:", JSON.stringify(res.data));
+  //       })
+  //       .catch((err) => {
+  //         console.log("Failed to list account! " + err);
+  //       });
+  //   };
+  //   getFeedback();
+  // }, [articleId]);
 
   return (
     <div>
@@ -358,6 +376,31 @@ function MarketingCFeedb(props) {
             </button>
           </div>
         </div>
+
+        {/* <div className="container">
+          <table className="table table-striped mt-5">
+            <thead>
+              <tr>
+                <th>UserID</th>
+                <th>ArticleID</th>
+                <th>FeedbackID</th>
+                <th>Context</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {viewFeedback.map((feedback) => (
+                <tr key={feedback.articleId}>
+                  <td>{feedback.userId}</td>
+                  <td>{feedback.articleId}</td>
+                  <td>{feedback.feedbackId}</td>
+                  <td>{feedback.feedback}</td>
+                  <td>{feedback.feedbackTime.toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div> */}
         {/* Modal */}
         <div
           className="modal fade"
@@ -386,6 +429,7 @@ function MarketingCFeedb(props) {
                   className="form-control"
                   id="feedback"
                   placeholder={feedback}
+                  value={updateFeedback}
                   onChange={(e) => setUpdateFeedback(e.target.value)}
                 />
               </div>
@@ -400,7 +444,7 @@ function MarketingCFeedb(props) {
                 <button
                   className="btn btn-primary"
                   type="submit"
-                  onClick={() => handleUpdateFeedback}
+                  onClick={handleUpdateFeedback}
                 >
                   Update feedback
                 </button>
@@ -410,24 +454,6 @@ function MarketingCFeedb(props) {
         </div>
         {/* Modal */}
       </div>
-      {/* <table className="table table-striped mt-2 text-center">
-        <tr>
-          <th>userID</th>
-          <th>FeebackID</th>
-          <th>ArticleID</th>
-          <th>Date</th>
-          <th>Feedback</th>
-        </tr>
-        {feedbackList.map((feedbackk) => (
-          <tr key={feedbackk.userId}>
-            <td>{feedbackk.userId}</td>
-            <td>{feedbackk.feedbackId}</td>
-            <td>{feedbackk.articleId}</td>
-            <td>{feedbackk.feedbackTime}</td>
-            <td>{feedbackk.feedbackContent}</td>
-          </tr>
-        ))}
-      </table> */}
     </div>
   );
 }
