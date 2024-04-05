@@ -101,18 +101,14 @@ function MarketingCFeedb(props) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    axios
-      .get(
-        `${API_BASE}/article/GetUpLoadedFiles`,
-        { articleId: id },
-        {
-          headers: {
-            "ngrok-skip-browser-warning": true,
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+    console.log("id: ", id)
+    axios.post(`${API_BASE}/article/GetUpLoadedFiles?articleId=${id}`, null, {
+      headers: {
+        "ngrok-skip-browser-warning": true,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
+    })
       .then((data) => {
         setFile(data.data.data);
       })
@@ -252,10 +248,77 @@ function MarketingCFeedb(props) {
     }
   };
 
+  // useEffect(() => {
+  //   const getFeedback = async () => {
+  //     const token = localStorage.getItem("token");
+  //     await axios
+  //       .get(`${API_BASE}/feedback/getbyarticleID`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       })
+  //       .then((res) => {
+  //         setFeedbackList(res.data);
+  //         console.table("Feedback:", JSON.stringify(res.data));
+  //       })
+  //       .catch((err) => {
+  //         console.log("Failed to list account! " + err);
+  //       });
+  //   };
+  //   getFeedback();
+  // }, [articleId]);
+  const handlePublicContribution = async (e) => {
+    e.preventDefault()
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.put(`${API_BASE}/article/Approved`, {
+        articleId: +id,
+      }, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if (res.status === 200) {
+        Toast.toastSuccess("apprvoed successfully")
+        setTimeout(() => {
+          navigate("/mk-manage-topic");
+        }, 1000)
+      }
+    } catch (err) {
+      Toast.toastErorr("Some thing went wrong, Approve false")
+      console.log(err)
+    }
+  }
+  const handleDownloadFile = (e) =>{
+    e.preventDefault()
+    const token = localStorage.getItem("token");
+    debugger;
+    try {
+      const res = axios.post(`${API_BASE}/article/GetFile?articleId=${id}`,null, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if (res.status === 200) {
+        console.log("res: ",res)
+        Toast.toastSuccess("Download successfully")
+      }
+    } catch (err) {
+      Toast.toastErorr("Some thing went wrong, Approve false")
+      console.log(err)
+    }
+  }
   return (
     <div>
       {/* <PostInfor dataTopic={postData} /> */}
       <>
+        <div>{file?.map((file) => {
+          return (
+            <a href="!#">{file?.fileName} </a>
+          )
+        })}</div>
         <div className="mt-5 mb-5 max-width m-auto">
           <form>
             <div className="drop_card form-control">
@@ -290,13 +353,13 @@ function MarketingCFeedb(props) {
               <textarea
                 className="form-control"
                 aria-label="With textarea"
-                value={postData.content}
+                placeholder={postData.content}
               ></textarea>
             </div>
-            <button type="submit" className="btn btn-secondary float-end mt-3">
+            <button className="btn btn-secondary float-end mt-3" onClick={handleDownloadFile}>
               Download Contribution
             </button>
-            <button type="submit" className="btn btn-success float-end mt-3">
+            <button className="btn btn-success float-end mt-3" onClick={handlePublicContribution}>
               Public
             </button>
           </form>
