@@ -17,7 +17,7 @@ const DetailContribution = () => {
   const handleSubmitComment = async (e) => {
     if (e.key === "Enter") {
       try {
-        const response = await axios.post(
+        await axios.post(
           `${API_BASE}/comment/create`,
           {
             articleId: articleId,
@@ -80,13 +80,14 @@ const DetailContribution = () => {
         },
       })
       .then((data) => {
-        // setData(data.data.data);
+        setData(data.data.data);
       })
       .catch((err) => console.log(err));
   }, [data]);
 
   console.log("Listcmt", listCmt);
-  //   View detail contribution and comment
+
+  //View detail contribution and comment
   return (
     <div className="container">
       {
@@ -101,17 +102,18 @@ const DetailContribution = () => {
             <tbody>
               <tr>
                 <th scope="row">Title</th>
-                {/* <td>{data.title}</td> */}
+                <td>{data.title}</td>
               </tr>
               <tr>
                 <th scope="row">Description</th>
-                <td>{/* <h1>{data.content}</h1> */}</td>
+                <td>
+                  <h1>{data.content}</h1>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
       }
-
       <hr />
       <div className="form-comment border border-2 mt-3">
         <div className="input-group">

@@ -6,7 +6,6 @@ import axios from "axios";
 import React from "react";
 import * as Toast from "../../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY || "";
-const token = localStorage.getItem("token");
 const userId = localStorage.getItem("user_id");
 
 // {
@@ -144,7 +143,9 @@ function MarketingCFeedb() {
   console.log("Feedback ID: ", feedbackId);
   console.log("Feedback list: ", feedbackList);
 
-  const handleUpdate = async () => {
+  const handleUpdateFeedback = async () => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("user_id");
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
       const update = {
@@ -178,7 +179,7 @@ function MarketingCFeedb() {
         window.location.reload();
       }, 1000);
     } catch (err) {
-      console.error("Error updating feedback:", err);
+      console.log("Error updating feedback:", err);
     }
   };
 
@@ -362,7 +363,7 @@ function MarketingCFeedb() {
                 <button
                   className="btn btn-primary"
                   type="submit"
-                  onClick={() => handleUpdate()}
+                  onClick={() => handleUpdateFeedback}
                 >
                   Update feedback
                 </button>
@@ -372,6 +373,24 @@ function MarketingCFeedb() {
         </div>
         {/* Modal */}
       </div>
+      {/* <table className="table table-striped mt-2 text-center">
+        <tr>
+          <th>userID</th>
+          <th>FeebackID</th>
+          <th>ArticleID</th>
+          <th>Date</th>
+          <th>Feedback</th>
+        </tr>
+        {feedbackList.map((feedbackk) => (
+          <tr key={feedbackk.userId}>
+            <td>{feedbackk.userId}</td>
+            <td>{feedbackk.feedbackId}</td>
+            <td>{feedbackk.articleId}</td>
+            <td>{feedbackk.feedbackTime}</td>
+            <td>{feedbackk.feedbackContent}</td>
+          </tr>
+        ))}
+      </table> */}
     </div>
   );
 }
