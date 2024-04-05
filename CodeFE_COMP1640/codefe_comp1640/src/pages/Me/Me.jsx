@@ -38,6 +38,7 @@ function Me() {
         //     Toast.toastErorr("Error updating user");
         // }
     }
+    console.log(userData)
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (userId !== undefined) {
