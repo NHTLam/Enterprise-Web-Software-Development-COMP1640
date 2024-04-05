@@ -19,16 +19,17 @@ const userId = localStorage.getItem("user_id");
 //   "user": null
 // },
 
-function MarketingCFeedb(props) {
+function MarketingCFeedb() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState("");
   const [updateFeedback, setUpdateFeedback] = useState("");
-  const [feedbackId, setFeedbackId] = useState({});
+  const [feedbackId, setFeedbackId] = useState(0);
   const [articleId, setArticleId] = useState(id);
   const [feedbackTime, setFeedbackTime] = useState(new Date());
   const [isSending, setIsSending] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
+  const [viewFeedback, setViewFeedback] = useState([]);
   // const onFileChange = (files) => {
   //   console.log(files);
   // };
@@ -98,7 +99,7 @@ function MarketingCFeedb(props) {
   // };
 
   //Feedback
-  const handleFeedback = async () => {
+  async function handleFeedback() {
     setIsSending(true);
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
@@ -125,42 +126,38 @@ function MarketingCFeedb(props) {
       }
       console.log("Create feedback success!");
       console.log("Feedback: ", response.data);
-      setFeedbackId(response.data);
-      const fbId = response.data.feedbackId;
-      console.log("Feedback ID: ", fbId);
-      console.log("Id", feedbackId);
-
       const newFeedback = {
         userId: userId,
         articleId: articleId,
         feedbackContent: feedback,
         feedbackTime: formattedFeedbackTime,
-        feedbackId: fbId,
+        feedbackId: response.data.feedbackId,
       };
-      setFeedbackList(feedbackList.push(newFeedback));
-      console.log(feedbackId);
-      console.log(response.data);
-
+      setFeedbackList([...feedbackList, newFeedback]);
+      setFeedbackId(newFeedback.feedbackId);
       console.log("Feedback list: ", feedbackList);
     } catch (err) {
       console.error("Error sending feedback:", err);
     }
-  };
+  }
+
+  console.log("Feedback ID: ", feedbackId);
+  console.log("Feedback list: ", feedbackList);
 
   const handleUpdate = async () => {
     try {
       const formattedFeedbackTime = feedbackTime.toISOString();
-      const updateFeedback = {
+      const update = {
         userId: userId,
         articleId: articleId,
-        feedbackContent: feedback,
+        feedbackContent: updateFeedback,
         feedbackTime: formattedFeedbackTime,
         feedbackId: feedbackId,
       };
       console.log(feedbackId);
       const res = await axios.put(
         `${API_BASE}/feedback/update/${feedbackId}`,
-        updateFeedback,
+        update,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -169,19 +166,43 @@ function MarketingCFeedb(props) {
       );
       const updatedFeedbackList = feedbackList.map((item) => {
         if (item.feedbackId === feedbackId) {
-          return {
-            ...item,
-            ...updateFeedback,
-          };
+          return update;
+        } else {
+          return item;
         }
-        return item;
       });
       setFeedbackList(updatedFeedbackList);
+      setFeedback(updateFeedback);
       console.log("Update feedback: " + res.data);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (err) {
       console.error("Error updating feedback:", err);
     }
   };
+
+  useEffect(() => {
+    const getFeedback = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await axios.post(`${API_BASE}/feedback/getbyarticleID`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setViewFeedback(res.data);
+        console.table("Feedback:", JSON.stringify(res.data));
+      } catch (err) {
+        console.log("Failed to list account! " + err);
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
+    };
+    getFeedback();
+  }, []);
 
   return (
     <div>
@@ -285,7 +306,7 @@ function MarketingCFeedb(props) {
             <button
               className="btn btn-group btn-outline-primary mr-2"
               type="submit"
-              onClick={() => handleFeedback()}
+              onClick={handleFeedback}
             >
               Save feedback
             </button>
@@ -293,7 +314,7 @@ function MarketingCFeedb(props) {
               className="btn btn-group btn-outline-danger mr-2 ms-2"
               data-bs-toggle="modal"
               data-bs-target="#updateFeedback"
-              onClick={() => setFeedbackId(feedbackList.feedbackId)}
+              onClick={() => setFeedbackId(feedbackId)}
             >
               Edit feedback
             </button>
