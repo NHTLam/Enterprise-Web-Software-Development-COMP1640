@@ -11,6 +11,7 @@ namespace CodeBE_COMP1640.Repositories
         IFeedbackRepository FeedbackRepository { get; }
         IDashboardRepository DashboardRepository { get; }
         ILogRepository LogRepository { get; }
+        IBadWordRepository BadWordRepository { get; }
 
     }
     public class UOW : IUOW
@@ -21,6 +22,7 @@ namespace CodeBE_COMP1640.Repositories
         public ICommentRepository CommentRepository { get; private set; }
         public IDashboardRepository DashboardRepository { get; private set; }
         public ILogRepository LogRepository { get; private set; }
+        public IBadWordRepository BadWordRepository { get; private set; }
         private IFeedbackRepository _feedbackRepository;
 
         public UOW(DataContext DataContext)
@@ -31,6 +33,7 @@ namespace CodeBE_COMP1640.Repositories
             CommentRepository = new CommentRepository(DataContext);
             DashboardRepository = new DashboardRepository(DataContext);
             LogRepository = new LogRepository(DataContext);
+            BadWordRepository = new BadWordRepository(DataContext);
         }
         public IFeedbackRepository FeedbackRepository
         {

@@ -16,6 +16,7 @@ using CodeBE_COMP1640.Services.DashboardS;
 using CodeBE_COMP1640.Services.EmailS;
 using System.Text.Json.Serialization;
 using CodeBE_COMP1640.Services.LogS;
+using CodeBE_COMP1640.Services.BadWordS;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -71,8 +72,8 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ILogService, LogService>();
+builder.Services.AddScoped<IBadWordService, BadWordService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
-
 
 var app = builder.Build();
 
