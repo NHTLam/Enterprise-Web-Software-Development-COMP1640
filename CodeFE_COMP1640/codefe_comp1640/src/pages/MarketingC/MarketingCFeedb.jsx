@@ -63,9 +63,10 @@ function MarketingCFeedb(props) {
   const fileInputRef = useRef(null);
   const [postData, setPostData] = useState();
 
+  //Save feedback 1 lan. edit het
+
   useEffect(() => {
     const getFeedback = async () => {
-      debugger;
       const token = localStorage.getItem("token");
       const res = await axios.get(
         `${API_BASE}/feedback/getbyarticleID?articleId=${articleId}`,
@@ -76,7 +77,6 @@ function MarketingCFeedb(props) {
           },
         }
       );
-      debugger;
       setViewFeedback(res.data);
       console.table("Feedback:", JSON.stringify(res.data));
     };
@@ -101,14 +101,15 @@ function MarketingCFeedb(props) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log("id: ", id)
-    axios.post(`${API_BASE}/article/GetUpLoadedFiles?articleId=${id}`, null, {
-      headers: {
-        "ngrok-skip-browser-warning": true,
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      }
-    })
+    console.log("id: ", id);
+    axios
+      .post(`${API_BASE}/article/GetUpLoadedFiles?articleId=${id}`, null, {
+        headers: {
+          "ngrok-skip-browser-warning": true,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((data) => {
         setFile(data.data.data);
       })
@@ -202,6 +203,9 @@ function MarketingCFeedb(props) {
       setFeedbackList([...feedbackList, newFeedback]);
       setFeedbackId(newFeedback.feedbackId);
       console.log("Feedback list: ", feedbackList);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (err) {
       console.error("Error sending feedback:", err);
     }
@@ -268,57 +272,65 @@ function MarketingCFeedb(props) {
   //   getFeedback();
   // }, [articleId]);
   const handlePublicContribution = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.put(`${API_BASE}/article/Approved`, {
-        articleId: +id,
-      }, {
-        headers: {
-          'ngrok-skip-browser-warning': 'true',
-          Authorization: `Bearer ${token}`
+      const res = await axios.put(
+        `${API_BASE}/article/Approved`,
+        {
+          articleId: +id,
+        },
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       if (res.status === 200) {
-        Toast.toastSuccess("apprvoed successfully")
+        Toast.toastSuccess("apprvoed successfully");
         setTimeout(() => {
           navigate("/mk-manage-topic");
-        }, 1000)
+        }, 1000);
       }
     } catch (err) {
-      Toast.toastErorr("Some thing went wrong, Approve false")
-      console.log(err)
+      Toast.toastErorr("Some thing went wrong, Approve false");
+      console.log(err);
     }
-  }
-  const handleDownloadFile = (e) =>{
-    e.preventDefault()
+  };
+  const handleDownloadFile = (e) => {
+    e.preventDefault();
     const token = localStorage.getItem("token");
     debugger;
     try {
-      const res = axios.post(`${API_BASE}/article/GetFile?articleId=${id}`,null, {
-        headers: {
-          'ngrok-skip-browser-warning': 'true',
-          Authorization: `Bearer ${token}`
+      const res = axios.post(
+        `${API_BASE}/article/GetFile?articleId=${id}`,
+        null,
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       if (res.status === 200) {
-        console.log("res: ",res)
-        Toast.toastSuccess("Download successfully")
+        console.log("res: ", res);
+        Toast.toastSuccess("Download successfully");
       }
     } catch (err) {
-      Toast.toastErorr("Some thing went wrong, Approve false")
-      console.log(err)
+      Toast.toastErorr("Some thing went wrong, Approve false");
+      console.log(err);
     }
-  }
+  };
   return (
     <div>
       {/* <PostInfor dataTopic={postData} /> */}
       <>
-        <div>{file?.map((file) => {
-          return (
-            <a href="!#">{file?.fileName} </a>
-          )
-        })}</div>
+        <div>
+          {file?.map((file) => {
+            return <a href="!#">{file?.fileName} </a>;
+          })}
+        </div>
         <div className="mt-5 mb-5 max-width m-auto">
           <form>
             <div className="drop_card form-control">
@@ -356,10 +368,16 @@ function MarketingCFeedb(props) {
                 placeholder={postData.content}
               ></textarea>
             </div>
-            <button className="btn btn-secondary float-end mt-3" onClick={handleDownloadFile}>
+            <button
+              className="btn btn-secondary float-end mt-3"
+              onClick={handleDownloadFile}
+            >
               Download Contribution
             </button>
-            <button className="btn btn-success float-end mt-3" onClick={handlePublicContribution}>
+            <button
+              className="btn btn-success float-end mt-3"
+              onClick={handlePublicContribution}
+            >
               Public
             </button>
           </form>
@@ -431,6 +449,7 @@ function MarketingCFeedb(props) {
                 <th>FeedbackID</th>
                 <th>Context</th>
                 <th>Date</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -442,6 +461,9 @@ function MarketingCFeedb(props) {
                   <td>{feedback.feedbackContent}</td>
                   {/* //FIx ngay */}
                   <td>{feedback.feedbackTime.toLocaleString()}</td>
+                  <td>
+                    <button className="btn btn-danger"></button>
+                  </td>
                 </tr>
               ))}
             </tbody>
