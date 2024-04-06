@@ -83,7 +83,7 @@ function ManageTopic() {
         <tbody>
 
           {
-            topicData?.map((item, index) => {
+            [...topicData].reverse()?.map((item, index) => {
               return (
                 <tr>
                   <td key={index}>{index + 1}</td>
