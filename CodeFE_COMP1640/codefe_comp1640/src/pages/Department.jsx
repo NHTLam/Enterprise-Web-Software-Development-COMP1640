@@ -44,7 +44,7 @@ function Department() {
           )
         })
       }
-      <Contribution currentItems={isTopic.reverse()} link={`/topic/view`}/>
+      <Contribution currentItems={[...isTopic].reverse()} link={`/topic/view`}/>
     </div>
   )
 }

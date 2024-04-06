@@ -15,7 +15,6 @@ function ManageTopic() {
   const [DataFromChild, setDataFromChild] = useState([]);
   const [dataContribution, setDataContribution] = useState([]);
   const [TopicInfor, setTopicInfor] = useState([]);
-  console.log("data from child: " , DataFromChild)
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios.get(`${API_BASE}/article/GetAllArticle`, {
@@ -66,7 +65,7 @@ function ManageTopic() {
         <tbody>
 
           {
-            topicData?.map((item, index) => {
+            [...topicData].reverse()?.map((item, index) => {
               return (
                 <tr>
                   <td key={index}>{index + 1}</td>
@@ -106,10 +105,10 @@ function ManageTopic() {
 
       {/* Topic approved and have contribute of student */}
       {
-        topicApproved?.map((item,idex) =>{
+        [...topicApproved].reverse()?.map((item,idex) =>{
           return(
             <div class="card mt-5">
-            <h5 class="card-header">{item.title} {item.articleId}</h5>
+            <h5 class="card-header"><span className="text-black fw-bolder">Topic {item.articleId}:</span> {item.title} </h5>
             <div class="card-body">
               <h5 class="card-title">{item.content}</h5>
     
