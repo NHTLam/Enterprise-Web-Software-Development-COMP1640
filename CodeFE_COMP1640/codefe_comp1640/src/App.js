@@ -22,6 +22,7 @@ import ManageTopic from "./pages/ManagerC/ManageTopic";
 import CheckLog from "./pages/Log/CheckLog";
 import CreateTopic from "./pages/MarketingC/CreateTopic";
 import BadWord from "./pages/BadWord/BadWord";
+import ViewHistory from "./components/ViewHistory";
 const App = () => {
   return (
     <Router>
@@ -72,6 +73,8 @@ const App = () => {
             </Layout>
           }
         />
+
+        <Route path="/history/view/:id" element={<ViewHistory />} />
 
         <Route
           path="/department/:departmentId"
