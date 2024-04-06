@@ -7,25 +7,25 @@ const EditAccount = () => {
   const [Roles, setRoles] = useState([]);
   const departments = [
     {
-        Id: 1,
-        Name: "Business and Economics",
+      Id: 1,
+      Name: "Business and Economics",
     },
     {
-        Id: 2,
-        Name: "Enginering",
+      Id: 2,
+      Name: "Enginering",
     },
     {
-        Id: 3,
-        Name: "Art and Humanities",
+      Id: 3,
+      Name: "Art and Humanities",
     },
     {
-        Id: 4,
-        Name: "Law",
+      Id: 4,
+      Name: "Law",
     },
     {
-        Id: 5,
-        Name: "Sciences",
-    }
+      Id: 5,
+      Name: "Sciences",
+    },
   ];
   const navigate = useNavigate();
   const { id } = useParams();
@@ -198,7 +198,6 @@ const EditAccount = () => {
               value={account.departmentId}
               onChange={handleChange}
             >
-              <option>Select a department</option>
               {departments.map((department) => (
                 <option key={department.Id} value={department.Id}>
                   {department.Name}
