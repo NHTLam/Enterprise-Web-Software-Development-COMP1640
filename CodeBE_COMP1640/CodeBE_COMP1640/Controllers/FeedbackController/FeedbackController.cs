@@ -83,7 +83,6 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController
 
             // Tạo mới đối tượng Feedback từ dữ liệu trong request body
             var feedback = new Feedback
-
             {
                 UserId = feedbackDTO.UserId,
                 ArticleId = feedbackDTO.ArticleId,

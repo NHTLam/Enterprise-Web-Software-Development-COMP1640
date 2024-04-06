@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Repositories;
+using CodeBE_COMP1640.Controllers.FeedbackController;
 
 
 
@@ -18,7 +19,7 @@ namespace CodeBE_COMP1640.Services.FeedbackS
         Task CreateFeedback(Feedback feedback);
         Task UpdateFeedback(Feedback feedback);
         Task DeleteFeedback(int id);
-        Task<List<Feedback>> GetFeedbackByArticleId(int articleId);
+        Task<List<FeedbackDTO>> GetFeedbackByArticleId(int articleId);
     }
 
   public class FeedbackService : IFeedbackService
@@ -64,8 +65,19 @@ namespace CodeBE_COMP1640.Services.FeedbackS
         {
             await _uow.FeedbackRepository.DeleteFeedback(id);
         }
-         public async Task<List<Feedback>>  GetFeedbackByArticleId(int articleId){
-               return await _uow.FeedbackRepository.GetFeedbackByArticleId(articleId);      
-           }
+         public async Task<List<FeedbackDTO>> GetFeedbackByArticleId(int articleId)
+{
+    var feedbacks = await _uow.FeedbackRepository.GetFeedbackByArticleId(articleId);
+    var feedbackDTOs = feedbacks.Select(feedback => new FeedbackDTO
+    {
+        UserId = feedback.UserId,
+        ArticleId = feedback.ArticleId,
+        FeedbackContent = feedback.FeedbackContent,
+        FeedbackTime = feedback.FeedbackTime.GetValueOrDefault(),
+        Username = feedback.User?.Username
+    }).ToList();
+
+        return feedbackDTOs;
+}
     }
 }

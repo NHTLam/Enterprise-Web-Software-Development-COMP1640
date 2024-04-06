@@ -9,6 +9,6 @@ namespace CodeBE_COMP1640.Controllers.FeedbackController;
     public string FeedbackContent { get; set; }
     public DateTime FeedbackTime { get; set; }
 
-  
+    public string Username { get; set; }
 
     }

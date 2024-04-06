@@ -71,7 +71,10 @@ namespace CodeBE_COMP1640.Repositories
         }
          public async Task<List<Feedback>> GetFeedbackByArticleId(int articleId)
     {
-        return await _context.Feedbacks.Where(u => u.ArticleId == articleId ).ToListAsync();
+        return await _context.Feedbacks
+                .Include(f => f.User) // Bổ sung thông tin của bảng User
+                .Where(u => u.ArticleId == articleId)
+                .ToListAsync();
     }
     }
 }
