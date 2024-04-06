@@ -41,9 +41,9 @@ const App = () => {
         <Route
           path="/me"
           element={
-            // <Layout>
-            <Me />
-            // </Layout>
+            <Layout>
+              <Me />
+            </Layout>
           }
         />
 
@@ -74,7 +74,14 @@ const App = () => {
           }
         />
 
-        <Route path="/history/view/:id" element={<ViewHistory />} />
+        <Route
+          path="/history/view/:id"
+          element={
+            <Layout>
+              <ViewHistory />
+            </Layout>
+          }
+        />
 
         <Route
           path="/department/:departmentId"
@@ -86,7 +93,11 @@ const App = () => {
         />
         <Route
           path="/contribution/detail/:contributionId"
-          element={<DetailContribution />}
+          element={
+            <Layout>
+              <DetailContribution />
+            </Layout>
+          }
         />
 
         {/* Marketing Conidator ROUTES */}

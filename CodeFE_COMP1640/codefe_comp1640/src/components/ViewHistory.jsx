@@ -11,7 +11,7 @@ const ViewHistory = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [feedback, setFeedback] = useState("");
-  const [articleId, setArticleId] = useState(id);
+  // const [articleId, setArticleId] = useState(id);
   const [feedbackTime, setFeedbackTime] = useState(new Date());
   const disabledView = true;
   const [userName, setUserName] = useState("");
@@ -21,7 +21,7 @@ const ViewHistory = () => {
     const getFeedback = async () => {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `${API_BASE}/feedback/getbyarticleID?articleId=${articleId}`,
+        `${API_BASE}/feedback/getbyarticleID?articleId=${id}`,
         {
           headers: {
             "ngrok-skip-browser-warning": "true",
@@ -29,16 +29,17 @@ const ViewHistory = () => {
           },
         }
       );
-      setFeedback(res.data[0].feedbackContent);
-      setUserName(res.data[0].username);
+      console.log("data",res.data)
+      setFeedback(res.data[0]?.feedbackContent);
+      setUserName(res.data[0]?.username);
     };
     getFeedback();
-  }, [articleId]);
+  }, [id]);
 
   useEffect(() => {
     const getContent = async () => {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${API_BASE}/article/get/${articleId}`, {
+      const res = await axios.get(`${API_BASE}/article/get/${id}`, {
         headers: {
           "ngrok-skip-browser-warning": "true",
           Authorization: `Bearer ${token}`,
@@ -47,7 +48,7 @@ const ViewHistory = () => {
       setContent(res.data.data.content);
     };
     getContent();
-  }, [articleId]);
+  }, [id]);
 
   return (
     <div className="container">

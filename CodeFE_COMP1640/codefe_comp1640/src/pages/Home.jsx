@@ -106,7 +106,7 @@ const Home = () => {
                 </div>
             </nav>
             <div className="d-flex flex-wrap justify-content-center align-content-center mb-5">
-                <Pagination itemsPerPage={5} dataContributions={contributions.reverse()} link ={"/contribution/detail"} />
+                <Pagination itemsPerPage={5} dataContributions={[...contributions].reverse()} link ={"/contribution/detail"} />
             </div>
         </div>
     )

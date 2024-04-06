@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const API_BASE = process.env.REACT_APP_API_KEY;
 
@@ -19,7 +20,7 @@ function PostHistory() {
         })
         .then((data) => {
           console.log(data.data);
-          setListPost(data.data.data);
+          setListPost(data.data.data.filter(data => data.isTopic === false));
         })
         .catch((err) => console.log(err));
     };
@@ -27,7 +28,7 @@ function PostHistory() {
   }, []);
   return (
     <div>
-      {listPost.map((post) => {
+      {[...listPost].reverse().map((post) => {
         return (
           <div class="card">
             <h5 class="card-header">{post.content}</h5>
@@ -37,9 +38,9 @@ function PostHistory() {
                 With supporting text below as a natural lead-in to additional
                 content.
               </p>
-              <a href="!#" class="btn btn-primary">
-                Go somewhere
-              </a>
+              <Link to={`/history/view/${post.articleId}`}>
+                View Detail
+              </Link>
             </div>
           </div>
         );
