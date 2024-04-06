@@ -27,7 +27,8 @@ function StAddPost() {
     }
 
     return (
-        <div>
+        <div className="mt-5">
+            <h1 className="text-black fw-bolder">Submit Contribution</h1>
             <PostInfor dataTopic={data}/>
             <PostSubmit onFileChange={(files) => onFileChange(files)} />
         </div>
