@@ -46,7 +46,6 @@ const ManagerRole = () => {
 
   const handleDelete = async (userId) => {
     const token = localStorage.getItem("token");
-    console.log(userId);
     try {
       var res = await axios.post(`${API_BASE}/role/delete-role`, {
         userId,

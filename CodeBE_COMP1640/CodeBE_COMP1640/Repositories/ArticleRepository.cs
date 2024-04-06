@@ -55,6 +55,8 @@ namespace CodeBE_COMP1640.Repositories
                 existingArticle.IsTopic = item.IsTopic;
                 existingArticle.TopicId = item.TopicId;
                 existingArticle.Title = item.Title;
+                existingArticle.StartDate = item.StartDate;
+                existingArticle.EndDate = item.EndDate;
 
                 // Update other properties if needed
 

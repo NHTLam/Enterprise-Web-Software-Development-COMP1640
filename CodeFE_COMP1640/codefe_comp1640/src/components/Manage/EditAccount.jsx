@@ -125,7 +125,6 @@ const EditAccount = () => {
     } else {
       setAccount({ ...account, [name]: value });
     }
-    console.log(account);
   };
 
   return (

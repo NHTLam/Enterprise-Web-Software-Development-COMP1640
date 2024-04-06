@@ -32,13 +32,13 @@ function Me() {
             }
         })
         if(res.status === 200){
-            console.log("success", res)
             Toast.toastSuccess("User updated successfully");
         }
         // }else{
         //     Toast.toastErorr("Error updating user");
         // }
     }
+    console.log(userData)
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (userId !== undefined) {

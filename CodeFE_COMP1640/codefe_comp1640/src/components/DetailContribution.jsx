@@ -14,22 +14,20 @@ const DetailContribution = () => {
   const [articleId, setArticleId] = useState(contributionId);
   const [data, setData] = useState([]);
   const navigate = useNavigate();
-  console.log("user: ", user);
-  const handleSubmitComment = async (e) => {
-    if (e.key === "Enter") {
-      try {
-        const response = await axios.post(
-          `${API_BASE}/comment/create`,
-          {
-            articleId: articleId,
-            userId: user,
-            commentContent: comment,
+  const handleSubmitComment = async () => {
+    try {
+      await axios.post(
+        `${API_BASE}/comment/create`,
+        {
+          articleId: articleId,
+          userId: user,
+          commentContent: comment,
+        },
+        {   
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        }
         );
         setTimeout(() => {
           window.location.reload();
@@ -43,7 +41,6 @@ const DetailContribution = () => {
         }, 1000);
       }
     }
-  };
 
   useEffect(() => {
     const listCmt = async () => {
@@ -82,13 +79,14 @@ const DetailContribution = () => {
         },
       })
       .then((data) => {
-        // setData(data.data.data);
+        setData(data.data.data);
       })
       .catch((err) => console.log(err));
   }, [data]);
 
   console.log("Listcmt", listCmt);
-  //   View detail contribution and comment
+
+  //View detail contribution and comment
   return (
     <div className="container">
       {
@@ -102,20 +100,17 @@ const DetailContribution = () => {
             </thead>
             <tbody>
               <tr>
-                <th scope="row">Title</th>
-                {/* <td>{data.title}</td> */}
-              </tr>
-              <tr>
                 <th scope="row">Description</th>
-                <td>{/* <h1>{data.content}</h1> */}</td>
+                <td>
+                  <h1>{data.content}</h1>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
       }
-
       <hr />
-      <div className="form-comment border border-2 mt-3">
+      <div className="form-comment mt-3">
         <div className="input-group">
           <span className="input-group-text">Comment</span>
           <textarea
@@ -124,8 +119,16 @@ const DetailContribution = () => {
             id="content"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            onKeyDown={handleSubmitComment}
           ></textarea>
+        </div>
+        <div>
+          <button
+            className="btn btn-success mt-3"
+            type="submit"
+            onClick={handleSubmitComment}
+          >
+            Comment
+          </button>
         </div>
         {listCmt.map((cmt) => (
           <div key={cmt.userId} className="bg-light rounded-4 p-0 mt-2">

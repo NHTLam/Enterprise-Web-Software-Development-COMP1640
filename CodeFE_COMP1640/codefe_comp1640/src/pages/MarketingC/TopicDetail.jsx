@@ -22,12 +22,10 @@ function TopicDetail({ dataTopic, sendDataToParent }) {
       .catch(err => console.log(err))
   }, [])
   useEffect(() => {
-    console.log("is running")
     if (Array.isArray(data)) {
     setfinalData(data.filter(data => data.topicId === dataTopic.articleId))
   }
   }, [dataTopic])
-  console.log("final Data", finalData)
   const sendDataToParentOnChange = () => {
     sendDataToParentOnChange(finalData);
   };
