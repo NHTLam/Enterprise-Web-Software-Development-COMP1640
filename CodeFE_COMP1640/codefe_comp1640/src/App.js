@@ -21,6 +21,7 @@ import Department from "./pages/Department";
 import ManageTopic from "./pages/ManagerC/ManageTopic";
 import CheckLog from "./pages/Log/CheckLog";
 import CreateTopic from "./pages/MarketingC/CreateTopic";
+import BadWord from "./pages/BadWord/BadWord";
 const App = () => {
   return (
     <Router>
@@ -172,6 +173,15 @@ const App = () => {
           element={
             <LayoutAdmin>
               <CheckLog />
+            </LayoutAdmin>
+          }
+        />
+
+        <Route
+          path="/manage_bad_word"
+          element={
+            <LayoutAdmin>
+              <BadWord />
             </LayoutAdmin>
           }
         />

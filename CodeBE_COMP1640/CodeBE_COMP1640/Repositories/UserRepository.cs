@@ -84,6 +84,9 @@ namespace CodeBE_COMP1640.Repositories
 
         public async Task<bool> Delete(User User)
         {
+            await DataContext.RoleUserMappings
+                    .Where(x => x.UserId == User.UserId)
+                    .DeleteFromQueryAsync();
             User? CurrentUser = DataContext.Users
                 .Where(x => x.UserId == User.UserId)
                 .FirstOrDefault();
@@ -91,7 +94,6 @@ namespace CodeBE_COMP1640.Repositories
                 return false;
             DataContext.Users.Remove(CurrentUser);
             await DataContext.SaveChangesAsync();
-            await SaveReference(User);
             return true;
         }
 
