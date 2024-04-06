@@ -36,9 +36,6 @@ const DetailContribution = () => {
     } catch (error) {
       console.error("Error creating comment:", error); // Handle network or other errors
       Toast.toastErorr("Comment contains inappropriate words");
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
     }
   };
 
