@@ -9,6 +9,7 @@ function Department() {
   const {departmentId} = useParams();
   const [data, setData] = useState([]);
   const [isTopic, setIsTopic] = useState([]);
+  const [departmentGet, setDepartmentGet] = useState();
   const [departmentData, setDepartmentData] = useState(Departments.DepartmentData());
 
   useEffect(() => {
@@ -29,20 +30,21 @@ function Department() {
     setIsTopic(data.filter(data => data.isTopic === true && data.isApproved === true));
   }
   },[data])
+
+  useEffect(()=>{
+    setDepartmentGet(departmentData?.filter(item => item?.id === +departmentId))
+  },[])
+
   return (
     <div>
       {
-        departmentData.map((item,index)=>{
+        departmentGet?.map((item,index)=>{
           return(
-            <div className="">
-
-            <h1>{departmentId === item?.id ? item.name : <></>}</h1>
-            {/* <div className="p">{item.name}</div> */}
-            </div>
+            <h1 className='text-black fw-bolder'>{item?.name}</h1>
           )
         })
       }
-      <Contribution currentItems={isTopic} link={`/topic/view`}/>
+      <Contribution currentItems={isTopic.reverse()} link={`/topic/view`}/>
     </div>
   )
 }
