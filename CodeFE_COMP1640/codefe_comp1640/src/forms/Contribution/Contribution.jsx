@@ -18,6 +18,8 @@ function Contribution({ currentItems, link }) {
                                             <div class="card-body">
                                                 <h5 class="card-title">{item.title}</h5>
                                                 <p class="card-text">{item.content}</p>
+                                                <p>{item?.startDate}</p>
+                                                <p>{item?.endDate}</p>
                                                 <p class="card-text"><small class="btn btn-light">See moree ...</small></p>
                                             </div>
                                         </div>

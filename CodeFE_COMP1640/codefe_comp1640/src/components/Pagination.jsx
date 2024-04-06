@@ -4,7 +4,7 @@ import Contribution from '../forms/Contribution/Contribution';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 const API_BASE = process.env.REACT_APP_API_KEY;
-function Pagination({ itemsPerPage, dataContributions }) {
+function Pagination({ itemsPerPage, dataContributions, link }) {
     const [itemOffset, setItemOffset] = useState(0);
 
     const [contributions, setContributions] = useState([]);
@@ -13,7 +13,6 @@ function Pagination({ itemsPerPage, dataContributions }) {
         setContributions(dataContributions)
     },[dataContributions])
     const endOffset = itemOffset + itemsPerPage;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
     const currentItems = contributions.slice(itemOffset, endOffset);
     const pageCount = Math.ceil(contributions.length / itemsPerPage);
 
@@ -27,7 +26,7 @@ function Pagination({ itemsPerPage, dataContributions }) {
 
     return (
         <>
-                <Contribution currentItems={currentItems} link={"/contribution/detail"} />
+                <Contribution currentItems={currentItems} link={link} />
             
             <ReactPaginate
                 breakLabel="..."
