@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Contribution from '../forms/Contribution/Contribution';
+import Pagination from '../components/Pagination';
 import * as Departments from "../data/department"
 const API_BASE = process.env.REACT_APP_API_KEY;
 
@@ -44,7 +45,10 @@ function Department() {
           )
         })
       }
-      <Contribution currentItems={[...isTopic].reverse()} link={`/topic/view`}/>
+            <div className="d-flex flex-wrap justify-content-center align-content-center mb-5">
+                <Pagination itemsPerPage={5} dataContributions={[...isTopic].reverse()} link={`/topic/view`} />
+            </div>
+      {/* <Contribution currentItems={} link={`/topic/view`}/> */}
     </div>
   )
 }

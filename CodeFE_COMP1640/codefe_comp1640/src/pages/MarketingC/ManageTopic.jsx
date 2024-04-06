@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import ModelAdd from "../../forms/ModelAdd/ModelAdd";
 import ModelEdit from "../../forms/ModelEdit/ModelEdit";
+import Pagination from "../../components/Pagination";
 import TopicDetail from "./TopicDetail";
 const API_BASE = process.env.REACT_APP_API_KEY;
 
@@ -127,6 +128,7 @@ function ManageTopic() {
           )
         })
       }
+
       <ModelEdit dataEdit={dataEdit}/>
       <TopicDetail dataTopic={TopicInfor}  sendDataToParent={handleDataFromChild}  />
     </div>
