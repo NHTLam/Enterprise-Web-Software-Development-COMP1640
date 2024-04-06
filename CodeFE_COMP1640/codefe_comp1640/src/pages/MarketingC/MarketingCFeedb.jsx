@@ -21,6 +21,8 @@ function MarketingCFeedb(props) {
   const [isSending, setIsSending] = useState(false);
   const [showButtonSave, setShowButtonSave] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
+  const [oldFeedback, setOldFeedback] = useState("");
+  const [userName, setUserName] = useState("");
   const onFileChange = (files) => {
     console.log(files);
   };
@@ -55,8 +57,6 @@ function MarketingCFeedb(props) {
   const fileInputRef = useRef(null);
   const [postData, setPostData] = useState();
 
-  //Save feedback 1 lan. edit het
-
   useEffect(() => {
     const getFeedback = async () => {
       const token = localStorage.getItem("token");
@@ -70,6 +70,9 @@ function MarketingCFeedb(props) {
         }
       );
       setViewFeedback(res.data);
+      setOldFeedback(res.data[0].feedbackContent);
+      setFeedbackId(res.data[0].feedbackId);
+      setUserName(res.data[0].username);
       setShowButtonSave(res.data.length > 0);
     };
     getFeedback();
@@ -293,7 +296,7 @@ function MarketingCFeedb(props) {
   return (
     <div>
       {/* <PostInfor dataTopic={postData} /> */}
-      <>
+      {/* <>
         <div>
           {file?.map((file) => {
             return <a href="!#">{file?.fileName} </a>;
@@ -350,7 +353,7 @@ function MarketingCFeedb(props) {
             </button>
           </form>
         </div>
-      </>
+      </> */}
       <div className="form-feedback border border-2 mt-3">
         <h3>Feedback</h3>
         <div className="container">
@@ -363,12 +366,12 @@ function MarketingCFeedb(props) {
             </thead>
             <tbody>
               <tr>
-                <th scope="row">UserID</th>
-                <td>{userId}</td>
+                <th scope="row">Username</th>
+                <td>{userName}</td>
               </tr>
               <tr>
-                <th scope="row">ArticleID</th>
-                <td>{articleId}</td>
+                <th scope="row">Article Content</th>
+                <td>{postData.content}</td>
               </tr>
               <tr>
                 <th scope="row">Date</th>
@@ -382,8 +385,9 @@ function MarketingCFeedb(props) {
                     class="form-control shadow-none"
                     rows="5"
                     value={feedback}
+                    placeholder={oldFeedback}
                     onChange={(e) => setFeedback(e.target.value)}
-                    disabled={isSending ? true : false}
+                    disabled={isSending ? false : true}
                   ></textarea>
                 </td>
               </tr>
@@ -400,9 +404,37 @@ function MarketingCFeedb(props) {
               </button>
             )}
           </div>
+          <div className="d-flex mb-2">
+            <div className="button1">
+              <button
+                className="btn btn-group btn-outline-danger mr-2 ms-2"
+                data-bs-toggle="modal"
+                data-bs-target="#updateFeedback"
+                onClick={() => {
+                  setFeedbackId(feedbackId);
+                  setUpdateFeedback(feedback);
+                }}
+              >
+                Edit feedback
+              </button>
+            </div>
+            <div className="button2">
+              <button
+                className="btn btn-secondary mr-2 ms-2"
+                onClick={handleDownloadFile}
+              >
+                Download Contribution
+              </button>
+              <button
+                className="btn btn-success mr-2 ms-2"
+                onClick={handlePublicContribution}
+              >
+                Public
+              </button>
+            </div>
+          </div>
         </div>
-
-        <div className="container">
+        {/* <div className="container">
           <table className="table table-striped mt-5">
             <thead>
               <tr>
@@ -417,7 +449,7 @@ function MarketingCFeedb(props) {
             <tbody>
               {viewFeedback.map((feedback) => (
                 <tr key={feedback.articleId}>
-                  <td>{feedback.userId}</td>
+                  <td>{feedback.username}</td>
                   <td>{feedback.articleId}</td>
                   <td>{feedback.feedbackId}</td>
                   <td>{feedback.feedbackContent}</td>
@@ -429,7 +461,8 @@ function MarketingCFeedb(props) {
                       data-bs-target="#updateFeedback"
                       onClick={() => {
                         setFeedbackId(feedback.feedbackId);
-                        setFeedback(feedback.feedbackContent);
+                        // setFeedback(feedback.feedbackContent);
+                        setUpdateFeedback(feedback.feedbackContent);
                       }}
                     >
                       Edit feedback
@@ -439,7 +472,7 @@ function MarketingCFeedb(props) {
               ))}
             </tbody>
           </table>
-        </div>
+        </div> */}
         {/* Modal */}
         <div
           className="modal fade"
@@ -467,7 +500,7 @@ function MarketingCFeedb(props) {
                   type="text"
                   className="form-control"
                   id="feedback"
-                  placeholder={feedback}
+                  placeholder={oldFeedback}
                   value={updateFeedback}
                   onChange={(e) => setUpdateFeedback(e.target.value)}
                 />
