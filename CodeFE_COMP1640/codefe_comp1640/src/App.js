@@ -40,9 +40,9 @@ const App = () => {
         <Route
           path="/me"
           element={
-            <Layout>
-              <Me />
-            </Layout>
+            // <Layout>
+            <Me />
+            // </Layout>
           }
         />
 
@@ -63,7 +63,6 @@ const App = () => {
             </Layout>
           }
         />
-
 
         <Route
           path="/history"
