@@ -38,18 +38,12 @@ function StEditPost(props) {
                 })
                     .then(data => {
                         setTopicData(data.data.data)
-                        console.log("topic:", data.data.data)
                     })
                     .catch(err => console.log(err))
             })
             .catch(err => console.log(err))
     }, [])
 
-    console.log("post",postData)
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-
-    }, [])
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -73,7 +67,7 @@ function StEditPost(props) {
         e.preventDefault();
         try {
             const response = await axios.delete(
-                `${API_BASE}/article/delete/${id}`, null, {
+                `${API_BASE}/article/delete/${+id}`, {
                 headers: {
                     'ngrok-skip-browser-warning': 'true',
                     Authorization: `Bearer ${token}`
@@ -97,6 +91,9 @@ function StEditPost(props) {
             console.log("Error " + err);
         }
     };
+    const handleUpdate = () =>{
+
+    }
     // function onFileInput(e) {
     //     const files = e.target.files;
     //     if (files.length === 0) return;
@@ -120,6 +117,7 @@ function StEditPost(props) {
     // }
     return (
         <div>
+            <h1 className="text-black fw-bolder">Edit Contribution</h1>
             <PostInfor dataTopic={topicData} />
             <>
                 <div className='mt-5 mb-5 max-width m-auto'>
@@ -163,8 +161,8 @@ function StEditPost(props) {
                             ></textarea>
 
                         </div>
-                        <button type="submit" className="btn btn-secondary float-end mt-3">Save</button>
-                        <button type="submit" className="btn btn-secondary float-end mt-3 me-2" onClick={handleClickDelete}>Detele</button>
+                        <button type="submit" className="btn btn-secondary float-end mt-3" onClick={handleUpdate}>Save</button>
+                        <button type="submit" className="btn btn-danger float-end mt-3 me-2" onClick={handleClickDelete}>Detele</button>
                     </form>
         </div>
       </>

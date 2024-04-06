@@ -270,9 +270,8 @@ function MarketingCFeedb(props) {
   const handleDownloadFile = (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    debugger;
     try {
-      const res = axios.post(
+      const res = axios.get(
         `${API_BASE}/article/GetFile?articleId=${id}`,
         null,
         {
