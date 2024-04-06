@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Pagination from '../components/Pagination';
 import Slide from '../components/Slide';
 import thumgnail from "../assets/slide3.jpeg"
+import * as Department from "../data/department"
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 const Home = () => {
@@ -13,6 +14,7 @@ const Home = () => {
     const [userData, setUserData] = useState();
     const [contributions, setContributions] = useState([]);
     const [data,setData] = useState([]);
+    const [departmentData, setDepartmentData] = useState(Department.DepartmentData());
     useEffect(() => {
         const token = localStorage.getItem("token");
         axios.get(`${API_BASE}/article/GetAllArticle`, {
@@ -50,33 +52,7 @@ const Home = () => {
 
     localStorage.setItem("user_id", userId);
     //department data
-    const departments = [
-        {
-            id: 1,
-            name: "Business and Economics",
-            thumgnail: "https://www.franklin.edu/sites/default/files/styles/btcb_photo/public/fr/back%20to%20college%20blog/main%20images/iStock-1081869346.jpg?itok=aBlpXTJR"
-        },
-        {
-            id: 2,
-            name: "Enginering",
-            thumgnail: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/wp1lcwdav1p1/3AmsNeMmdIUytvhtu8ePPX/92e66e4f3ec1ed931a4d4ecaec27b029/GettyImages-551986071.jpg?w=1500&h=680&q=60&fit=fill&f=faces&fm=jpg&fl=progressive&auto=format%2Ccompress&dpr=1&w=1000"
-        },
-        {
-            id: 3,
-            name: "Art and Humanities",
-            thumgnail: "https://learn.g2.com/hubfs/iStock-1191609321%20%281%29.jpg"
-        },
-        {
-            id: 4,
-            name: "Law",
-            thumgnail: "https://integrolaw.com.sg/wp-content/uploads/2023/06/Family-Law-scaled.jpeg"
-        },
-        {
-            id: 5,
-            name: "Sciences",
-            thumgnail: "https://blog.webico.vn/wp-content/uploads/2017/01/tu-vung-tieng-anh-trong-marketing-scaled.jpg"
-        }
-    ]
+
 
     const mystyle = {
         maxHeight: "280px",
@@ -89,7 +65,7 @@ const Home = () => {
                 <h1 className='mt-5'>Department</h1>
                 <hr></hr>
                 {
-                    departments.map((item, index) => {
+                    departmentData.map((item, index) => {
                         return (
                             <div key={index} className="col-4 p-1">
                                 <Link to={`/department/${item.id}`}>

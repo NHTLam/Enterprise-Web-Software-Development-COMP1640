@@ -81,6 +81,17 @@ const Sidebar = () => {
               ) : (
                 <></>
               )}
+
+<Link
+                to="/mk-manage-topic/create"
+                className="sidebar-link d-flex"
+              >
+                <li>
+                  <a className="" href="!#">
+                    View Topic & Contribution
+                  </a>
+                </li>
+              </Link>
               <Link
                 to="/mk-manage-topic/create"
                 className="sidebar-link d-flex"
@@ -91,6 +102,7 @@ const Sidebar = () => {
                   </a>
                 </li>
               </Link>
+              
             </ul>
           </div>
         ) : (
