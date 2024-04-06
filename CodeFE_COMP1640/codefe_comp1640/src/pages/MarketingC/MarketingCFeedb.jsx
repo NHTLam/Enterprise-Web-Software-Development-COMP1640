@@ -19,6 +19,7 @@ function MarketingCFeedb(props) {
   const [articleId, setArticleId] = useState(id);
   const [feedbackTime, setFeedbackTime] = useState(new Date());
   const [isSending, setIsSending] = useState(false);
+  const [showButtonSave, setShowButtonSave] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
   const onFileChange = (files) => {
     console.log(files);
@@ -69,6 +70,7 @@ function MarketingCFeedb(props) {
         }
       );
       setViewFeedback(res.data);
+      setShowButtonSave(res.data.length > 0);
     };
     getFeedback();
   }, [articleId]);
@@ -174,21 +176,20 @@ function MarketingCFeedb(props) {
           },
         }
       );
-      if (response.status === 200) {
-        const newFeedback = {
-          userId: userId,
-          articleId: articleId,
-          feedbackContent: feedback,
-          feedbackTime: formattedFeedbackTime,
-          feedbackId: response.data.feedbackId,
-        };
-        setFeedbackList([...feedbackList, newFeedback]);
-        setFeedbackId(newFeedback.feedbackId);
-        Toast.toastSuccess("Creaed feedback successfully");
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      } else if (response.status === 403) {
+      const newFeedback = {
+        userId: userId,
+        articleId: articleId,
+        feedbackContent: feedback,
+        feedbackTime: formattedFeedbackTime,
+        feedbackId: response.data.feedbackId,
+      };
+      setFeedbackList([...feedbackList, newFeedback]);
+      setFeedbackId(newFeedback.feedbackId);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      Toast.toastSuccess("Creaed feedback successfully");
+      if (response.status === 403) {
         console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
         setTimeout(() => {
@@ -221,23 +222,19 @@ function MarketingCFeedb(props) {
           },
         }
       );
-      if (res.status === 200) {
-        const updatedFeedbackList = feedbackList.map((item) => {
-          if (item.feedbackId === feedbackId) {
-            return update;
-          } else {
-            return item;
-          }
-        });
-        setFeedbackList(updatedFeedbackList);
-        setFeedback(updateFeedback);
-        Toast.toastSuccess("Update feedback successfully");
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      } else {
-        Toast.toastSuccess("Update feedback failed");
-      }
+      const updatedFeedbackList = feedbackList.map((item) => {
+        if (item.feedbackId === feedbackId) {
+          return update;
+        } else {
+          return item;
+        }
+      });
+      setFeedbackList(updatedFeedbackList);
+      setFeedback(updateFeedback);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      Toast.toastSuccess("Update feedback successfully");
     } catch (err) {
       console.log("Error updating feedback:", err);
     }
@@ -394,13 +391,15 @@ function MarketingCFeedb(props) {
             </tbody>
           </table>
           <div className="mb-2">
-            <button
-              className="btn btn-group btn-outline-primary mr-2"
-              type="submit"
-              onClick={handleFeedback}
-            >
-              Save feedback
-            </button>
+            {!showButtonSave && (
+              <button
+                className="btn btn-group btn-outline-primary mr-2"
+                type="submit"
+                onClick={handleFeedback}
+              >
+                Save feedback
+              </button>
+            )}
           </div>
         </div>
 
@@ -429,7 +428,10 @@ function MarketingCFeedb(props) {
                       className="btn btn-group btn-outline-danger mr-2 ms-2"
                       data-bs-toggle="modal"
                       data-bs-target="#updateFeedback"
-                      onClick={() => setFeedbackId(feedback.feedbackId)}
+                      onClick={() => {
+                        setFeedbackId(feedback.feedbackId);
+                        setFeedback(feedback.feedbackContent);
+                      }}
                     >
                       Edit feedback
                     </button>
