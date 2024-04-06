@@ -70,9 +70,9 @@ function MarketingCFeedb(props) {
         }
       );
       setViewFeedback(res.data);
-      setOldFeedback(res.data[0].feedbackContent);
-      setFeedbackId(res.data[0].feedbackId);
-      setUserName(res.data[0].username);
+      setOldFeedback(res.data[0]?.feedbackContent);
+      setFeedbackId(res.data[0]?.feedbackId);
+      setUserName(res.data[0]?.username);
       setShowButtonSave(res.data.length > 0);
     };
     getFeedback();
@@ -387,7 +387,7 @@ function MarketingCFeedb(props) {
                     value={feedback}
                     placeholder={oldFeedback}
                     onChange={(e) => setFeedback(e.target.value)}
-                    disabled={isSending ? false : true}
+                    disabled={isSending ? true : false}
                   ></textarea>
                 </td>
               </tr>
