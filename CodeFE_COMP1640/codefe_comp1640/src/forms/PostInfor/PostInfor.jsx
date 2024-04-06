@@ -1,6 +1,7 @@
 import React from "react";
 
 function PostInfor({ dataTopic }) {
+  console.log("topic infor: ",dataTopic)
   return (
     <div>
       <table className="table table-striped mt-5">
@@ -13,19 +14,19 @@ function PostInfor({ dataTopic }) {
         <tbody>
           <tr>
             <th scope="row">Title of Topic</th>
-            <td>{dataTopic.title}</td>
+            <td>{dataTopic?.title}</td>
           </tr>
           <tr>
             <th scope="row">Description</th>
-            <td>{dataTopic.content}</td>
+            <td>{dataTopic?.content}</td>
           </tr>
           <tr>
             <th scope="row">Start Date</th>
-            <td>{dataTopic.startDate}</td>
+            <td>{dataTopic?.startDate}</td>
           </tr>
           <tr>
             <th scope="row">End Date</th>
-            <td>{dataTopic.endDate}</td>
+            <td>{dataTopic?.endDate}</td>
           </tr>
           <tr>
             <th scope="row">Requirement</th>

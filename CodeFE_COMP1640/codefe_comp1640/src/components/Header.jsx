@@ -69,10 +69,7 @@ const Header = () => {
         }
         getUserId();
       }
-
     }
-    navigate("/");
-    navigate("/");
   }, [])
 
   useEffect(() => {

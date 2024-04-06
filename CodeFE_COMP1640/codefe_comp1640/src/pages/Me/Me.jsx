@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import * as Toast from "../../components/Toast"
 import { useEffect } from 'react';
+import Header from '../../components/Header';
 
 const API_BASE = process.env.REACT_APP_API_KEY;
 
@@ -19,13 +20,13 @@ function Me() {
         const token = localStorage.getItem("token");
         e.preventDefault();
          const res = await axios.post(`${API_BASE}/app-user/update`, {
-            userId: userId,
+            userId: +userId,
             username: userData.username,
             departmentId: userData.departmentId,
             email: userData.email,
             password: userData.password,
             class: userData.class,
-            roleUserMapping: userData.roleUserMapping,
+            roleUserMappings: userData.roleUserMappings,
             ...credentials}, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -39,6 +40,7 @@ function Me() {
         // }
     }
     console.log(userData)
+    // console.log(userData.roleUserMapping)
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (userId !== undefined) {

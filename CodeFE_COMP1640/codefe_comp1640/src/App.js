@@ -40,9 +40,9 @@ const App = () => {
         <Route
           path="/me"
           element={
-            // <Layout>
+            <Layout>
               <Me />
-            // </Layout>
+            </Layout>
           }
         />
 
@@ -104,6 +104,17 @@ const App = () => {
             </LayoutAdmin>
           }
         />
+
+        {/* <Route
+          path="/contribution/view/:id"
+          element={
+            <Layout>
+              <MarketingCFeedb />
+            </Layout>
+          }
+        />  */}
+
+        {/* <Route path="/contribute/view/:id" element={<MarketingCFeedb />} /> */}
 
         {/* MANAGER ROUTES */}
 
