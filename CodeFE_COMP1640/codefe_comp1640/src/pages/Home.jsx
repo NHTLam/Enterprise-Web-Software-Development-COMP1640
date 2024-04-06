@@ -72,7 +72,7 @@ const Home = () => {
                                     <div className="card w-100">
                                         <img src={item.thumgnail} className="card-img w-100" style={mystyle} alt="..." />
                                         <div className="card-img-overlay d-flex justify-content-center">
-                                            <h5 className="card-title fs-3 text-dark">{item.name}</h5>
+                                            <h5 className="card-title fs-3 text-black fw-bold">{item.name}</h5>
                                         </div>
                                     </div>
                                 </Link>
@@ -106,7 +106,7 @@ const Home = () => {
                 </div>
             </nav>
             <div className="d-flex flex-wrap justify-content-center align-content-center mb-5">
-                <Pagination itemsPerPage={5} dataContributions={contributions.reverse()} />
+                <Pagination itemsPerPage={5} dataContributions={contributions.reverse()} link ={"/contribution/detail"} />
             </div>
         </div>
     )
