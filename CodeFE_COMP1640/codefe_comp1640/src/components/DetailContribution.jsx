@@ -23,24 +23,24 @@ const DetailContribution = () => {
           userId: user,
           commentContent: comment,
         },
-        {   
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-        );
-        setTimeout(() => {
-          window.location.reload();
-        }, 1);
-        setComment("");
-      } catch (error) {
-        console.error("Error creating comment:", error); // Handle network or other errors
-        Toast.toastErorr("Comment contains inappropriate words");
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-      }
+      );
+      setTimeout(() => {
+        window.location.reload();
+      }, 1);
+      setComment("");
+    } catch (error) {
+      console.error("Error creating comment:", error); // Handle network or other errors
+      Toast.toastErorr("Comment contains inappropriate words");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     }
+  };
 
   useEffect(() => {
     const listCmt = async () => {
