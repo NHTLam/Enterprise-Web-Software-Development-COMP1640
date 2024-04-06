@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import * as Toast from "../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY;
 const token = localStorage.getItem("token");
 const user = localStorage.getItem("user_id");
@@ -36,6 +37,7 @@ const DetailContribution = () => {
         setComment("");
       } catch (error) {
         console.error("Error creating comment:", error); // Handle network or other errors
+        Toast.toastErorr("Comment contains inappropriate words");
         setTimeout(() => {
           navigate("/");
         }, 1000);

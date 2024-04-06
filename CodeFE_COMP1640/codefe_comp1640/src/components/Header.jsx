@@ -18,7 +18,8 @@ const Header = () => {
     '/app-user/list',
     '/feedback/create',
     '/role/list-role',
-    '/log/list'
+    '/log/list',
+    '/bad-word/list'
   ]
 
   setTimeout(() => {
@@ -106,6 +107,9 @@ const Header = () => {
   }
   else if (ValidAccessUrl === "/log/list"){
     ValidAccessUrl = "/check_log"
+  }
+  else if (ValidAccessUrl == "/bad-word/list"){
+    ValidAccessUrl = "/manage_bad_word"
   }
 
 

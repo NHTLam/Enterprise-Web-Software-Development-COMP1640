@@ -88,7 +88,7 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             if (isRegisterSuccess)
                 return true;
             else
-                return BadRequest("Commentname already exists");
+                return BadRequest("Comment contains inappropriate words");
         }
 
         [Route(CommentRoute.Update), HttpPost, Authorize]
@@ -108,7 +108,7 @@ namespace CodeBE_COMP1640.Controllers.CommentController
             if (Comment != null)
                 return CommentDTO;
             else
-                return BadRequest(Comment);
+                return BadRequest("Comment contains inappropriate words");
         }
 
         [Route(CommentRoute.Delete), HttpPost, Authorize]

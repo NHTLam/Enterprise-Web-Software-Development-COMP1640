@@ -188,7 +188,7 @@ const App = () => {
         />
 
         <Route
-          path="/manage_bad-word"
+          path="/manage_bad_word"
           element={
             <LayoutAdmin>
               <BadWord />
