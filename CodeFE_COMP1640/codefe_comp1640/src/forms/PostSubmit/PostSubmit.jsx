@@ -4,11 +4,12 @@ import PropTypes from "prop-types";
 import "./Style.css";
 import imageInput from "../../assets/add_image.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import * as Loader from "../../components/Loader"
 import * as Toast from "../../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 const PostSubmit = (props) => {
-  const {topicId} = useParams()
+  const { topicId } = useParams()
   //decalre value
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -19,7 +20,8 @@ const PostSubmit = (props) => {
   const [credentials, setCredentials] = useState({});
   const [checkBox, setCheckBox] = useState(false);
   const [disable, setDisable] = useState(true);
-  const [fileData, setFileData] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+
   const token = localStorage.getItem("token");
 
   //functions
@@ -30,18 +32,18 @@ const PostSubmit = (props) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios.get(`${API_BASE}/article/get/${topicId}`, {
-        headers: {
-            'ngrok-skip-browser-warning': 'true',
-            Authorization: `Bearer ${token}`
-            
-        },staleTime: 0
+      headers: {
+        'ngrok-skip-browser-warning': 'true',
+        Authorization: `Bearer ${token}`
+
+      }, staleTime: 0
     })
-        .then(data => {
-            setDepartmentId(data.data.data.departmentId)
-            // console.log(data.data)
-        })
-        .catch(err => console.log(err))
-},[topicId])
+      .then(data => {
+        setDepartmentId(data.data.data.departmentId)
+        // console.log(data.data)
+      })
+      .catch(err => console.log(err))
+  }, [])
 
   const handleCheckBox = () => {
     if (checkBox) {
@@ -55,7 +57,6 @@ const PostSubmit = (props) => {
 
   const handleClickSubmit = async (event) => {
     event.preventDefault();
-
     const userId = localStorage.getItem("user_id");
     const token = localStorage.getItem("token");
     if (!selectedFile) {
@@ -65,6 +66,8 @@ const PostSubmit = (props) => {
     const formData = new FormData();
     formData.append("file", selectedFile);
     try {
+
+      setIsLoading(true)
       const res = await axios.post(
         `${API_BASE}/article/create`,
         {
@@ -106,41 +109,42 @@ const PostSubmit = (props) => {
         setTimeout(() => {
           navigate("/");
         }, 1000);
-      }else if(res.status === 400){
+      } else if (res.status === 400) {
         Toast.toastErorr("Submit failed");
       }
       Toast.toastSuccess("submit success")
-      setTimeout(()=>{
-        // navigate(`/contribute/view/edit/${res.data.data.articleId}`);
-      },3000)
+      setTimeout(() => {
+        navigate(`/contribute/view/edit/${res.data.data.articleId}`);
+        setIsLoading(false)
+      }, 3000)
     } catch (error) {
       Toast.toastErorr("Submit Erorr");
       console.error("Error:", error);
     }
   };
-  function onFileInput(e) {
-    const files = e.target.files;
-    if (files.length === 0) return;
-    for (let i = 0; i < files.length; i++) {
-      // if (files[i].type.split('/')[0] !== 'images') continue;
-      if (!imageList.some((e) => e.name === files[i].name)) {
-        setImageList((preImages) => [
-          ...preImages,
-          {
-            name: files[i].name,
-            url: URL.createObjectURL(files[i]),
-          },
-        ]);
-      }
-    }
-  }
+  // function onFileInput(e) {
+  //   const files = e.target.files;
+  //   if (files.length === 0) return;
+  //   for (let i = 0; i < files.length; i++) {
+  //     // if (files[i].type.split('/')[0] !== 'images') continue;
+  //     if (!imageList.some((e) => e.name === files[i].name)) {
+  //       setImageList((preImages) => [
+  //         ...preImages,
+  //         {
+  //           name: files[i].name,
+  //           url: URL.createObjectURL(files[i]),
+  //         },
+  //       ]);
+  //     }
+  //   }
+  // }
 
-  const fileRemove = (file) => {
-    const updatedList = [...imageList];
-    updatedList.splice(imageList.indexOf(file), 1);
-    setImageList(updatedList);
-    props.onFileChange(updatedList);
-  };
+  // const fileRemove = (file) => {
+  //   const updatedList = [...imageList];
+  //   updatedList.splice(imageList.indexOf(file), 1);
+  //   setImageList(updatedList);
+  //   props.onFileChange(updatedList);
+  // };
 
   return (
     <>
@@ -157,7 +161,7 @@ const PostSubmit = (props) => {
               />
             </div>
           </div>
-          <div className="drop_card form-control">
+          {/* <div className="drop_card form-control">
             <div className="image_area">
               {imageList.map((item, index) => (
                 <div className="image-preview__item">
@@ -182,12 +186,12 @@ const PostSubmit = (props) => {
                 />
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="input-group mt-3">
-            <span className="input-group-text">With textarea</span>
+            <span className="input-group-text">Note</span>
             <textarea
               className="form-control"
-              aria-label="With textarea"
+              aria-label="Note"
               id="content"
               onChange={handleChange}
             ></textarea>
@@ -219,14 +223,19 @@ const PostSubmit = (props) => {
             </div>
           </div>
 
-          <button
-            disabled={disable}
-            type="submit"
-            className="btn btn-secondary float-end mt-3"
-            onClick={handleClickSubmit}
-          >
-            Submit
-          </button>
+          {isLoading ?
+            <div className="div w-100 text-blue float-end">
+              {Loader.RotatingLoad()}
+            </div>
+            :
+            <button
+              disabled={disable}
+              type="submit"
+              onClick={handleClickSubmit}
+              className="btn btn-secondary float-end"
+            >
+              Submit
+            </button>}
         </form>
       </div>
 
