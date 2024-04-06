@@ -81,17 +81,6 @@ const Sidebar = () => {
               ) : (
                 <></>
               )}
-
-<Link
-                to="/mk-manage-topic/create"
-                className="sidebar-link d-flex"
-              >
-                <li>
-                  <a className="" href="!#">
-                    View Topic & Contribution
-                  </a>
-                </li>
-              </Link>
               <Link
                 to="/mk-manage-topic/create"
                 className="sidebar-link d-flex"
@@ -102,7 +91,7 @@ const Sidebar = () => {
                   </a>
                 </li>
               </Link>
-              
+
             </ul>
           </div>
         ) : (
@@ -121,7 +110,7 @@ const Sidebar = () => {
       </li>
       <li className="sidebar-item">
         {listPath.includes("/feedback/create") &&
-        listPath.includes("/dashboard/get-data") ? (
+          listPath.includes("/dashboard/get-data") ? (
           <Link to="/manager_manage" className="sidebar-link d-flex">
             <i className="bi bi-person"></i>
             <p className="mt-1">Manage Check Topic</p>

@@ -121,7 +121,6 @@ function ManageTopic() {
               data-bs-toggle="modal"
               data-bs-target="#topicDetail"
               >
-              {" "}
                 View Submition
               </a>
             </div>
