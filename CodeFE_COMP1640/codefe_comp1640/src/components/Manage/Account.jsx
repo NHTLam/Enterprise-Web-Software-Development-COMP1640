@@ -12,25 +12,25 @@ const Account = () => {
   const [address, setAddress] = useState("");
   const departments = [
     {
-        Id: 1,
-        Name: "Business and Economics",
+      Id: 1,
+      Name: "Business and Economics",
     },
     {
-        Id: 2,
-        Name: "Enginering",
+      Id: 2,
+      Name: "Enginering",
     },
     {
-        Id: 3,
-        Name: "Art and Humanities",
+      Id: 3,
+      Name: "Art and Humanities",
     },
     {
-        Id: 4,
-        Name: "Law",
+      Id: 4,
+      Name: "Law",
     },
     {
-        Id: 5,
-        Name: "Sciences",
-    }
+      Id: 5,
+      Name: "Sciences",
+    },
   ];
   const changeDepartment = {
     1: "Business and Economics",
@@ -66,13 +66,13 @@ const Account = () => {
       );
       setTimeout(() => {
         window.location.reload();
-      }, 1000)
+      }, 1000);
     } catch (err) {
       console.log("Create account failed!");
       Toast.toastErorr("You do not have permission to perform this action");
       setTimeout(() => {
         navigate("/");
-      }, 1000);     
+      }, 1000);
     }
   };
 
@@ -91,7 +91,9 @@ const Account = () => {
         }
       );
       setAccount(accounts.filter((account) => account.userId !== userId));
-      // navigate("/");
+      setTimeout(() => {
+        window.location.reload();
+      });
     } catch (err) {
       console.log("Delete account failed! " + err);
       Toast.toastErorr("You do not have permission to perform this action");
@@ -284,7 +286,12 @@ const Account = () => {
                     id="phone"
                     placeholder="Enter Phone"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => {
+                      const phoneVail = e.target.value;
+                      if (phoneVail.length <= 10) {
+                        setPhone(phoneVail);
+                      }
+                    }}
                   />
                 </div>
                 <div className="mb-3">
