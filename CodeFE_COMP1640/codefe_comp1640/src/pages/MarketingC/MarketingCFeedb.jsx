@@ -9,15 +9,6 @@ const API_BASE = process.env.REACT_APP_API_KEY || "";
 const userId = localStorage.getItem("user_id");
 
 const token = localStorage.getItem("token");
-// {
-//   "feedbackId": 89,
-//   "userId": 2,
-//   "articleId": 328,
-//   "feedbackContent": "1321312",
-//   "feedbackTime": "2024-03-31T14:57:08.997",
-//   "article": null,
-//   "user": null
-// },
 
 function MarketingCFeedb(props) {
   const { id } = useParams();
@@ -78,7 +69,6 @@ function MarketingCFeedb(props) {
         }
       );
       setViewFeedback(res.data);
-      console.table("Feedback:", JSON.stringify(res.data));
     };
     getFeedback();
   }, [articleId]);
@@ -184,30 +174,29 @@ function MarketingCFeedb(props) {
           },
         }
       );
-      if (response.status === 403) {
+      if (response.status === 200) {
+        const newFeedback = {
+          userId: userId,
+          articleId: articleId,
+          feedbackContent: feedback,
+          feedbackTime: formattedFeedbackTime,
+          feedbackId: response.data.feedbackId,
+        };
+        setFeedbackList([...feedbackList, newFeedback]);
+        setFeedbackId(newFeedback.feedbackId);
+        Toast.toastSuccess("Creaed feedback successfully");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else if (response.status === 403) {
         console.log("No Permission!");
         Toast.toastErorr("You do not have permission to perform this action");
         setTimeout(() => {
           navigate("/");
         }, 1000);
       }
-      console.log("Create feedback success!");
-      console.log("Feedback: ", response.data);
-      const newFeedback = {
-        userId: userId,
-        articleId: articleId,
-        feedbackContent: feedback,
-        feedbackTime: formattedFeedbackTime,
-        feedbackId: response.data.feedbackId,
-      };
-      setFeedbackList([...feedbackList, newFeedback]);
-      setFeedbackId(newFeedback.feedbackId);
-      console.log("Feedback list: ", feedbackList);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
     } catch (err) {
-      console.error("Error sending feedback:", err);
+      Toast.toastErorr("Create feedback failed");
     }
   }
 
@@ -223,7 +212,6 @@ function MarketingCFeedb(props) {
         feedbackTime: formattedFeedbackTime,
         feedbackId: feedbackId,
       };
-      console.log(feedbackId);
       const res = await axios.put(
         `${API_BASE}/feedback/update/${feedbackId}`,
         update,
@@ -233,44 +221,28 @@ function MarketingCFeedb(props) {
           },
         }
       );
-      console.log("Update feedback: " + res.data);
-      const updatedFeedbackList = feedbackList.map((item) => {
-        if (item.feedbackId === feedbackId) {
-          return update;
-        } else {
-          return item;
-        }
-      });
-      setFeedbackList(updatedFeedbackList);
-      setFeedback(updateFeedback);
-      console.log("Updated feedback list: ", updatedFeedbackList);
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 1000);
+      if (res.status === 200) {
+        const updatedFeedbackList = feedbackList.map((item) => {
+          if (item.feedbackId === feedbackId) {
+            return update;
+          } else {
+            return item;
+          }
+        });
+        setFeedbackList(updatedFeedbackList);
+        setFeedback(updateFeedback);
+        Toast.toastSuccess("Update feedback successfully");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        Toast.toastSuccess("Update feedback failed");
+      }
     } catch (err) {
       console.log("Error updating feedback:", err);
     }
   };
 
-  // useEffect(() => {
-  //   const getFeedback = async () => {
-  //     const token = localStorage.getItem("token");
-  //     await axios
-  //       .get(`${API_BASE}/feedback/getbyarticleID`, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       })
-  //       .then((res) => {
-  //         setFeedbackList(res.data);
-  //         console.table("Feedback:", JSON.stringify(res.data));
-  //       })
-  //       .catch((err) => {
-  //         console.log("Failed to list account! " + err);
-  //       });
-  //   };
-  //   getFeedback();
-  // }, [articleId]);
   const handlePublicContribution = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -429,14 +401,6 @@ function MarketingCFeedb(props) {
             >
               Save feedback
             </button>
-            <button
-              className="btn btn-group btn-outline-danger mr-2 ms-2"
-              data-bs-toggle="modal"
-              data-bs-target="#updateFeedback"
-              onClick={() => setFeedbackId(feedbackId)}
-            >
-              Edit feedback
-            </button>
           </div>
         </div>
 
@@ -459,10 +423,16 @@ function MarketingCFeedb(props) {
                   <td>{feedback.articleId}</td>
                   <td>{feedback.feedbackId}</td>
                   <td>{feedback.feedbackContent}</td>
-                  {/* //FIx ngay */}
-                  <td>{feedback.feedbackTime.toLocaleString()}</td>
+                  <td>{feedback.feedbackTime.toLocaleString("vi-VN")}</td>
                   <td>
-                    <button className="btn btn-danger"></button>
+                    <button
+                      className="btn btn-group btn-outline-danger mr-2 ms-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#updateFeedback"
+                      onClick={() => setFeedbackId(feedback.feedbackId)}
+                    >
+                      Edit feedback
+                    </button>
                   </td>
                 </tr>
               ))}
