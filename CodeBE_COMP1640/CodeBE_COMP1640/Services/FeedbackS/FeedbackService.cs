@@ -47,7 +47,7 @@ namespace CodeBE_COMP1640.Services.FeedbackS
             {
                 throw new ArgumentNullException(nameof(feedback));
             }
-
+         
             await _uow.FeedbackRepository.CreateFeedback(feedback);
         }
 
@@ -72,6 +72,7 @@ namespace CodeBE_COMP1640.Services.FeedbackS
     {
         UserId = feedback.UserId,
         ArticleId = feedback.ArticleId,
+        FeedbackId = feedback.FeedbackId,
         FeedbackContent = feedback.FeedbackContent,
         FeedbackTime = feedback.FeedbackTime.GetValueOrDefault(),
         Username = feedback.User?.Username
@@ -79,5 +80,6 @@ namespace CodeBE_COMP1640.Services.FeedbackS
 
         return feedbackDTOs;
 }
+      
     }
 }
