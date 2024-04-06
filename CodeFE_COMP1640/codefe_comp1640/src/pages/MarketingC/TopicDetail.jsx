@@ -2,8 +2,9 @@
 import PostInfor from "../../forms/PostInfor/PostInfor"
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import Contribution from "../../forms/Contribution/Contribution";
+
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 function TopicDetail({ dataTopic, sendDataToParent }) {
@@ -29,14 +30,17 @@ function TopicDetail({ dataTopic, sendDataToParent }) {
   const sendDataToParentOnChange = () => {
     sendDataToParentOnChange(finalData);
   };
+  
+  
+
   return (
     <div>
       <form>
         <div
-          className="modal fade "
+          className="modal fade"
           id="topicDetail"
           aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
+          aria-hidden="false"
         >
           <div className="modal-dialog modal-lg">
             <div className="modal-content">
@@ -57,7 +61,8 @@ function TopicDetail({ dataTopic, sendDataToParent }) {
                   finalData.map((item,index)=>{
                     return(
                       <Link to={`/contribute/view/${item.articleId}`}>
-                            <div className="mb-3 w-100" onChange={sendDataToParentOnChange} >
+                        
+                            <div className="mb-3 w-100" onChange={sendDataToParentOnChange}  data-bs-dismiss="modal" >
                                 <div class="card w-100">
                                     <div class="row g-0">
                                         <div class="col-md-4">
