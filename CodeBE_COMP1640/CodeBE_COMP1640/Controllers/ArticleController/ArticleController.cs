@@ -382,7 +382,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
             }
         }
 
-        [Route(ArticleRoute.GetFile), HttpGet, Authorize]
+        [Route(ArticleRoute.GetFile), HttpPost, Authorize]
         public async Task<IActionResult> GetFile(string articleId)
         {
             if (!await PermissionService.HasPermission(ArticleRoute.GetFile, PermissionService.GetUserId()))
