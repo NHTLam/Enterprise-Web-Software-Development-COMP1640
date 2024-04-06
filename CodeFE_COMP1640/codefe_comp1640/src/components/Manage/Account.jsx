@@ -318,7 +318,6 @@ const Account = () => {
                     value={selectedDepartment}
                     onChange={(e) => setSelectedDepartment(e.target.value)}
                   >
-                    <option>Select a department</option>
                     {departments.map((department) => (
                       <option key={department.Id} value={department.Id}>
                         {department.Name}

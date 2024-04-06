@@ -102,7 +102,7 @@ const DetailContribution = () => {
               <tr>
                 <th scope="row">Description</th>
                 <td>
-                  <h1>{data.content}</h1>
+                  <p>{data.content}</p>
                 </td>
               </tr>
             </tbody>
@@ -127,9 +127,10 @@ const DetailContribution = () => {
             type="submit"
             onClick={handleSubmitComment}
           >
-            Comment
+            Save comment
           </button>
         </div>
+        <hr />
         {listCmt.map((cmt) => (
           <div key={cmt.userId} className="bg-light rounded-4 p-0 mt-2">
             <h4 className="fw-bold text-black ms-3">
