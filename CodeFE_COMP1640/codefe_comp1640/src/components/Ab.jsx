@@ -104,6 +104,16 @@ const Sidebar = () => {
           <></>
         )}
       </li>
+      <li className="sidebar-item">
+        {listPath.includes('/bad-word/list') ? ( 
+        <Link to="/manage_bad_word" className="sidebar-link d-flex">
+          <i className="bi bi-person"></i>
+          <p className="mt-1">Manage Bad Word</p>
+        </Link>
+        ) : (
+          <></>
+        )}
+      </li>
     </ul>
   );
 };

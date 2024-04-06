@@ -8,6 +8,7 @@ using CodeBE_COMP1640.Models;
 using CodeBE_COMP1640.Repositories;
 using CodeBE_COMP1640.Services.LogS;
 using CodeBE_COMP1640.Controllers.CommentController;
+using System.Linq;
 
 namespace CodeBE_COMP1640.Services.CommentS
 {
@@ -41,6 +42,11 @@ namespace CodeBE_COMP1640.Services.CommentS
             string payload = Comment.ToString() ?? "";
             try
             {
+                bool isValidComment = await CheckContentComment(Comment);
+                if (!isValidComment)
+                {
+                    return false;
+                }
                 Comment.CommentTime = DateTime.Now;
                 await UOW.CommentRepository.Create(Comment);
                 Comment = await UOW.CommentRepository.Get(Comment.CommentId);
@@ -109,6 +115,11 @@ namespace CodeBE_COMP1640.Services.CommentS
             string payload = Comment?.ToString() ?? "";
             try
             {
+                bool isValidComment = await CheckContentComment(Comment);
+                if (!isValidComment)
+                {
+                    return null;
+                }
                 var oldData = await UOW.CommentRepository.Get(Comment.CommentId);
                 Comment.CommentTime = DateTime.Now;
                 await UOW.CommentRepository.Update(Comment);
@@ -122,6 +133,19 @@ namespace CodeBE_COMP1640.Services.CommentS
                 await LogService.Log(ex.ToString() ?? "", payload, "500", CommentRoute.Update, "POST");
                 throw new Exception();
             }
+        }
+
+        private async Task<bool> CheckContentComment(Comment comment)
+        {
+            List<string> BadWords = (await UOW.BadWordRepository.List()).Where(x => x.Name != null).Select(x => x.Name!).ToList();
+            foreach (var badWord in BadWords)
+            {
+                if (comment.CommentContent.Contains(badWord))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

@@ -48,14 +48,19 @@ namespace CodeBE_COMP1640.Repositories
             var PermissonRoleMappings = await DataContext.PermissonRoleMappings.AsNoTracking().ToListAsync();
             await DataContext.PermissonRoleMappings.Where(x => !Permissions.Select(p => p.PermissionId).Contains(x.PermissionId)).DeleteFromQueryAsync();
             await DataContext.Permissions.Where(x => !Permissions.Select(p => p.PermissionId).Contains(x.PermissionId)).DeleteFromQueryAsync();
-            Permissions = Permissions.DistinctBy(x => x.PermissionId).ToList();
-            foreach (var permission in Permissions)
+            var AddPermissions = Permissions.Where(x => x.PermissionId == 0).ToList();
+            var UpdatePermissions = Permissions.Where(x => x.PermissionId != 0).DistinctBy(x => x.PermissionId).ToList();
+            foreach (var permission in AddPermissions)
             {
                 if (permission.PermissionId == 0)
                 {
                     DataContext.Permissions.Add(permission);
                 }
-                else
+            }
+
+            foreach (var permission in UpdatePermissions)
+            {
+                if (permission.PermissionId != 0)
                 {
                     DataContext.Permissions.Update(permission);
                 }

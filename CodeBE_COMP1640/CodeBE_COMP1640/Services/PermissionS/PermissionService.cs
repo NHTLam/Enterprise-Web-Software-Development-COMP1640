@@ -17,6 +17,7 @@ using CodeBE_COMP1640.Controllers.CommentController;
 using CodeBE_COMP1640.Controllers.ArticleController;
 using CodeBE_COMP1640.Services.LogS;
 using CodeBE_COMP1640.Controllers.LogController;
+using CodeBE_COMP1640.Controllers.BadWordController;
 
 namespace CodeBE_COMP1640.Services.PermissionS
 {
@@ -68,6 +69,7 @@ namespace CodeBE_COMP1640.Services.PermissionS
                 DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, CommentRoute.DictionaryPath);
                 DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, ArticleRoute.DictionaryPath);
                 DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, LogRoute.DictionaryPath);
+                DictionaryPaths = ConcatMyDictionaryRoute(DictionaryPaths, BadWordRoute.DictionaryPath);
                 List<Permission> Permissions = new List<Permission>();
                 foreach (var DictionaryPath in DictionaryPaths)
                 {
