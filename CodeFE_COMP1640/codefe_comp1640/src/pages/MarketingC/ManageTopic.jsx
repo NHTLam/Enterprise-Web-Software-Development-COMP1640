@@ -130,7 +130,7 @@ function ManageTopic() {
         })
       }
       <ModelEdit dataEdit={dataEdit}/>
-      <TopicDetail dataTopic={TopicInfor} sendDataToParent={handleDataFromChild}  />
+      <TopicDetail dataTopic={TopicInfor}  sendDataToParent={handleDataFromChild}  />
     </div>
   );
 }

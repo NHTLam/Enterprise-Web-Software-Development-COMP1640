@@ -57,7 +57,7 @@ function TopicDetail({ dataTopic, sendDataToParent }) {
                   finalData.map((item,index)=>{
                     return(
                       <Link to={`/contribute/view/${item.articleId}`}>
-                            <div className="mb-3 w-100" onChange={sendDataToParentOnChange}>
+                            <div className="mb-3 w-100" onChange={sendDataToParentOnChange} >
                                 <div class="card w-100">
                                     <div class="row g-0">
                                         <div class="col-md-4">
