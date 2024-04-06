@@ -31,7 +31,7 @@ function ManageTopic() {
 
   useEffect(() => {
     if (Array.isArray(data)) {
-      setTopicData(data.filter(data => data.isTopic === true));
+      setTopicData(data.filter(data => data.isTopic === true && data.isApproved === false));
     }
   },[data])
 

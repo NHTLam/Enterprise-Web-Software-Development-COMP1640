@@ -82,7 +82,7 @@ const DetailContribution = () => {
         setData(data.data.data);
       })
       .catch((err) => console.log(err));
-  }, [data]);
+  }, [contributionId]);
 
   console.log("Listcmt", listCmt);
 

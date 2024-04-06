@@ -96,7 +96,7 @@ function Me() {
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Phone</label>
-                                            <input type="text" class="form-control" placeholder={userData.phone} aria-label="Phone number" onChange={handleChange} id="phone" />
+                                            <input type="text" class="form-control" placeholder={userData.phone} aria-label="Phone number" onChange={handleChange} id="phone" maxlength="10" minlength="10" />
                                         </div>
                                     </div>
                                 </div>
