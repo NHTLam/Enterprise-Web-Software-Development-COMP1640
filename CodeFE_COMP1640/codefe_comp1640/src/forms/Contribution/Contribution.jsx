@@ -30,7 +30,7 @@ function Contribution({ currentItems, link }) {
     }, []);
 
     function CheckArticle(item) {
-        debugger;
+        
         console.log("List Post", listPost);
         console.log("item recive", item);
     

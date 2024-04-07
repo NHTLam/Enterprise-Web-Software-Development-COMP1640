@@ -15,7 +15,7 @@ const PostSubmit = (props) => {
   const navigate = useNavigate();
   //State
   const [imageList, setImageList] = useState([]);
-  const [selectedFile, setSelectedFile] = useState("");
+  const [selectedFile, setSelectedFile] = useState([]);
   const [departmentId, setDepartmentId] = useState();
   const [credentials, setCredentials] = useState({});
   const [checkBox, setCheckBox] = useState(false);
@@ -56,72 +56,65 @@ const PostSubmit = (props) => {
   };
 
   const handleClickSubmit = async (event) => {
-    event.preventDefault();
-    const userId = localStorage.getItem("user_id");
-    const token = localStorage.getItem("token");
-    if (!selectedFile) {
-      alert("Please select a file to upload.");
-      return;
-    }
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-    try {
-
-      setIsLoading(true)
-      const res = await axios.post(
-        `${API_BASE}/article/create`,
-        {
-          departmentId,
-          topicId: +topicId,
-          userId: +userId,
-          ...credentials,
+  event.preventDefault();
+  const userId = localStorage.getItem("user_id");
+  const token = localStorage.getItem("token");
+  if (selectedFile.length === 0) {
+    alert("Please select at least one file to upload.");
+    return;
+  }
+  const formData = new FormData();
+  for (let i = 0; i < selectedFile.length; i++) {
+    formData.append("files", selectedFile[i]);
+  }
+  try {
+    setIsLoading(true);
+    const res = await axios.post(
+      `${API_BASE}/article/create`,
+      {
+        departmentId,
+        topicId: +topicId,
+        userId: +userId,
+        ...credentials,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
+      }
+    );
+    if (res.status === 200) {
+      const articleId = res.data.data.articleId;
+      formData.append("articleId", articleId);
+      await axios.post(
+        `${API_BASE}/article/upload-file?articleId=${articleId}`,
+        formData,
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      if (res.status === 200) {
-        const data = new FormData();
-        data.append("files", selectedFile);
-        data.append("files", imageList)
-        data.append("articleId", res.data.data.articleId);
-        await axios.post(
-          `${API_BASE}/article/upload-file?articleId=${res.data.data.articleId}`,
-          data,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-      } else if (res.status === 403) {
-        console.log("No Permission!");
-        Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-      } else if (res.status === 403) {
-        console.log("No Permission!");
-        Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-      } else if (res.status === 400) {
-        Toast.toastErorr("Submit failed");
-      }
-      Toast.toastSuccess("submit success")
+      Toast.toastSuccess("Submit success");
       setTimeout(() => {
-        navigate(`/contribute/view/edit/${res.data.data.articleId}`);
-        setIsLoading(false)
-      }, 3000)
-    } catch (error) {
-      Toast.toastErorr("Submit Erorr");
-      console.error("Error:", error);
+        navigate(`/contribute/view/edit/${articleId}`);
+        setIsLoading(false);
+      }, 3000);
+    } else if (res.status === 403) {
+      console.log("No Permission!");
+      Toast.toastErorr("You do not have permission to perform this action");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } else if (res.status === 400) {
+      Toast.toastErorr("Submit failed");
     }
-  };
+  } catch (error) {
+    Toast.toastErorr("Submit Error");
+    console.error("Error:", error);
+  }
+};
   // function onFileInput(e) {
   //   const files = e.target.files;
   //   if (files.length === 0) return;
@@ -157,7 +150,7 @@ const PostSubmit = (props) => {
                 type="file"
                 id="file"
                 multiple
-                onChange={(e) => setSelectedFile(e.target.files[0])}
+                onChange={(e) => setSelectedFile(e.target.files)}
               />
             </div>
           </div>
