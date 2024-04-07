@@ -270,29 +270,34 @@ function MarketingCFeedb(props) {
       console.log(err);
     }
   };
-  const handleDownloadFile = (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("token");
-    try {
-      const res = axios.get(
-        `${API_BASE}/article/GetFile?articleId=${id}`,
-        null,
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "true",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (res.status === 200) {
-        console.log("res: ", res);
-        Toast.toastSuccess("Download successfully");
+
+const handleDownloadFile = async () => {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await axios.post(
+      `${API_BASE}/article/GetFile?articleId=${articleId}`,
+      null,
+      {
+        responseType: "blob",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
-    } catch (err) {
-      Toast.toastErorr("Some thing went wrong, Approve false");
-      console.log(err);
-    }
-  };
+    );
+    const disposition = response.headers['content-disposition'];
+    const matches = /filename="([^"]+)"/.exec(disposition);
+    const fileName = matches != null && matches.length > 1 ? matches[1] : 'file.zip';
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+  } catch (error) {
+    console.error("Download failed:", error);
+  }
+};
   return (
     <div>
       {/* <PostInfor dataTopic={postData} /> */}
