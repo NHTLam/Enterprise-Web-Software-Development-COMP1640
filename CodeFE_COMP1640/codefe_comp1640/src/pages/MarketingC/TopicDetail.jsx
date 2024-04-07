@@ -3,7 +3,6 @@ import PostInfor from "../../forms/PostInfor/PostInfor"
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link} from "react-router-dom";
-import Contribution from "../../forms/Contribution/Contribution";
 
 const API_BASE = process.env.REACT_APP_API_KEY;
 
@@ -30,7 +29,23 @@ function TopicDetail({ dataTopic, sendDataToParent }) {
   const sendDataToParentOnChange = () => {
     sendDataToParentOnChange(finalData);
   };
-  
+  // useEffect(() => {
+  //   const getFeedback = async () => {
+  //     const token = localStorage.getItem("token");
+  //     const res = await axios.get(
+  //       `${API_BASE}/feedback/getbyarticleID?articleId=${dataTopic?.articleId}`,
+  //       {
+  //         headers: {
+  //           "ngrok-skip-browser-warning": "true",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //   console.log("feedbacks",res)
+  //   };
+  //   getFeedback();
+  // }, [dataTopic.articleId]);
   
 
   return (
@@ -70,9 +85,11 @@ function TopicDetail({ dataTopic, sendDataToParent }) {
                                         </div>
                                         <div class="col-md-8">
                                             <div class="card-body">
-                                                <h5 class="card-title">{item.title}</h5>
-                                                <p class="card-text">{item.content}</p>
-                                                <p class="card-text"><small class="btn btn-light">See moree ...</small></p>
+                                              <div className="card-title d-flex justify-content-between align-items-center">
+                                              <p class="card-text">{item.content}</p>
+                                              {item.isApproved === false ? <></>: <div className="btn btn-success">Checked</div>}
+                                              </div>
+                                                <p class="card-text"><small class="btn btn-info">See more</small></p>
                                             </div>
                                         </div>
                                     </div>

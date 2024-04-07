@@ -23,39 +23,59 @@ function MarketingCFeedb(props) {
   const [feedbackList, setFeedbackList] = useState([]);
   const [oldFeedback, setOldFeedback] = useState("");
   const [userName, setUserName] = useState("");
-  const onFileChange = (files) => {
-    console.log(files);
-  };
+
   const [file, setFile] = useState();
   const [viewFeedback, setViewFeedback] = useState([]);
-  // const onFileChange = (files) => {
-  //   console.log(files);
-  // };
-  // const [imageList, setImageList] = useState([]);
-  // const fileInputRef = useRef(null);
-  // const [postData, setPostData] = useState();
-  // useEffect(() => {
-  //   console.log("id", id);
-  //   axios
-  //     .get(`${API_BASE}/article/get/${id}`, {
-  //       headers: {
-  //         "ngrok-skip-browser-warning": "true",
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       staleTime: 0,
-  //     })
-  //     .then((data) => {
-  //       setPostData(data.data.data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // });
-  // if (!postData) {
-  //   return <></>;
-  // }
-
-  const [imageList, setImageList] = useState([]);
-  const fileInputRef = useRef(null);
   const [postData, setPostData] = useState();
+  const [userData, setUserData] = useState();
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios
+      .get(`${API_BASE}/article/get/${id}`, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${token}`,
+        },
+        staleTime: 0,
+      })
+      .then((data) => {
+        setPostData(data.data.data);
+        axios
+          .post(`${API_BASE}/app-user/get`, { userId: data.data.data?.userId }, {
+            headers: {
+              "ngrok-skip-browser-warning": "true",
+              Authorization: `Bearer ${token}`,
+            },
+            staleTime: 0,
+          })
+          .then((data) => {
+            setUserData(data.data);
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  }, [id]);
+  console.log("user: ", userData);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    axios
+      .post(`${API_BASE}/article/GetUpLoadedFiles?articleId=${id}`, null, {
+        headers: {
+          "ngrok-skip-browser-warning": true,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((data) => {
+        setFile(data.data.data);
+      })
+      .catch((err) => console.log(err));
+  }, [id]);
+
+  console.log("File: ", file);
 
   useEffect(() => {
     const getFeedback = async () => {
@@ -77,87 +97,6 @@ function MarketingCFeedb(props) {
     };
     getFeedback();
   }, [articleId]);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    axios
-      .get(`${API_BASE}/article/get/${id}`, {
-        headers: {
-          "ngrok-skip-browser-warning": "true",
-          Authorization: `Bearer ${token}`,
-        },
-        staleTime: 0,
-      })
-      .then((data) => {
-        setPostData(data.data.data);
-      })
-      .catch((err) => console.log(err));
-  }, [id]);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log("id: ", id);
-    axios
-      .post(`${API_BASE}/article/GetUpLoadedFiles?articleId=${id}`, null, {
-        headers: {
-          "ngrok-skip-browser-warning": true,
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((data) => {
-        setFile(data.data.data);
-      })
-      .catch((err) => console.log(err));
-  }, [id]);
-  console.log("File: ", file);
-  if (!postData) {
-    return <></>;
-  }
-
-  const handleClickDelete = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.delete(`${API_BASE}/article/delete`);
-      if (response.status === 200) {
-        navigate("/st_submit_post");
-        console.log("delete sucess");
-      } else if (response.status === 400) {
-        console.log("some thing went wrong");
-      } else if (response.status === 403) {
-        console.log("No Permission!");
-        Toast.toastErorr("You do not have permission to perform this action");
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-      }
-    } catch (err) {
-      console.log("Error " + err);
-    }
-  };
-  function onFileInput(e) {
-    const files = e.target.files;
-    if (files.length === 0) return;
-    for (let i = 0; i < files.length; i++) {
-      // if (files[i].type.split('/')[0] !== 'images') continue;
-      if (!imageList.some((e) => e.name === files[i].name)) {
-        setImageList((preImages) => [
-          ...preImages,
-          {
-            name: files[i].name,
-            url: URL.createObjectURL(files[i]),
-          },
-        ]);
-      }
-    }
-  }
-  const fileRemove = (file) => {
-    const updatedList = [...imageList];
-    updatedList.splice(imageList.indexOf(file), 1);
-    setImageList(updatedList);
-    props.onFileChange(updatedList);
-  };
-
   //Feedback
   async function handleFeedback() {
     const token = localStorage.getItem("token");
@@ -271,33 +210,37 @@ function MarketingCFeedb(props) {
     }
   };
 
-const handleDownloadFile = async () => {
-  const token = localStorage.getItem("token");
-  try {
-    const response = await axios.post(
-      `${API_BASE}/article/GetFile?articleId=${articleId}`,
-      null,
-      {
-        responseType: "blob",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    const disposition = response.headers['content-disposition'];
-    const matches = /filename="([^"]+)"/.exec(disposition);
-    const fileName = matches != null && matches.length > 1 ? matches[1] : 'file.zip';
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", fileName);
-    document.body.appendChild(link);
-    link.click();
-  } catch (error) {
-    console.error("Download failed:", error);
+  const handleDownloadFile = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.post(
+        `${API_BASE}/article/GetFile?articleId=${articleId}`,
+        null,
+        {
+          responseType: "blob",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const disposition = response.headers['content-disposition'];
+      const matches = /filename="([^"]+)"/.exec(disposition);
+      const fileName = matches != null && matches.length > 1 ? matches[1] : 'file.zip';
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
+  if (!postData) {
+    return <></>;
   }
-};
+
   return (
     <div>
       {/* <PostInfor dataTopic={postData} /> */}
@@ -375,6 +318,26 @@ const handleDownloadFile = async () => {
                 <td>{userName}</td>
               </tr>
               <tr>
+                <th scope="row">Contributer</th>
+                <td>{userData?.username}</td>
+              </tr>
+              <tr>
+                <th scope="row">Contribution</th>
+                <td>{file?.map((item) => {
+                  return (
+                    <div className=" d-flex justify-content-between align-items-center">
+
+                      <a href="!#">{item?.fileName}</a>
+                      <button
+                        className="btn btn-secondary mr-2 ms-2"
+                        onClick={handleDownloadFile}
+                      >
+                        Download
+                      </button></div>
+                  )
+                })}</td>
+              </tr>
+              <tr>
                 <th scope="row">Article Content</th>
                 <td>{postData.content}</td>
               </tr>
@@ -424,12 +387,6 @@ const handleDownloadFile = async () => {
               </button>
             </div>
             <div className="button2">
-              <button
-                className="btn btn-secondary mr-2 ms-2"
-                onClick={handleDownloadFile}
-              >
-                Download Contribution
-              </button>
               <button
                 className="btn btn-success mr-2 ms-2"
                 onClick={handlePublicContribution}

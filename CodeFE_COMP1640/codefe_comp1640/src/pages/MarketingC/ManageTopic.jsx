@@ -73,8 +73,8 @@ function ManageTopic() {
                   <td className="topic_tile">
                     <div className="d-flex align-items-center">{item.title}</div>
                   </td>
-                  <td className="topic_startdate">{item.startDate}</td>
-                  <td className="topic_enddate">{item.endDate}</td>
+                  <td className="topic_startdate">{item.startDate?.toLocaleString()}</td>
+                  <td className="topic_enddate">{item.endDate?.toLocaleString()}</td>
                   <td className="topic_description">{item.content}</td>
                   {item.isApproved === true ? <td> <p className="top_status btn btn-success">Approved</p></td> : <td> <p className="top_status btn btn-warning">Pending</p></td>}
                   <td className="topic_action">
@@ -113,9 +113,9 @@ function ManageTopic() {
             <div class="card-body">
               <h5 class="card-title">{item.content}</h5>
     
-              <p class="card-text">Start Date: {item.startDate}</p>
+              <p class="card-text">Start Date: {item.startDate?.toLocaleString()}</p>
 
-              <p class="card-text">End Date: {item.endDate}</p>
+              <p class="card-text">End Date: {item.endDate?.toLocaleString()}</p>
               <p class="card-text">Contribution: 30</p>
               <a href="!#" class="btn btn-primary" onClick={()=>setTopicInfor(item)}
               data-bs-toggle="modal"
@@ -127,6 +127,7 @@ function ManageTopic() {
           </div>
           )
         })
+        
       }
 
       <ModelEdit dataEdit={dataEdit}/>
