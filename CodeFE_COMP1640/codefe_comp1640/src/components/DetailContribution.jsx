@@ -14,8 +14,7 @@ const DetailContribution = () => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const handleSubmitComment = async () => {
-
-const user = localStorage.getItem("user_id");
+    const user = localStorage.getItem("user_id");
     try {
       await axios.post(
         `${API_BASE}/comment/create`,

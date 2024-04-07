@@ -387,7 +387,7 @@ function MarketingCFeedb(props) {
                     value={feedback}
                     placeholder={oldFeedback}
                     onChange={(e) => setFeedback(e.target.value)}
-                    disabled={isSending ? true : false}
+                    disabled={isSending}
                   ></textarea>
                 </td>
               </tr>
