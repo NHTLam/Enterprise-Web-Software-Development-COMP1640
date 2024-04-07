@@ -151,7 +151,7 @@ function StEditPost() {
             }
             Toast.toastSuccess("Update success")
             setTimeout(() => {
-                navigate(`/contribute/view/edit/${res.data.data.articleId}`);
+                window.location.reload();
             }, 3000)
         } catch (error) {
             Toast.toastErorr("Submit Erorr");
@@ -216,7 +216,7 @@ function StEditPost() {
                         </div> */}
 
                         <div className="input-group mt-3">
-                            <span className="input-group-text" >With textarea</span>
+                            <span className="input-group-text" >Note</span>
                             <textarea
                                 className="form-control"
                                 aria-label="Note"
@@ -226,7 +226,7 @@ function StEditPost() {
                             ></textarea>
 
                         </div>
-                        <button type="submit" className="btn btn-secondary float-end mt-3" onClick={handleUpdate}>Save</button>
+                        <button type="submit" className="btn btn-secondary float-end mt-3" onClick={handleUpdate}>Update</button>
                         <button type="submit" className="btn btn-danger float-end mt-3 me-2" onClick={handleClickDelete}>Detele</button>
                     </form>
                 </div>

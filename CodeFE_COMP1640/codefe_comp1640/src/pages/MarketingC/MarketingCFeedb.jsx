@@ -387,12 +387,14 @@ function MarketingCFeedb(props) {
               </button>
             </div>
             <div className="button2">
+              {postData?.isApproved === true ? <></> :              
               <button
                 className="btn btn-success mr-2 ms-2"
                 onClick={handlePublicContribution}
               >
                 Public
-              </button>
+              </button>}
+
             </div>
           </div>
         </div>

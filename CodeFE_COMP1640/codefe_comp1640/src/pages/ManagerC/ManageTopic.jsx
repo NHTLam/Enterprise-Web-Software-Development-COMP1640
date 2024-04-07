@@ -63,7 +63,9 @@ function ManageTopic() {
         Toast.toastErorr("Approve Failed")
       })
    }
-
+   const handleApproved = () =>{
+    Toast.toastInfo("Topic Allready Approved")
+   }
   return (
     <div className="container">
       <h1>Manager Check Topic</h1>
@@ -95,15 +97,14 @@ function ManageTopic() {
                   <td className="topic_description">{item.userId}</td>
                   <td className="topic_description">{item.departmentId}</td>
                   {item.isApproved === true ? <td> <p className="top_status btn btn-success">Approved</p></td> : <td> <p className="top_status btn btn-warning">Pendding</p></td>}
-                  <td className="topic_action">
+                  <td className="topic_action d-flex">
                     {listPath.includes('/feedback/create') && listPath.includes('/dashboard/get-data') ? ( 
-                    <button
-                      type="button"
-                      className="btn btn-success btn-sm btn-rounded"
-                      onClick={() =>handleApproveTopic(item)}
+                    <div
                     >
-                      Approve
-                    </button>
+                      {item.isApproved === true ? <button className="btn btn-light" onClick={handleApproved}>Approved</button>: <button type="button"
+                      className="btn btn-success btn-sm btn-rounded"
+                      onClick={() =>handleApproveTopic(item)}>Approve</button> }
+                    </div>
                     ) : (
                       <></>
                     )}
