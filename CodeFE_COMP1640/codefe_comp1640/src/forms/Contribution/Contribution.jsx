@@ -1,11 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 const API_BASE = process.env.REACT_APP_API_KEY;
 function Contribution({ currentItems, link }) {
+    const navigate = useNavigate();
     const [listPost, setListPost] = useState([])
-    const [editlink, setEditLink] = useState("")
+
+    var id = "";
     
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -27,7 +29,8 @@ function Contribution({ currentItems, link }) {
         
     }, []);
 
-    const CheckArticle = (item) => {
+    function CheckArticle(item) {
+        debugger;
         console.log("List Post", listPost);
         console.log("item recive", item);
     
@@ -38,21 +41,14 @@ function Contribution({ currentItems, link }) {
         if (foundItem) {
             console.log("same");
             console.log("contribution already have in topic", foundItem);
-    
             // Nếu tìm thấy, setEditLink với giá trị tương ứng
-            console.log(foundItem.articleId)
-            setEditLink(foundItem.articleId);
-            console.log("link edited",editlink)
-        } else {
-            console.log("not same");
-    
-            // Nếu không tìm thấy, đặt editLink thành chuỗi trống
-            setEditLink("");
+            // console.log(foundItem.articleId)
+            // let a = editlink;
+            // setEditLink(foundItem.articleId)
+            // let b = editlink;
+            navigate(`/contribute/view/edit/${foundItem.articleId}`)
         }
     }
-    useEffect(() => {
-        console.log("link edited", editlink);
-    }, [editlink]);
     return (
         <div className="d-flex flex-wrap mt-4 mb-4 w-100">
             {
@@ -71,7 +67,7 @@ function Contribution({ currentItems, link }) {
                                                 <p class="card-text">{item.content}</p>
                                                 <p>{item?.startDate}</p>
                                                 <p>{item?.endDate}</p>
-                                                <p class="card-text" onClick={()=>CheckArticle(item)}><Link to={editlink?`/contribute/view/edit/${editlink}`:`${link}/${item.articleId}`} class="btn btn-light">See moree</Link></p>
+                                                <p class="card-text" onClick={()=>CheckArticle(item)}><Link to={`${link}/${item.articleId}`} class="btn btn-light">See moree</Link></p>
                                             </div>
                                         </div>
                                     </div>
