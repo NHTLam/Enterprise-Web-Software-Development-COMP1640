@@ -39,7 +39,6 @@ function Me() {
         //     Toast.toastErorr("Error updating user");
         // }
     }
-    console.log(userData)
     // console.log(userData.roleUserMapping)
     useEffect(() => {
         const token = localStorage.getItem("token");

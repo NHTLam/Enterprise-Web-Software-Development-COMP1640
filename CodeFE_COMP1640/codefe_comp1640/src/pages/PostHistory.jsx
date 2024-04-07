@@ -2,10 +2,11 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Pagination from "../components/Pagination";
 
 const API_BASE = process.env.REACT_APP_API_KEY;
 
-function PostHistory() {
+function PostHistory(topicData) {
   const [listPost, setListPost] = useState([]);
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -27,8 +28,11 @@ function PostHistory() {
     getPosts();
   }, []);
   return (
-    <div>
-      {[...listPost].reverse().map((post) => {
+    <div className="d-flex flex-wrap justify-content-center align-content-center">
+      <div className="text-black fw-bolder fs-2 mt-5 mb-4">
+        Contribution History
+      </div>
+      {/* {[...listPost].reverse().map((post) => {
         return (
           <div class="card">
             <h5 class="card-header">{post.content}</h5>
@@ -44,7 +48,8 @@ function PostHistory() {
             </div>
           </div>
         );
-      })}
+      })} */}
+      <Pagination itemsPerPage={5} dataContributions={[...listPost].reverse()} link ={"/history/view"} />
     </div>
   );
 }

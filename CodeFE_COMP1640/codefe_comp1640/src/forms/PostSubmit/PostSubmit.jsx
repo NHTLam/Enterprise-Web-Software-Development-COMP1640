@@ -16,7 +16,7 @@ const PostSubmit = (props) => {
   //State
   const [imageList, setImageList] = useState([]);
   const [selectedFile, setSelectedFile] = useState("");
-  const [departmentId, setDepartmentId] = useState(1);
+  const [departmentId, setDepartmentId] = useState();
   const [credentials, setCredentials] = useState({});
   const [checkBox, setCheckBox] = useState(false);
   const [disable, setDisable] = useState(true);
@@ -43,7 +43,7 @@ const PostSubmit = (props) => {
         // console.log(data.data)
       })
       .catch(err => console.log(err))
-  }, [])
+  }, [topicId])
 
   const handleCheckBox = () => {
     if (checkBox) {
