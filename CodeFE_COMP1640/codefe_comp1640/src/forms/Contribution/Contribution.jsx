@@ -32,7 +32,7 @@ function Contribution({ currentItems, link }) {
         console.log("item recive", item);
     
         // Sử dụng find để tìm phần tử thỏa mãn điều kiện
-        const foundItem = listPost.find(con => con?.topicId === item?.articleId);
+        const foundItem =  listPost.find(con => con?.topicId === item?.articleId);
     
         // Kiểm tra xem phần tử có được tìm thấy hay không
         if (foundItem) {
@@ -40,7 +40,8 @@ function Contribution({ currentItems, link }) {
             console.log("contribution already have in topic", foundItem);
     
             // Nếu tìm thấy, setEditLink với giá trị tương ứng
-            setEditLink(`/contribute/view/edit/${foundItem.articleId}`);
+            console.log(foundItem.articleId)
+            setEditLink(foundItem.articleId);
             console.log("link edited",editlink)
         } else {
             console.log("not same");
@@ -49,7 +50,9 @@ function Contribution({ currentItems, link }) {
             setEditLink("");
         }
     }
-
+    useEffect(() => {
+        console.log("link edited", editlink);
+    }, [editlink]);
     return (
         <div className="d-flex flex-wrap mt-4 mb-4 w-100">
             {
@@ -68,7 +71,7 @@ function Contribution({ currentItems, link }) {
                                                 <p class="card-text">{item.content}</p>
                                                 <p>{item?.startDate}</p>
                                                 <p>{item?.endDate}</p>
-                                                <p class="card-text" onClick={()=>CheckArticle(item)}><Link to={editlink?editlink:`${link}/${item.articleId}`} class="btn btn-light">See moree</Link></p>
+                                                <p class="card-text" onClick={()=>CheckArticle(item)}><Link to={editlink?`/contribute/view/edit/${editlink}`:`${link}/${item.articleId}`} class="btn btn-light">See moree</Link></p>
                                             </div>
                                         </div>
                                     </div>

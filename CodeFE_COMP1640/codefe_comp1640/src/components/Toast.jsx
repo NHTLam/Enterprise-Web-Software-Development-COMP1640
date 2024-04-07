@@ -27,3 +27,20 @@ export const toastErorr = (message) => {
     theme: "light"
   }));
 };
+
+export const toastInfo = (message) => {
+  return(
+    toast.info(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      })
+  );
+};
+
+
