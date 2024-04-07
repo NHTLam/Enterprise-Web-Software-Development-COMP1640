@@ -29,7 +29,6 @@ function MarketingCFeedb(props) {
   const [postData, setPostData] = useState();
   const [userData, setUserData] = useState();
 
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
@@ -43,13 +42,17 @@ function MarketingCFeedb(props) {
       .then((data) => {
         setPostData(data.data.data);
         axios
-          .post(`${API_BASE}/app-user/get`, { userId: data.data.data?.userId }, {
-            headers: {
-              "ngrok-skip-browser-warning": "true",
-              Authorization: `Bearer ${token}`,
-            },
-            staleTime: 0,
-          })
+          .post(
+            `${API_BASE}/app-user/get`,
+            { userId: data.data.data?.userId },
+            {
+              headers: {
+                "ngrok-skip-browser-warning": "true",
+                Authorization: `Bearer ${token}`,
+              },
+              staleTime: 0,
+            }
+          )
           .then((data) => {
             setUserData(data.data);
           })
@@ -209,6 +212,39 @@ function MarketingCFeedb(props) {
       console.log(err);
     }
   };
+  const handleDownloadAllFiles = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.post(
+        `${API_BASE}/article/GetFile?articleId=${articleId}`,
+        null,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          responseType: "blob", // Yêu cầu dữ liệu trả về là kiểu Blob
+        }
+      );
+
+      const fileBlob = response.data; // Blob chứa tất cả các tệp
+
+      // Tạo một URL tạm thời cho Blob để tạo liên kết tải xuống
+      const fileUrl = URL.createObjectURL(fileBlob);
+
+      // Tạo một liên kết tạm thời để tải xuống tất cả các tệp
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", "all_files.zip");
+      document.body.appendChild(link);
+      link.click();
+
+      // Sau khi người dùng nhấp vào liên kết, loại bỏ liên kết tạm thời khỏi DOM
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
 
   const handleDownloadFile = async () => {
     const token = localStorage.getItem("token");
@@ -224,9 +260,10 @@ function MarketingCFeedb(props) {
           },
         }
       );
-      const disposition = response.headers['content-disposition'];
+      const disposition = response.headers["content-disposition"];
       const matches = /filename="([^"]+)"/.exec(disposition);
-      const fileName = matches != null && matches.length > 1 ? matches[1] : 'file.zip';
+      const fileName =
+        matches != null && matches.length > 1 ? matches[1] : "file.zip";
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -323,19 +360,27 @@ function MarketingCFeedb(props) {
               </tr>
               <tr>
                 <th scope="row">Contribution</th>
-                <td>{file?.map((item) => {
-                  return (
-                    <div className=" d-flex justify-content-between align-items-center">
-
-                      <a href="!#">{item?.fileName}</a>
-                      <button
-                        className="btn btn-secondary mr-2 ms-2"
-                        onClick={handleDownloadFile}
+                <div className="file-list">
+                  {file.map((item, index) => (
+                    <div key={index} className="file-item">
+                      <span>{item.fileName}</span>
+                      {/* <button
+                        className="btn btn-secondary ms-2"
+                        onClick={() => handleDownloadFile(item.id)}
                       >
-                        Download
-                      </button></div>
-                  )
-                })}</td>
+                        Tải xuống
+                      </button> */}
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <button
+                    className="btn btn-primary mt-3"
+                    onClick={handleDownloadAllFiles}
+                  >
+                    Download
+                  </button>
+                </div>
               </tr>
               <tr>
                 <th scope="row">Article Content</th>
@@ -387,14 +432,16 @@ function MarketingCFeedb(props) {
               </button>
             </div>
             <div className="button2">
-              {postData?.isApproved === true ? <></> :              
-              <button
-                className="btn btn-success mr-2 ms-2"
-                onClick={handlePublicContribution}
-              >
-                Public
-              </button>}
-
+              {postData?.isApproved === true ? (
+                <></>
+              ) : (
+                <button
+                  className="btn btn-success mr-2 ms-2"
+                  onClick={handlePublicContribution}
+                >
+                  Public
+                </button>
+              )}
             </div>
           </div>
         </div>
