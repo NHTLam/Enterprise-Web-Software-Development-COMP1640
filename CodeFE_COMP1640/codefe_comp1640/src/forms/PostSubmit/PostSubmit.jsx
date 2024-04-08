@@ -97,9 +97,9 @@ const PostSubmit = (props) => {
         }
       );
       Toast.toastSuccess("Submit success");
+      setIsLoading(false);
       setTimeout(() => {
         navigate(`/contribute/view/edit/${articleId}`);
-        setIsLoading(false);
       }, 3000);
     } else if (res.status === 403) {
       console.log("No Permission!");
@@ -112,6 +112,7 @@ const PostSubmit = (props) => {
     }
   } catch (error) {
     Toast.toastErorr("Submit Error");
+    setIsLoading(false);
     console.error("Error:", error);
   }
 };
