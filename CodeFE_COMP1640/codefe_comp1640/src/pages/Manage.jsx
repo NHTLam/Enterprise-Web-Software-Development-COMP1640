@@ -13,12 +13,11 @@ const Manage = () => {
     barChartSimplifys: [],
     lineChartSimplifys: [],
   });
-  // TypeError: pieChart is not iterable
   const pieChart = listDashBoard.pieChartSimplifys;
   const barChart = listDashBoard.barChartSimplifys;
   const lineChart = listDashBoard.lineChartSimplifys;
 
-  // // //Pie Chart % đóng góp
+  //Pie Chart % đóng góp
   const data = [["Department", "Number of contributions"], ...pieChart];
 
   const options = {
@@ -29,9 +28,6 @@ const Manage = () => {
   const data2 = [["Element", "topic", { role: "style" }], ...barChart];
 
   //Line Chart
-  // Top 10 topic được đóng góp nhiều nhất.
-  // Top 10 topic được comment nhiều nhất.
-  // Top 10 học sinh có nhiều đóng góp nhất.
   const data3 = [
     [
       "Month",
@@ -43,12 +39,6 @@ const Manage = () => {
     ],
     ...lineChart,
   ];
-
-  const options3 = {
-    chart: {
-      title: "Number of topics reported each month",
-    },
-  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -67,10 +57,10 @@ const Manage = () => {
         console.table("List of dashboard:", JSON.stringify(res.data));
       } catch (err) {
         console.log("Failed to list account! " + err);
-          Toast.toastErorr("You do not have permission to perform this action");
-          setTimeout(()=>{
-            navigate("/");
-          },1000)  
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
       }
     };
     dashBoard();
@@ -120,7 +110,7 @@ const Manage = () => {
         <hr />
         <div className="container">
           <div className="row bg-light">
-            <h4>Đánh giá</h4>
+            <h4>Percentage contribution of each department</h4>
             <div>
               <Chart
                 chartType="PieChart"
@@ -133,7 +123,7 @@ const Manage = () => {
           </div>
           <hr />
           <div className="row bg-light">
-            <h4>Đánh giá 2</h4>
+            <h4>Number of contributions of each department</h4>
             <div>
               <Chart
                 chartType="ColumnChart"
@@ -145,48 +135,18 @@ const Manage = () => {
           </div>
           <hr />
           <div className="row bg-light">
-            <h4>Đánh giá 3</h4>
+            <h4>Number of faculty evaluations per month</h4>
             <div>
               <Chart
                 chartType="Line"
                 width="100%"
                 height="400px"
                 data={data3}
-                options={options3}
               />
             </div>
           </div>
         </div>
       </div>
-      {/* <div className="row w-100 bg-light mb-3">
-        <h3>Pie Chart</h3>
-        <Chart
-          chartType="PieChart"
-          data={data}
-          options={options}
-          width={"100%"}
-          height={"400px"}
-        />
-      </div>
-      <div className="row w-100 bg-dark mb-3">
-        <h3>Column Chart</h3>
-        <Chart
-          chartType="ColumnChart"
-          width={"100%"}
-          height={"400px"}
-          data={data2}
-        />
-      </div>
-      <div className="row w-100 bg-light">
-        <h3>Line Chart</h3>
-        <Chart
-          chartType="Line"
-          width="100%"
-          height="400px"
-          data={data3}
-          options={options3}
-        />
-      </div> */}
     </div>
   );
 };
