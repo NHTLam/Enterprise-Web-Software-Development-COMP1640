@@ -6,9 +6,7 @@ const API_BASE = process.env.REACT_APP_API_KEY;
 function Contribution({ currentItems, link }) {
     const navigate = useNavigate();
     const [listPost, setListPost] = useState([])
-
     var id = "";
-    
     useEffect(() => {
         const token = localStorage.getItem("token");
         const userId = localStorage.getItem("user_id");
@@ -33,19 +31,10 @@ function Contribution({ currentItems, link }) {
         
         console.log("List Post", listPost);
         console.log("item recive", item);
-    
-        // Sử dụng find để tìm phần tử thỏa mãn điều kiện
         const foundItem =  listPost.find(con => con?.topicId === item?.articleId);
-    
-        // Kiểm tra xem phần tử có được tìm thấy hay không
         if (foundItem) {
             console.log("same");
             console.log("contribution already have in topic", foundItem);
-            // Nếu tìm thấy, setEditLink với giá trị tương ứng
-            // console.log(foundItem.articleId)
-            // let a = editlink;
-            // setEditLink(foundItem.articleId)
-            // let b = editlink;
             navigate(`/contribute/view/edit/${foundItem.articleId}`)
         }
     }
@@ -59,7 +48,8 @@ function Contribution({ currentItems, link }) {
                                 <div class="card w-100">
                                     <div class="row g-0">
                                         <div class="col-md-4">
-                                            <img src="https://www.analyticsinsight.net/wp-content/uploads/2021/07/Technology-Can-Boost-Your-Business-Productivity.jpg" class="img-fluid rounded-start" alt="..." />
+                                            <img src="https://www.analyticsinsight.net/wp-content/uploads/2021/07/Technology-Can-Boost-Your-Business-Productivity.jpg" 
+                                            class="img-fluid rounded-start" alt="..." />
                                         </div>
                                         <div class="col-md-8">
                                             <div class="card-body">
@@ -67,7 +57,9 @@ function Contribution({ currentItems, link }) {
                                                 <p class="card-text">{item.content}</p>
                                                 <p>{item?.startDate}</p>
                                                 <p>{item?.endDate}</p>
-                                                <p class="card-text" onClick={()=>CheckArticle(item)}><Link to={`${link}/${item.articleId}`} class="btn btn-light">See moree</Link></p>
+                                                <p class="card-text" onClick={()=>CheckArticle(item)}>
+                                                    <Link to={`${link}/${item.articleId}`} class="btn btn-light">See moree</Link>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>

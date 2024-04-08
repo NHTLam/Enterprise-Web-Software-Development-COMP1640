@@ -384,7 +384,7 @@ function MarketingCFeedb(props) {
               </tr>
               <tr>
                 <th scope="row">Article Content</th>
-                <td>{postData.content}</td>
+                <td>{postData?.content}</td>
               </tr>
               <tr>
                 <th scope="row">Date</th>
