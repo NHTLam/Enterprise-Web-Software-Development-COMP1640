@@ -137,10 +137,16 @@ namespace CodeBE_COMP1640.Services.CommentS
 
         private async Task<bool> CheckContentComment(Comment comment)
         {
+            if (comment == null)
+            {
+                comment = new Comment();
+                comment.CommentContent = "";
+            }
+
             List<string> BadWords = (await UOW.BadWordRepository.List()).Where(x => x.Name != null).Select(x => x.Name!).ToList();
             foreach (var badWord in BadWords)
             {
-                if (comment.CommentContent.Contains(badWord))
+                if (comment.CommentContent.Trim().ToLower().Contains(badWord.Trim().ToLower()))
                 {
                     return false;
                 }
