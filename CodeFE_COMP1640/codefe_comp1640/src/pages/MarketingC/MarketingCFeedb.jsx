@@ -361,7 +361,7 @@ function MarketingCFeedb(props) {
               <tr>
                 <th scope="row">Contribution</th>
                 <div className="file-list">
-                  {file.map((item, index) => (
+                  {file?.map((item, index) => (
                     <div key={index} className="file-item">
                       <span>{item.fileName}</span>
                       {/* <button
@@ -384,7 +384,7 @@ function MarketingCFeedb(props) {
               </tr>
               <tr>
                 <th scope="row">Article Content</th>
-                <td>{postData.content}</td>
+                <td>{postData?.content}</td>
               </tr>
               <tr>
                 <th scope="row">Date</th>

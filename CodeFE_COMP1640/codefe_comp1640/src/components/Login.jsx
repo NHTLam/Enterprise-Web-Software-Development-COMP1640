@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
+import * as Toast from "../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 const Login = () => {
@@ -32,21 +33,17 @@ const Login = () => {
   const handleClickLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `${API_BASE}/app-user/login`,
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post(`${API_BASE}/app-user/login`, {
+        email,
+        password,
+      });
       if (response.status === 200) {
         const token = response.data;
-        localStorage.setItem('token', token);
+        localStorage.setItem("token", token);
         navigate("/");
-      } else if (response.status === 400) {
-        console.log("Wrong email or password");
       }
     } catch (err) {
+      Toast.toastErorr("Wrong email or password");
       console.log("Error " + err);
     }
   };

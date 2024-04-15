@@ -42,9 +42,8 @@ function Department() {
         departmentGet?.map((item, index) => {
           return (
             <div className="d-flex">
-
-              <h1 className='text-black fw-bolder me-5'>{item?.name}</h1>
-              <form className="d-flex ms-5 w-100">
+              <h1 className='text-black fw-bolder w-50 me-5'>{item?.name}</h1>
+              <form className="d-flex ms-5 w-50">
                 <input className="form-control" type="search" placeholder="Search" aria-label="Search" />
                 <button className="btn btn-outline-secondary border border-primary" type="submit">Search</button>
               </form>
@@ -53,7 +52,7 @@ function Department() {
         })
       }
       <div className="d-flex flex-wrap justify-content-center align-content-center mb-5">
-        {isTopic.length <= 0 ? <h1 className='fw-bold mt-5'>This Deparment did not have Topic yet</h1> :
+        {isTopic.length <= 0 ? <h1 className='fw-bold mt-5'>Finding data ...</h1> :
           <Pagination itemsPerPage={5} dataContributions={[...isTopic].reverse()} link={`/topic/view`} />
         }
       </div>
