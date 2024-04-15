@@ -4,12 +4,12 @@ import PropTypes from "prop-types";
 import "./Style.css";
 import imageInput from "../../assets/add_image.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import * as Loader from "../../components/Loader"
+import * as Loader from "../../components/Loader";
 import * as Toast from "../../components/Toast";
 const API_BASE = process.env.REACT_APP_API_KEY;
 
 const PostSubmit = (props) => {
-  const { topicId } = useParams()
+  const { topicId } = useParams();
   //decalre value
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -31,19 +31,20 @@ const PostSubmit = (props) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    axios.get(`${API_BASE}/article/get/${topicId}`, {
-      headers: {
-        'ngrok-skip-browser-warning': 'true',
-        Authorization: `Bearer ${token}`
-
-      }, staleTime: 0
-    })
-      .then(data => {
-        setDepartmentId(data.data.data.departmentId)
+    axios
+      .get(`${API_BASE}/article/get/${topicId}`, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${token}`,
+        },
+        staleTime: 0,
+      })
+      .then((data) => {
+        setDepartmentId(data.data.data.departmentId);
         // console.log(data.data)
       })
-      .catch(err => console.log(err))
-  }, [topicId])
+      .catch((err) => console.log(err));
+  }, [topicId]);
 
   const handleCheckBox = () => {
     if (checkBox) {
@@ -56,66 +57,61 @@ const PostSubmit = (props) => {
   };
 
   const handleClickSubmit = async (event) => {
-  event.preventDefault();
-  const userId = localStorage.getItem("user_id");
-  const token = localStorage.getItem("token");
-  if (selectedFile.length === 0) {
-    alert("Please select at least one file to upload.");
-    return;
-  }
-  const formData = new FormData();
-  for (let i = 0; i < selectedFile.length; i++) {
-    formData.append("files", selectedFile[i]);
-  }
-  try {
-    setIsLoading(true);
-    const res = await axios.post(
-      `${API_BASE}/article/create`,
-      {
-        departmentId,
-        topicId: +topicId,
-        userId: +userId,
-        ...credentials,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+    event.preventDefault();
+    const userId = localStorage.getItem("user_id");
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    for (let i = 0; i < selectedFile.length; i++) {
+      formData.append("files", selectedFile[i]);
+    }
+    try {
+      setIsLoading(true);
+      const res = await axios.post(
+        `${API_BASE}/article/create`,
+        {
+          departmentId,
+          topicId: +topicId,
+          userId: +userId,
+          ...credentials,
         },
-      }
-    );
-    if (res.status === 200) {
-      const articleId = res.data.data.articleId;
-      formData.append("articleId", articleId);
-      await axios.post(
-        `${API_BASE}/article/upload-file?articleId=${articleId}`,
-        formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      Toast.toastSuccess("Submit success");
-      setIsLoading(false);
-      setTimeout(() => {
-        navigate(`/contribute/view/edit/${articleId}`);
-      }, 3000);
-    } else if (res.status === 403) {
-      console.log("No Permission!");
-      Toast.toastErorr("You do not have permission to perform this action");
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
-    } else if (res.status === 400) {
-      Toast.toastErorr("Submit failed");
+      if (res.status === 200) {
+        const articleId = res.data.data.articleId;
+        formData.append("articleId", articleId);
+        await axios.post(
+          `${API_BASE}/article/upload-file?articleId=${articleId}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        Toast.toastSuccess("Submit success");
+        setTimeout(() => {
+          navigate(`/contribute/view/edit/${articleId}`);
+          setIsLoading(false);
+        }, 3000);
+      } else if (res.status === 403) {
+        console.log("No Permission!");
+        Toast.toastErorr("You do not have permission to perform this action");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else if (res.status === 400) {
+        Toast.toastErorr("Submit failed");
+      }
+    } catch (error) {
+      Toast.toastErorr("Submit Error");
+      console.error("Error:", error);
     }
-  } catch (error) {
-    Toast.toastErorr("Submit Error");
-    setIsLoading(false);
-    console.error("Error:", error);
-  }
-};
+  };
   // function onFileInput(e) {
   //   const files = e.target.files;
   //   if (files.length === 0) return;
@@ -217,11 +213,11 @@ const PostSubmit = (props) => {
             </div>
           </div>
 
-          {isLoading ?
+          {isLoading ? (
             <div className="div w-100 text-blue float-end">
               {Loader.RotatingLoad()}
             </div>
-            :
+          ) : (
             <button
               disabled={disable}
               type="submit"
@@ -229,7 +225,8 @@ const PostSubmit = (props) => {
               className="btn btn-secondary float-end"
             >
               Submit
-            </button>}
+            </button>
+          )}
         </form>
       </div>
 

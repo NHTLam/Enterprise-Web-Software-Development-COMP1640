@@ -13,5 +13,6 @@ namespace CodeBE_COMP1640.SearchModels
         public bool? IsApproved { get; set; }
         public bool IsTopic { get; set; }
         public string Title { get; set; }
+        public bool? Isfeedback { get; set; }
     }
 }

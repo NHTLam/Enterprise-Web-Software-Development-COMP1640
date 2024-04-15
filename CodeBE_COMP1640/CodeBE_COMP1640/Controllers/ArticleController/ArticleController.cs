@@ -74,13 +74,13 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
 
                 // Always set IsApproved to false
                 request.IsApproved = false;
+                request.Isfeedback = false;
 
                 // Tạo entity từ request và đặt IsApproved là false
                 var articleEntity = request.ToEntity();
                 articleEntity.SubmissionTime = DateTime.Now;
                 articleEntity.StartDate = request.StartDate;
                 articleEntity.EndDate = request.EndDate;
-
                 articleEntity.TopicId = request.TopicId;
 
                 if (!string.IsNullOrEmpty(request.Title))
@@ -341,7 +341,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                     return BadRequest("Invalid articleId");
 
                 if (files == null || files.Count == 0)
-                    return BadRequest("No files selected");
+                    return Ok();
 
                 if (_articleFiles.ContainsKey(articleId))
                 {
@@ -351,7 +351,7 @@ namespace CodeBE_COMP1640.Controllers.ArticleController
                 foreach (var file in files)
                 {
                     if (file == null || file.Length == 0)
-                        return BadRequest("File not selected");
+                        continue;
 
                     var allowedContentTypes = new[] { "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "image/jpeg", "image/png", "image/gif" };
                     if (!allowedContentTypes.Contains(file.ContentType))
