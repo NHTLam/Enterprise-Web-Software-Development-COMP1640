@@ -57,6 +57,7 @@ namespace CodeBE_COMP1640.Repositories
                 existingArticle.Title = item.Title;
                 existingArticle.StartDate = item.StartDate;
                 existingArticle.EndDate = item.EndDate;
+                existingArticle.Isfeedback = item.Isfeedback;
 
                 // Update other properties if needed
 
